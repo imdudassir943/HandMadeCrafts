@@ -65,7 +65,7 @@ export default function AuthSection() {
         setSignInEmail("");
         setSignInPassword("");
       }
-    } catch (err) {
+    } catch {
       setSignInError(language === "en" ? "An unexpected error occurred" : "کوئی غیر متوقع غلطی ہوئی ہے");
     } finally {
       setSignInLoading(false);
@@ -106,7 +106,7 @@ export default function AuthSection() {
         // Auto transition after 3 seconds
         setTimeout(() => setSignUpSuccess(false), 4000);
       }
-    } catch (err) {
+    } catch {
       setSignUpError(language === "en" ? "An unexpected error occurred" : "کوئی غیر متوقع غلطی ہوئی ہے");
     } finally {
       setSignUpLoading(false);

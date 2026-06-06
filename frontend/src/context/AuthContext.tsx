@@ -3,6 +3,10 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { User } from "@/types";
 
+interface RegisteredUser extends User {
+  password?: string;
+}
+
 interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: { en: string; ur: string } }>;
@@ -35,10 +39,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     // Get registered users from localStorage
     const usersRaw = localStorage.getItem("handmade_registered_users");
-    const registeredUsers = usersRaw ? JSON.parse(usersRaw) : [];
+    const registeredUsers: RegisteredUser[] = usersRaw ? JSON.parse(usersRaw) : [];
 
     const foundUser = registeredUsers.find(
-      (u: any) => u.email.toLowerCase() === email.toLowerCase() && u.password === password
+      (u) => u.email.toLowerCase() === email.toLowerCase() && u.password === password
     );
 
     if (foundUser) {
@@ -70,10 +74,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     await new Promise((resolve) => setTimeout(resolve, 800));
 
     const usersRaw = localStorage.getItem("handmade_registered_users");
-    const registeredUsers = usersRaw ? JSON.parse(usersRaw) : [];
+    const registeredUsers: RegisteredUser[] = usersRaw ? JSON.parse(usersRaw) : [];
 
     const emailExists = registeredUsers.some(
-      (u: any) => u.email.toLowerCase() === email.toLowerCase()
+      (u) => u.email.toLowerCase() === email.toLowerCase()
     );
 
     if (emailExists || email.toLowerCase() === "admin@auracrafts.com") {
