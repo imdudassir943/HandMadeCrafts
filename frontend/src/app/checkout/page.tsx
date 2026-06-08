@@ -6,6 +6,7 @@ import { CheckCircle2, ArrowRight, ArrowLeft, CreditCard, Truck, Receipt } from 
 import { useLanguage } from "@/context/LanguageContext";
 import { useCart } from "@/context/CartContext";
 import { motion, AnimatePresence } from "framer-motion";
+import { API_BASE_URL } from "@/config";
 
 export default function Checkout() {
   const { language, direction } = useLanguage();
@@ -58,31 +59,31 @@ export default function Checkout() {
       emptySub: "Please add products to your cart before checking out.",
     },
     ur: {
-      heading: "ادائیگی",
+      heading: "چیک آؤٹ",
       cartSummary: "آرڈر کی تفصیلات",
       shippingTitle: "شپنگ کی تفصیلات",
       paymentTitle: "ادائیگی کا طریقہ",
       shippingCost: "شپنگ",
       free: "مفت",
-      total: "کل قیمت",
+      total: "کل رقم",
       nameLabel: "پورا نام",
       emailLabel: "ای میل ایڈریس",
       addressLabel: "گھر کا پتہ",
       cityLabel: "شہر",
       countryLabel: "ملک",
       cardLabel: "کارڈ نمبر",
-      expiryLabel: "تاریخ انتہا (MM/YY)",
-      cvvLabel: "سیکورٹی کوڈ (CVV)",
-      nextBtn: "ادائیگی کی طرف بڑھیں",
+      expiryLabel: "میعاد ختم ہونے کی تاریخ",
+      cvvLabel: "سی وی وی",
+      nextBtn: "ادائیگی پر جائیں",
       submitBtn: "آرڈر دیں",
       backBtn: "واپس",
       successTitle: "آرڈر کی تصدیق ہو گئی!",
-      successSub: "خریداری کا شکریہ۔ ہم نے اپنے کاریگروں کو آپ کی دستکاریاں پیک کرنے کا پیغام بھیج دیا ہے۔",
+      successSub: "آپ کے آرڈر کا شکریہ۔ ہم نے اپنے دستکاروں کو آپ کے آرڈر کی پیکنگ شروع کرنے کی اطلاع دے دی ہے۔",
       orderNumber: "آرڈر نمبر",
-      trackSub: "آرڈر ٹریکنگ کی معلومات آپ کو ای میل کر دی جائیں گی۔",
-      homeBtn: "ہوم پیج پر واپس جائیں",
-      emptyCart: "آپ کا شاپنگ بیگ خالی ہے",
-      emptySub: "ادائیگی کے لیے آگے بڑھنے سے پہلے کارٹ میں کچھ اشیاء شامل کریں۔",
+      trackSub: "آپ کو ای میل کے ذریعے شپنگ ٹریکنگ کی معلومات موصول ہوں گی۔",
+      homeBtn: "ہوم پیج پر جائیں",
+      emptyCart: "آپ کی کارٹ خالی ہے",
+      emptySub: "چیک آؤٹ کرنے سے پہلے کارٹ میں مصنوعات شامل کریں۔",
     },
   }[language];
 
@@ -113,7 +114,7 @@ export default function Checkout() {
         }
 
         // 1. Create Order
-        const orderRes = await fetch("http://localhost:8000/api/orders/", {
+        const orderRes = await fetch(`${API_BASE_URL}/orders/`, {
           method: "POST",
           headers,
           body: JSON.stringify({
@@ -133,7 +134,7 @@ export default function Checkout() {
         const orderData = await orderRes.json();
 
         // 2. Process Payment
-        const paymentRes = await fetch("http://localhost:8000/api/payments/process/", {
+        const paymentRes = await fetch(`${API_BASE_URL}/payments/process/`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

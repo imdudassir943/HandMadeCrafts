@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { User } from "@/types";
 
-const API_BASE_URL = "http://localhost:8000/api";
+import { API_BASE_URL } from "@/config";
 
 interface AuthContextType {
   user: User | null;

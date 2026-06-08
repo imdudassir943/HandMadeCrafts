@@ -22,9 +22,11 @@ const playfair = Playfair_Display({
   display: "swap",
 });
 
+import { API_BASE_URL } from "@/config";
+
 export async function generateMetadata(): Promise<Metadata> {
   try {
-    const res = await fetch("http://localhost:8000/api/dashboard/settings/", { cache: "no-store" });
+    const res = await fetch(`${API_BASE_URL}/dashboard/settings/`, { cache: "no-store" });
     if (res.ok) {
       const data = await res.json();
       return {

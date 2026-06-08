@@ -5,12 +5,14 @@ import { useLanguage } from "@/context/LanguageContext";
 import { mockProducts } from "@/data/products";
 import ArtisanBioCard from "@/components/ArtisanBioCard";
 
+import { API_BASE_URL } from "@/config";
+
 export default function Stories() {
   const { language } = useLanguage();
   const [products, setProducts] = React.useState<any[]>([]);
 
   React.useEffect(() => {
-    fetch("http://localhost:8000/api/products/")
+    fetch(`${API_BASE_URL}/products/`)
       .then((res) => res.json())
       .then((data) => setProducts(data))
       .catch((err) => console.error("Failed to fetch products in Stories", err));

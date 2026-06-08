@@ -9,6 +9,8 @@ import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
 
+import { API_BASE_URL } from "@/config";
+
 export default function Navbar() {
   const { language, toggleLanguage, direction } = useLanguage();
   const { cartCount, setIsCartOpen } = useCart();
@@ -22,7 +24,7 @@ export default function Navbar() {
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
 
   React.useEffect(() => {
-    fetch("http://localhost:8000/api/dashboard/settings/")
+    fetch(`${API_BASE_URL}/dashboard/settings/`)
       .then((res) => res.json())
       .then((data) => {
         setBrandName(language === "ur" ? data.siteNameUr : data.siteName);

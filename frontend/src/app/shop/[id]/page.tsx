@@ -9,6 +9,8 @@ import { useCart } from "@/context/CartContext";
 import { mockProducts } from "@/data/products";
 import ProductCard from "@/components/ProductCard";
 
+import { API_BASE_URL } from "@/config";
+
 interface ProductDetailProps {
   params: {
     id: string;
@@ -25,7 +27,7 @@ export default function ProductDetail({ params }: ProductDetailProps) {
 
   useEffect(() => {
     setIsLoading(true);
-    fetch(`http://localhost:8000/api/products/${params.id}/`)
+    fetch(`${API_BASE_URL}/products/${params.id}/`)
       .then((res) => {
         if (!res.ok) throw new Error("Product not found");
         return res.json();
@@ -33,7 +35,7 @@ export default function ProductDetail({ params }: ProductDetailProps) {
       .then((data) => {
         setProduct(data);
         // Fetch related products dynamically by category
-        fetch(`http://localhost:8000/api/products/?category=${encodeURIComponent(data.category)}`)
+        fetch(`${API_BASE_URL}/products/?category=${encodeURIComponent(data.category)}`)
           .then((r) => r.json())
           .then((relatedList) => {
             setRelatedProducts(

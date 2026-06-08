@@ -12,6 +12,8 @@ import AuthSection from "@/components/AuthSection";
 import ReviewSection from "@/components/ReviewSection";
 import { motion } from "framer-motion";
 
+import { API_BASE_URL } from "@/config";
+
 export default function Home() {
   const { language, direction } = useLanguage();
   const [heroTitle, setHeroTitle] = React.useState("");
@@ -19,7 +21,7 @@ export default function Home() {
   const [featuredProducts, setFeaturedProducts] = React.useState<any[]>([]);
 
   React.useEffect(() => {
-    fetch("http://localhost:8000/api/dashboard/settings/")
+    fetch(`${API_BASE_URL}/dashboard/settings/`)
       .then((res) => res.json())
       .then((data) => {
         setHeroTitle(language === "ur" ? data.heroTitleUr : data.heroTitle);
@@ -39,7 +41,7 @@ export default function Home() {
         );
       });
 
-    fetch("http://localhost:8000/api/products/?featured=true")
+    fetch(`${API_BASE_URL}/products/?featured=true`)
       .then((res) => res.json())
       .then((data) => {
         setFeaturedProducts(data.slice(0, 3));

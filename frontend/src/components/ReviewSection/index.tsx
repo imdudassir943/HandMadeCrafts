@@ -7,6 +7,8 @@ import { mockReviews } from "@/data/products";
 import { useLanguage } from "@/context/LanguageContext";
 import { motion, AnimatePresence } from "framer-motion";
 
+import { API_BASE_URL } from "@/config";
+
 export default function ReviewSection() {
   const { language } = useLanguage();
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -16,7 +18,7 @@ export default function ReviewSection() {
   const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/reviews/")
+    fetch(`${API_BASE_URL}/reviews/`)
       .then((res) => res.json())
       .then((data) => setReviews(data))
       .catch((err) => console.error("Failed to load reviews in ReviewSection", err));
@@ -54,7 +56,7 @@ export default function ReviewSection() {
       return;
     }
 
-    fetch("http://localhost:8000/api/reviews/", {
+    fetch(`${API_BASE_URL}/reviews/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

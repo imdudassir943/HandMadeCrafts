@@ -7,6 +7,8 @@ import { useLanguage } from "@/context/LanguageContext";
 import { mockProducts } from "@/data/products";
 import ProductCard from "@/components/ProductCard";
 
+import { API_BASE_URL } from "@/config";
+
 function ShopContent() {
   const { language } = useLanguage();
   const searchParams = useSearchParams();
@@ -23,7 +25,7 @@ function ShopContent() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/products/")
+    fetch(`${API_BASE_URL}/products/`)
       .then((res) => res.json())
       .then((data) => setProducts(data))
       .catch((err) => console.error("Failed to load products", err))

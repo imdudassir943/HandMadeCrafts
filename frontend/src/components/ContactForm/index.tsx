@@ -5,6 +5,8 @@ import { Send, CheckCircle2, MessageSquare } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { motion, AnimatePresence } from "framer-motion";
 
+import { API_BASE_URL } from "@/config";
+
 export default function ContactForm() {
   const { language } = useLanguage();
   const [name, setName] = useState("");
@@ -59,7 +61,7 @@ export default function ContactForm() {
 
     setIsSubmitting(true);
 
-    fetch("http://localhost:8000/api/contact/", {
+    fetch(`${API_BASE_URL}/contact/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
