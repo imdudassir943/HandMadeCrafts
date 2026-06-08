@@ -38,12 +38,15 @@ def seed():
     os.makedirs(artisans_media_dir, exist_ok=True)
     os.makedirs(site_media_dir, exist_ok=True)
 
-    # Source images path in frontend
+    # Source images path in frontend and fallback default_media
     frontend_images_dir = os.path.abspath(os.path.join(backend_dir, '..', 'frontend', 'public', 'images'))
+    default_media_dir = os.path.join(backend_dir, 'default_media')
 
     # Copy files helper
     def copy_file(filename, dest_folder):
         src = os.path.join(frontend_images_dir, filename)
+        if not os.path.exists(src):
+            src = os.path.join(default_media_dir, filename)
         dest = os.path.join(dest_folder, filename)
         if os.path.exists(src):
             shutil.copy(src, dest)
@@ -51,24 +54,22 @@ def seed():
         else:
             print(f"Source file not found: {src}")
 
-    if os.path.exists(frontend_images_dir):
-        copy_file('ceramic_vase.png', products_media_dir)
-        copy_file('wall_hanging.png', products_media_dir)
-        copy_file('wood_bowl.png', products_media_dir)
-        copy_file('brass_lantern.png', products_media_dir)
-        copy_file('artisan_portrait.png', artisans_media_dir)
-        # Copy one of them as a mock website logo
-        copy_file('ceramic_vase.png', site_media_dir)
-        # Rename it to logo.png
-        src_logo = os.path.join(site_media_dir, 'ceramic_vase.png')
-        dest_logo = os.path.join(site_media_dir, 'logo.png')
-        if os.path.exists(src_logo):
-            if os.path.exists(dest_logo):
-                os.remove(dest_logo)
-            os.rename(src_logo, dest_logo)
-            print("Set logo.png in media/site/")
-    else:
-        print(f"Frontend images directory not found: {frontend_images_dir}")
+    # Run copy files
+    copy_file('ceramic_vase.png', products_media_dir)
+    copy_file('wall_hanging.png', products_media_dir)
+    copy_file('wood_bowl.png', products_media_dir)
+    copy_file('brass_lantern.png', products_media_dir)
+    copy_file('artisan_portrait.png', artisans_media_dir)
+    # Copy one of them as a mock website logo
+    copy_file('ceramic_vase.png', site_media_dir)
+    # Rename it to logo.png
+    src_logo = os.path.join(site_media_dir, 'ceramic_vase.png')
+    dest_logo = os.path.join(site_media_dir, 'logo.png')
+    if os.path.exists(src_logo):
+        if os.path.exists(dest_logo):
+            os.remove(dest_logo)
+        os.rename(src_logo, dest_logo)
+        print("Set logo.png in media/site/")
 
     # 3. Create Site Settings
     site_settings = SiteSettings.load()
