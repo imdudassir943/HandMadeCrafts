@@ -173,3 +173,22 @@ STORAGES = {
 }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Production Security Configurations
+if not DEBUG:
+    # Tell Django it's running behind a reverse proxy that terminates SSL (like Railway's load balancer)
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    # Redirect HTTP traffic to HTTPS
+    SECURE_SSL_REDIRECT = True
+    # Ensure session and CSRF cookies are only sent over HTTPS
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    # Browser security headers
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    # HSTS settings (1 year duration)
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    # Clickjacking protection
+    X_FRAME_OPTIONS = 'DENY'
