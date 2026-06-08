@@ -18,6 +18,23 @@ export default function Navbar() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [brandName, setBrandName] = useState("");
+  const [logoUrl, setLogoUrl] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    fetch("http://localhost:8000/api/dashboard/settings/")
+      .then((res) => res.json())
+      .then((data) => {
+        setBrandName(language === "ur" ? data.siteNameUr : data.siteName);
+        if (data.logo) {
+          setLogoUrl(data.logo);
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to fetch settings in Navbar", err);
+        setBrandName(language === "ur" ? "اورا کرافٹس" : "Aura Crafts");
+      });
+  }, [language]);
 
 
   const t = {
@@ -96,9 +113,13 @@ export default function Navbar() {
         {/* Logo */}
         <div className="flex lg:flex-1">
           <Link href="/" className="flex items-center gap-2">
-            <span className="font-serif text-2xl font-bold tracking-wide text-brand-crimson dark:text-brand-gold transition-colors duration-200">
-              {t.brand}
-            </span>
+            {logoUrl ? (
+              <img src={logoUrl} alt={brandName} className="h-8 w-auto object-contain" />
+            ) : (
+              <span className="font-serif text-2xl font-bold tracking-wide text-brand-crimson dark:text-brand-gold transition-colors duration-200">
+                {brandName || t.brand}
+              </span>
+            )}
           </Link>
         </div>
 

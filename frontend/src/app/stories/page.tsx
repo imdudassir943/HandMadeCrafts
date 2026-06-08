@@ -7,6 +7,14 @@ import ArtisanBioCard from "@/components/ArtisanBioCard";
 
 export default function Stories() {
   const { language } = useLanguage();
+  const [products, setProducts] = React.useState<any[]>([]);
+
+  React.useEffect(() => {
+    fetch("http://localhost:8000/api/products/")
+      .then((res) => res.json())
+      .then((data) => setProducts(data))
+      .catch((err) => console.error("Failed to fetch products in Stories", err));
+  }, []);
 
   const t = {
     en: {
@@ -86,7 +94,7 @@ export default function Stories() {
       <main className="space-y-12 pb-12">
         {artisans.map((artisan, index) => {
           // Filter products made by this artisan
-          const artisanProducts = mockProducts.filter(
+          const artisanProducts = products.filter(
             (p) => p.artisan === artisan.productFilter
           );
 

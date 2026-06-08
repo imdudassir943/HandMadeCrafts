@@ -18,6 +18,17 @@ function ShopContent() {
   const [priceLimit, setPriceLimit] = useState(200);
   const [sortBy, setSortBy] = useState("default");
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+  
+  const [products, setProducts] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("http://localhost:8000/api/products/")
+      .then((res) => res.json())
+      .then((data) => setProducts(data))
+      .catch((err) => console.error("Failed to load products", err))
+      .finally(() => setIsLoading(false));
+  }, []);
 
   // Sync search query from URL on mount/change
   useEffect(() => {
@@ -87,7 +98,7 @@ function ShopContent() {
   ];
 
   // Perform filtration
-  const filteredProducts = mockProducts
+  const filteredProducts = products
     .filter((product) => {
       // 1. Search term match (English or Arabic fields)
       const query = searchTerm.toLowerCase();

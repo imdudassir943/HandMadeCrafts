@@ -27,6 +27,7 @@ export default function Checkout() {
   const [cardCvv, setCardCvv] = useState("");
 
   const [orderId, setOrderId] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const t = {
     en: {
@@ -92,13 +93,68 @@ export default function Checkout() {
     }
   };
 
-  const handlePaymentSubmit = (e: React.FormEvent) => {
+  const handlePaymentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (cardNumber && cardExpiry && cardCvv) {
-      const generatedId = `AC-${Math.floor(100000 + Math.random() * 900000)}`;
-      setOrderId(generatedId);
-      setStep("success");
-      clearCart();
+      setIsSubmitting(true);
+      try {
+        // Prepare items list
+        const items = cart.map(item => ({
+          product_id: item.product.id,
+          quantity: item.quantity
+        }));
+
+        const headers: Record<string, string> = {
+          "Content-Type": "application/json"
+        };
+        const token = localStorage.getItem("handmade_access_token");
+        if (token) {
+          headers["Authorization"] = `Bearer ${token}`;
+        }
+
+        // 1. Create Order
+        const orderRes = await fetch("http://localhost:8000/api/orders/", {
+          method: "POST",
+          headers,
+          body: JSON.stringify({
+            name: shippingName,
+            email: shippingEmail,
+            address: shippingAddress,
+            city: shippingCity,
+            country: shippingCountry,
+            items
+          })
+        });
+
+        if (!orderRes.ok) {
+          throw new Error("Failed to create order");
+        }
+
+        const orderData = await orderRes.json();
+
+        // 2. Process Payment
+        const paymentRes = await fetch("http://localhost:8000/api/payments/process/", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            order_number: orderData.order_number,
+            payment_method: "Card"
+          })
+        });
+
+        if (!paymentRes.ok) {
+          throw new Error("Payment processing failed");
+        }
+
+        setOrderId(orderData.order_number);
+        setStep("success");
+        clearCart();
+      } catch (err) {
+        console.error(err);
+        alert("Checkout failed. Please check backend server status.");
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -293,9 +349,10 @@ export default function Checkout() {
 
                     <button
                       type="submit"
-                      className="rounded-button bg-brand-crimson text-brand-cream px-6 py-2.5 font-semibold hover:bg-brand-crimson/95 shadow-md"
+                      disabled={isSubmitting}
+                      className="rounded-button bg-brand-crimson text-brand-cream px-6 py-2.5 font-semibold hover:bg-brand-crimson/95 shadow-md disabled:opacity-50"
                     >
-                      {t.submitBtn}
+                      {isSubmitting ? (language === "ur" ? "پروسیس ہو رہا ہے..." : "Processing...") : t.submitBtn}
                     </button>
                   </div>
                 </form>

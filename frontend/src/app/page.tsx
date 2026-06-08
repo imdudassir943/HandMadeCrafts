@@ -14,11 +14,43 @@ import { motion } from "framer-motion";
 
 export default function Home() {
   const { language, direction } = useLanguage();
+  const [heroTitle, setHeroTitle] = React.useState("");
+  const [heroSub, setHeroSub] = React.useState("");
+  const [featuredProducts, setFeaturedProducts] = React.useState<any[]>([]);
+
+  React.useEffect(() => {
+    fetch("http://localhost:8000/api/dashboard/settings/")
+      .then((res) => res.json())
+      .then((data) => {
+        setHeroTitle(language === "ur" ? data.heroTitleUr : data.heroTitle);
+        setHeroSub(language === "ur" ? data.heroSubUr : data.heroSub);
+      })
+      .catch((err) => {
+        console.error("Failed to load settings in Home", err);
+        setHeroTitle(
+          language === "ur"
+            ? "ہاتھ سے بنے شاہکار آپ کے خوبصورت گھر کے لیے"
+            : "Handcrafted Treasures for Your Sanctuary"
+        );
+        setHeroSub(
+          language === "ur"
+            ? "اپنے گھر کو دنیا بھر کے ماہر دستکاروں کی کہانیوں سے سجائیں۔ منتخب، پائیدار اور شاندار ہوم ڈیکور۔"
+            : "Immerse your space in the stories of global master craftsmen. Curated, sustainable, and heirloom-quality home decor."
+        );
+      });
+
+    fetch("http://localhost:8000/api/products/?featured=true")
+      .then((res) => res.json())
+      .then((data) => {
+        setFeaturedProducts(data.slice(0, 3));
+      })
+      .catch((err) => {
+        console.error("Failed to load products in Home", err);
+      });
+  }, [language]);
 
   const t = {
     en: {
-      heroTitle: "Handcrafted Treasures for Your Sanctuary",
-      heroSub: "Immerse your space in the stories of global master craftsmen. Curated, sustainable, and heirloom-quality home decor.",
       cta: "Shop the Collection",
       catTitle: "Browse by Category",
       catSub: "Explore items crafted by hand over weeks of focused artistry.",
@@ -30,8 +62,6 @@ export default function Home() {
       lighting: "Lighting",
     },
     ur: {
-      heroTitle: "ہاتھ سے بنے شاہکار آپ کے خوبصورت گھر کے لیے",
-      heroSub: "اپنے گھر کو دنیا بھر کے ماہر دستکاروں کی کہانیوں سے سجائیں۔ منتخب، پائیدار اور شاندار ہوم ڈیکور۔",
       cta: "کلیکشن خریدیں",
       catTitle: "زمرے کے لحاظ سے دیکھیں",
       catSub: "ہفتوں کی مہارت اور توجہ سے تیار کردہ ہاتھ سے بنی اشیاء دیکھیں۔",
@@ -43,9 +73,6 @@ export default function Home() {
       lighting: "لائٹس اور فانوس",
     },
   }[language];
-
-  // Pick 3 featured products to show
-  const featuredProducts = mockProducts.slice(0, 3);
 
   const categories = [
     { name: t.ceramics, image: "/images/ceramic_vase.png", href: "/shop?category=Ceramics" },
@@ -76,11 +103,11 @@ export default function Home() {
                 transition={{ duration: 0.6 }}
                 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] text-white"
               >
-                {t.heroTitle}
+                {heroTitle}
               </motion.h1>
               
               <p className="text-base sm:text-lg lg:text-xl text-brand-cream/80 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-                {t.heroSub}
+                {heroSub}
               </p>
 
               <div className="pt-4 flex flex-wrap justify-center lg:justify-start gap-4">

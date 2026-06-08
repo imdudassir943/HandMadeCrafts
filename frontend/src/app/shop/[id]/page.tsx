@@ -19,13 +19,34 @@ export default function ProductDetail({ params }: ProductDetailProps) {
   const { language, direction } = useLanguage();
   const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
-  const [product, setProduct] = useState<(typeof mockProducts)[0] | null>(null);
+  const [product, setProduct] = useState<any | null>(null);
+  const [relatedProducts, setRelatedProducts] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const found = mockProducts.find((p) => p.id === params.id);
-    if (found) {
-      setProduct(found);
-    }
+    setIsLoading(true);
+    fetch(`http://localhost:8000/api/products/${params.id}/`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Product not found");
+        return res.json();
+      })
+      .then((data) => {
+        setProduct(data);
+        // Fetch related products dynamically by category
+        fetch(`http://localhost:8000/api/products/?category=${encodeURIComponent(data.category)}`)
+          .then((r) => r.json())
+          .then((relatedList) => {
+            setRelatedProducts(
+              relatedList.filter((p: any) => String(p.id) !== String(data.id)).slice(0, 3)
+            );
+          })
+          .catch((err) => console.error("Failed to load related products", err));
+      })
+      .catch((err) => {
+        console.error("Failed to load product", err);
+        setProduct(null);
+      })
+      .finally(() => setIsLoading(false));
   }, [params.id]);
 
   if (!product) {
@@ -89,10 +110,7 @@ export default function ProductDetail({ params }: ProductDetailProps) {
     },
   }[language];
 
-  // Related products (exclude current, filter by category)
-  const relatedProducts = mockProducts
-    .filter((p) => p.category === product.category && p.id !== product.id)
-    .slice(0, 3);
+  // Related products loaded from state
 
   const incrementQty = () => setQuantity((prev) => prev + 1);
   const decrementQty = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));

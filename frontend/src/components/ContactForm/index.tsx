@@ -58,15 +58,32 @@ export default function ContactForm() {
     if (!name.trim() || !email.trim() || !message.trim()) return;
 
     setIsSubmitting(true);
-    // Simulate API request
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setShowSuccess(true);
-      setName("");
-      setEmail("");
-      setSubject("general");
-      setMessage("");
-    }, 1500);
+
+    fetch("http://localhost:8000/api/contact/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name, email, subject, message }),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to submit message");
+        return res.json();
+      })
+      .then(() => {
+        setShowSuccess(true);
+        setName("");
+        setEmail("");
+        setSubject("general");
+        setMessage("");
+      })
+      .catch((err) => {
+        console.error(err);
+        alert("Failed to send message. Please try again.");
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
   };
 
   return (

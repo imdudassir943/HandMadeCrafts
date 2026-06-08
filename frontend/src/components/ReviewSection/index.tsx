@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Star } from "lucide-react";
 import { Review } from "@/types";
 import { mockReviews } from "@/data/products";
@@ -9,11 +9,18 @@ import { motion, AnimatePresence } from "framer-motion";
 
 export default function ReviewSection() {
   const { language } = useLanguage();
-  const [reviews, setReviews] = useState<Review[]>(mockReviews);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [newAuthor, setNewAuthor] = useState("");
   const [newComment, setNewComment] = useState("");
   const [newRating, setNewRating] = useState(5);
   const [showSuccess, setShowSuccess] = useState(false);
+
+  useEffect(() => {
+    fetch("http://localhost:8000/api/reviews/")
+      .then((res) => res.json())
+      .then((data) => setReviews(data))
+      .catch((err) => console.error("Failed to load reviews in ReviewSection", err));
+  }, []);
 
   const t = {
     en: {
@@ -47,26 +54,35 @@ export default function ReviewSection() {
       return;
     }
 
-    const createdReview: Review = {
-      id: `r-user-${Date.now()}`,
-      author: newAuthor,
-      authorUr: newAuthor,
-      rating: newRating,
-      comment: newComment,
-      commentUr: newComment,
-      date: new Date().toLocaleDateString(language === "en" ? "en-US" : "ur-PK", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
+    fetch("http://localhost:8000/api/reviews/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        author: newAuthor,
+        author_ur: newAuthor,
+        rating: newRating,
+        comment: newComment,
+        comment_ur: newComment,
       }),
-    };
-
-    setReviews([createdReview, ...reviews]);
-    setNewAuthor("");
-    setNewComment("");
-    setNewRating(5);
-    setShowSuccess(true);
-    setTimeout(() => setShowSuccess(false), 4000);
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to submit review");
+        return res.json();
+      })
+      .then((data) => {
+        setReviews([data, ...reviews]);
+        setNewAuthor("");
+        setNewComment("");
+        setNewRating(5);
+        setShowSuccess(true);
+        setTimeout(() => setShowSuccess(false), 4000);
+      })
+      .catch((err) => {
+        console.error(err);
+        alert("Failed to submit review. Please try again.");
+      });
   };
 
   return (

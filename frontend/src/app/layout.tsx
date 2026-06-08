@@ -22,10 +22,24 @@ const playfair = Playfair_Display({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: "Aura Crafts - Premium Handmade Home Décor",
-  description: "Sourcing exquisite handmade home treasures crafted by skilled global artisans. High contrast, mobile-first, and fully accessible decor website.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  try {
+    const res = await fetch("http://localhost:8000/api/dashboard/settings/", { cache: "no-store" });
+    if (res.ok) {
+      const data = await res.json();
+      return {
+        title: data.siteTitle || "Aura Crafts - Premium Handmade Home Décor",
+        description: data.heroSub || "Sourcing exquisite handmade home treasures...",
+      };
+    }
+  } catch (e) {
+    console.error("Failed to load metadata dynamically", e);
+  }
+  return {
+    title: "Aura Crafts - Premium Handmade Home Décor",
+    description: "Sourcing exquisite handmade home treasures crafted by skilled global artisans.",
+  };
+}
 
 export default function RootLayout({
   children,
