@@ -17,10 +17,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / '.env')
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-m8lxy+&rpjzpr(c)x4@(7r+!x(!j_t=@=gc7xykuig954sz$df')
+_SECRET_KEY_DEFAULT = 'django-insecure-m8lxy+&rpjzpr(c)x4@(7r+!x(!j_t=@=gc7xykuig954sz$df'
+SECRET_KEY = os.getenv('SECRET_KEY', _SECRET_KEY_DEFAULT)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'True').lower() in ['true', '1']
+
+# In production, crash loudly if insecure defaults are still in use
+if not DEBUG:
+    if SECRET_KEY == _SECRET_KEY_DEFAULT or 'insecure' in SECRET_KEY:
+        raise ValueError(
+            "SECURITY ERROR: SECRET_KEY must be set to a secure value in production. "
+            "Generate one with: python -c \"import secrets; print(secrets.token_urlsafe(50))\""
+        )
 
 # Parse allowed hosts
 allowed_hosts_raw = os.getenv('ALLOWED_HOSTS', '*')
@@ -192,3 +201,44 @@ if not DEBUG:
     SECURE_HSTS_PRELOAD = True
     # Clickjacking protection
     X_FRAME_OPTIONS = 'DENY'
+
+# =============================================================================
+# Logging Configuration
+# Streams all WARNING+ level logs to stdout, which Railway captures centrally.
+# =============================================================================
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '[{levelname}] {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '[{levelname}] {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'WARNING',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'propagate': False,
+        },
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+    },
+}
