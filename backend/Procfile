@@ -1,2 +1,2 @@
-web: gunicorn handmade_backend.wsgi --bind 0.0.0.0:$PORT --workers 2 --timeout 120 --log-file -
-release: python manage.py collectstatic --noinput && python manage.py migrate --noinput
+web: python manage.py collectstatic --noinput && gunicorn handmade_backend.wsgi --bind 0.0.0.0:$PORT --workers 2 --timeout 120 --log-file -
+release: python manage.py migrate --noinput
