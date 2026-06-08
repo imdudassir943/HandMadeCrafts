@@ -2,14 +2,14 @@
 
 import React from "react";
 import { useLanguage } from "@/context/LanguageContext";
-import { mockProducts } from "@/data/products";
 import ArtisanBioCard from "@/components/ArtisanBioCard";
 
 import { API_BASE_URL } from "@/config";
+import { Product } from "@/types";
 
 export default function Stories() {
   const { language } = useLanguage();
-  const [products, setProducts] = React.useState<any[]>([]);
+  const [products, setProducts] = React.useState<Product[]>([]);
 
   React.useEffect(() => {
     fetch(`${API_BASE_URL}/products/`)

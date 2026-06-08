@@ -6,10 +6,10 @@ import Image from "next/image";
 import { ArrowLeft, ShoppingBag, ShieldCheck, Heart, Award, Star } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { useCart } from "@/context/CartContext";
-import { mockProducts } from "@/data/products";
 import ProductCard from "@/components/ProductCard";
 
 import { API_BASE_URL } from "@/config";
+import { Product } from "@/types";
 
 interface ProductDetailProps {
   params: {
@@ -21,12 +21,10 @@ export default function ProductDetail({ params }: ProductDetailProps) {
   const { language, direction } = useLanguage();
   const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
-  const [product, setProduct] = useState<any | null>(null);
-  const [relatedProducts, setRelatedProducts] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [product, setProduct] = useState<Product | null>(null);
+  const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    setIsLoading(true);
     fetch(`${API_BASE_URL}/products/${params.id}/`)
       .then((res) => {
         if (!res.ok) throw new Error("Product not found");
@@ -39,7 +37,7 @@ export default function ProductDetail({ params }: ProductDetailProps) {
           .then((r) => r.json())
           .then((relatedList) => {
             setRelatedProducts(
-              relatedList.filter((p: any) => String(p.id) !== String(data.id)).slice(0, 3)
+              relatedList.filter((p: Product) => String(p.id) !== String(data.id)).slice(0, 3)
             );
           })
           .catch((err) => console.error("Failed to load related products", err));
@@ -47,8 +45,7 @@ export default function ProductDetail({ params }: ProductDetailProps) {
       .catch((err) => {
         console.error("Failed to load product", err);
         setProduct(null);
-      })
-      .finally(() => setIsLoading(false));
+      });
   }, [params.id]);
 
   if (!product) {

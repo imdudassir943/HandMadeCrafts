@@ -99,7 +99,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           },
         };
       }
-    } catch (e) {
+    } catch {
       return {
         success: false,
         error: {
@@ -140,7 +140,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           },
         };
       }
-    } catch (e) {
+    } catch {
       return {
         success: false,
         error: {

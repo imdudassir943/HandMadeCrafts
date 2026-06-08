@@ -4,10 +4,10 @@ import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Filter, RotateCcw, Search } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
-import { mockProducts } from "@/data/products";
 import ProductCard from "@/components/ProductCard";
 
 import { API_BASE_URL } from "@/config";
+import { Product } from "@/types";
 
 function ShopContent() {
   const { language } = useLanguage();
@@ -21,15 +21,13 @@ function ShopContent() {
   const [sortBy, setSortBy] = useState("default");
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   
-  const [products, setProducts] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
     fetch(`${API_BASE_URL}/products/`)
       .then((res) => res.json())
       .then((data) => setProducts(data))
-      .catch((err) => console.error("Failed to load products", err))
-      .finally(() => setIsLoading(false));
+      .catch((err) => console.error("Failed to load products", err));
   }, []);
 
   // Sync search query from URL on mount/change

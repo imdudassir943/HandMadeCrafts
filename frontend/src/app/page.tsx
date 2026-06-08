@@ -5,7 +5,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
-import { mockProducts } from "@/data/products";
 import ProductCard from "@/components/ProductCard";
 import ArtisanShowcase from "@/components/ArtisanShowcase";
 import AuthSection from "@/components/AuthSection";
@@ -13,12 +12,13 @@ import ReviewSection from "@/components/ReviewSection";
 import { motion } from "framer-motion";
 
 import { API_BASE_URL } from "@/config";
+import { Product } from "@/types";
 
 export default function Home() {
   const { language, direction } = useLanguage();
   const [heroTitle, setHeroTitle] = React.useState("");
   const [heroSub, setHeroSub] = React.useState("");
-  const [featuredProducts, setFeaturedProducts] = React.useState<any[]>([]);
+  const [featuredProducts, setFeaturedProducts] = React.useState<Product[]>([]);
 
   React.useEffect(() => {
     fetch(`${API_BASE_URL}/dashboard/settings/`)

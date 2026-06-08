@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import { Star } from "lucide-react";
 import { Review } from "@/types";
-import { mockReviews } from "@/data/products";
 import { useLanguage } from "@/context/LanguageContext";
 import { motion, AnimatePresence } from "framer-motion";
 
