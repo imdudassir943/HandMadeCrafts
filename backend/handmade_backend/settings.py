@@ -127,6 +127,10 @@ REST_FRAMEWORK = {
 }
 
 # SimpleJWT Configuration
+# JWT_SECRET_KEY is a dedicated signing key separate from Django's SECRET_KEY.
+# Falls back to SECRET_KEY locally if JWT_SECRET_KEY is not set.
+_JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', SECRET_KEY)
+
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
@@ -134,7 +138,7 @@ SIMPLE_JWT = {
     'BLACKLIST_AFTER_ROTATION': False,
     'UPDATE_LAST_LOGIN': False,
     'ALGORITHM': 'HS256',
-    'SIGNING_KEY': SECRET_KEY,
+    'SIGNING_KEY': _JWT_SECRET_KEY,  # Uses dedicated JWT key, not Django SECRET_KEY
     'AUTH_HEADER_TYPES': ('Bearer',),
     'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
     'USER_ID_FIELD': 'id',
