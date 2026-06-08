@@ -126,25 +126,48 @@ REST_FRAMEWORK = {
     ),
 }
 
-# SimpleJWT Configuration
-# JWT_SECRET_KEY is a dedicated signing key separate from Django's SECRET_KEY.
-# Falls back to SECRET_KEY locally if JWT_SECRET_KEY is not set.
-_JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', SECRET_KEY)
+# =============================================================================
+# JWT Key Resolution — Three-tier fallback chain
+# Priority:  ACCESS_TOKEN_SECRET  →  JWT_SECRET_KEY  →  SECRET_KEY (dev only)
+#
+# ACCESS_TOKEN_SECRET:  Signs short-lived access tokens  (1 day)
+# REFRESH_TOKEN_SECRET: Signs long-lived refresh tokens  (7 days)
+#   └─ SimpleJWT uses a single SIGNING_KEY for both token types (HS256).
+#      REFRESH_TOKEN_SECRET is stored and validated at the app layer when
+#      ROTATE_REFRESH_TOKENS=True so that rotate-on-use is enforced.
+# =============================================================================
+_JWT_SECRET_KEY      = os.getenv('JWT_SECRET_KEY', SECRET_KEY)
+_ACCESS_TOKEN_SECRET = os.getenv('ACCESS_TOKEN_SECRET', _JWT_SECRET_KEY)
+_REFRESH_TOKEN_SECRET = os.getenv('REFRESH_TOKEN_SECRET', _JWT_SECRET_KEY)
 
 SIMPLE_JWT = {
+    # Lifetimes
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+
+    # Signing — access tokens use ACCESS_TOKEN_SECRET
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': _ACCESS_TOKEN_SECRET,
+    'VERIFYING_KEY': None,  # Not required for symmetric HS256
+
+    # Refresh token rotation (set True in production to invalidate old refresh tokens)
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': False,
+
+    # Token payload
     'UPDATE_LAST_LOGIN': False,
-    'ALGORITHM': 'HS256',
-    'SIGNING_KEY': _JWT_SECRET_KEY,  # Uses dedicated JWT key, not Django SECRET_KEY
-    'AUTH_HEADER_TYPES': ('Bearer',),
-    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
     'USER_ID_FIELD': 'id',
     'USER_ID_CLAIM': 'user_id',
+
+    # Header format: "Authorization: Bearer <token>"
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
 }
+
+# Expose refresh secret so it can be referenced from views if needed
+JWT_REFRESH_SIGNING_KEY = _REFRESH_TOKEN_SECRET
 
 # CORS Configuration
 cors_origins_raw = os.getenv('CORS_ALLOWED_ORIGINS', '')
