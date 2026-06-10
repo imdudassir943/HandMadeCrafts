@@ -47,6 +47,7 @@ ALLOWED_HOSTS = [h.strip() for h in allowed_hosts_raw.split(',') if h.strip()]
 
 # Application definition
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -87,7 +88,7 @@ ROOT_URLCONF = 'handmade_backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'handmade_backend' / 'templates'],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -295,3 +296,89 @@ LOGGING = {
         },
     },
 }
+
+# =============================================================================
+# Django Jazzmin Admin Theme Configurations
+# =============================================================================
+JAZZMIN_SETTINGS = {
+    "site_title": "HandMadeCrafts Admin",
+    "site_header": "HandMadeCrafts",
+    "site_brand": "HandMadeCrafts Portal",
+    "site_logo_classes": "img-circle",
+    "site_icon": None,
+    "welcome_sign": "Welcome to HandMadeCrafts Administration Portal",
+    "copyright": "HandMadeCrafts Ltd",
+    "search_model": ["accounts.User", "products.Product"],
+    "user_avatar": None,
+    "topmenu_links": [
+        {"name": "Home",  "url": "admin:index", "permissions": ["auth.view_user"]},
+        {"name": "View Root Website", "url": "home", "new_window": False},
+    ],
+    "show_sidebar": True,
+    "navigation_expanded": True,
+    "hide_apps": [],
+    "hide_models": [],
+    "order_with_respect_to": ["accounts", "products", "orders", "cart", "reviews", "payments", "dashboard", "contact"],
+    "icons": {
+        "accounts": "fas fa-users-cog",
+        "accounts.user": "fas fa-user",
+        "products": "fas fa-box-open",
+        "products.product": "fas fa-tag",
+        "products.category": "fas fa-folder",
+        "products.productimage": "fas fa-image",
+        "orders": "fas fa-shopping-bag",
+        "orders.order": "fas fa-receipt",
+        "orders.orderitem": "fas fa-list-ul",
+        "cart": "fas fa-shopping-cart",
+        "cart.cart": "fas fa-cart-arrow-down",
+        "cart.cartitem": "fas fa-shopping-basket",
+        "reviews": "fas fa-star",
+        "reviews.review": "fas fa-comment-alt",
+        "payments": "fas fa-credit-card",
+        "payments.payment": "fas fa-money-check-alt",
+        "dashboard": "fas fa-tachometer-alt",
+        "dashboard.sitesettings": "fas fa-cogs",
+        "contact": "fas fa-envelope",
+        "contact.contactmessage": "fas fa-comment-dots",
+    },
+    "default_icon_parents": "fas fa-chevron-circle-right",
+    "default_icon_children": "fas fa-circle",
+    "custom_css": None,
+    "custom_js": None,
+    "show_ui_builder": False,
+    "changeform_format": "horizontal_tabs",
+    "changeform_format_overrides": {
+        "auth.user": "collapsible",
+        "auth.group": "default",
+    },
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": False,
+    "footer_small_text": False,
+    "body_small_text": False,
+    "brand_small_text": False,
+    "brand_colour": "navbar-success",
+    "actions_colour": "navbar-success",
+    "navbar": "navbar-dark navbar-success",
+    "no_navbar_border": False,
+    "navbar_double_size": False,
+    "sidebar": "sidebar-dark-success",
+    "sidebar_nav_small_text": False,
+    "sidebar_disable_expand": False,
+    "sidebar_nav_child_indent": True,
+    "sidebar_nav_compact_style": False,
+    "sidebar_nav_legacy_style": False,
+    "sidebar_nav_flat_style": False,
+    "theme": "flatly",
+    "dark_mode_theme": None,
+    "button_classes": {
+        "primary": "btn-success",
+        "secondary": "btn-outline-secondary",
+        "info": "btn-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success"
+    }
+}
+
