@@ -92,13 +92,29 @@ TEMPLATES = [
 WSGI_APPLICATION = 'handmade_backend.wsgi.application'
 
 # Database
-# Connect to Railway Postgres if DATABASE_URL is set, otherwise use local sqlite
+# Connect to Railway Postgres using DATABASE_URL or individual PG/POSTGRES environment variables
+db_config = dj_database_url.config(
+    default=f"sqlite:///{BASE_DIR}/db.sqlite3",
+    conn_max_age=600
+)
+
+# Overwrite / update with individual Railway PostgreSQL variables if present.
+# This prevents authentication failures if DATABASE_URL has an outdated password.
+pg_host = os.getenv('PGHOST') or os.getenv('POSTGRES_HOST')
+if pg_host:
+    db_config.update({
+        'ENGINE': 'django.db.backends.postgresql',
+        'HOST': pg_host,
+        'PORT': os.getenv('PGPORT') or os.getenv('POSTGRES_PORT') or db_config.get('PORT', '5432'),
+        'USER': os.getenv('PGUSER') or os.getenv('POSTGRES_USER') or db_config.get('USER', 'postgres'),
+        'PASSWORD': os.getenv('PGPASSWORD') or os.getenv('POSTGRES_PASSWORD') or db_config.get('PASSWORD'),
+        'NAME': os.getenv('PGDATABASE') or os.getenv('POSTGRES_DB') or db_config.get('NAME', 'railway'),
+    })
+
 DATABASES = {
-    'default': dj_database_url.config(
-        default=f"sqlite:///{BASE_DIR}/db.sqlite3",
-        conn_max_age=600
-    )
+    'default': db_config
 }
+
 
 # Custom User Model
 AUTH_USER_MODEL = 'accounts.User'
