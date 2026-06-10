@@ -16,6 +16,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Load environment variables from .env file if it exists
 load_dotenv(BASE_DIR / '.env')
 
+import sys
+print("=== STARTING DJANGO APPLICATION ===", file=sys.stderr)
+print(f"DEBUG={os.getenv('DEBUG')}", file=sys.stderr)
+print(f"PORT={os.getenv('PORT')}", file=sys.stderr)
+print(f"DATABASE_URL is set: {bool(os.getenv('DATABASE_URL'))}", file=sys.stderr)
+print(f"PGHOST is set: {bool(os.getenv('PGHOST'))}", file=sys.stderr)
+print(f"PGPASSWORD is set: {bool(os.getenv('PGPASSWORD'))}", file=sys.stderr)
+print("===================================", file=sys.stderr)
+
+
 # SECURITY WARNING: keep the secret key used in production secret!
 _SECRET_KEY_DEFAULT = 'django-insecure-m8lxy+&rpjzpr(c)x4@(7r+!x(!j_t=@=gc7xykuig954sz$df'
 SECRET_KEY = os.getenv('SECRET_KEY', _SECRET_KEY_DEFAULT)
