@@ -23,8 +23,12 @@ export default function ProductDetail({ params }: ProductDetailProps) {
   const [quantity, setQuantity] = useState(1);
   const [product, setProduct] = useState<Product | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    setIsLoading(true);
+    setError(null);
     fetch(`${API_BASE_URL}/products/${params.id}/`)
       .then((res) => {
         if (!res.ok) throw new Error("Product not found");
@@ -32,6 +36,7 @@ export default function ProductDetail({ params }: ProductDetailProps) {
       })
       .then((data) => {
         setProduct(data);
+        setIsLoading(false);
         // Fetch related products dynamically by category
         fetch(`${API_BASE_URL}/products/?category=${encodeURIComponent(data.category)}`)
           .then((r) => r.json())
@@ -45,10 +50,26 @@ export default function ProductDetail({ params }: ProductDetailProps) {
       .catch((err) => {
         console.error("Failed to load product", err);
         setProduct(null);
+        setError("not_found");
+        setIsLoading(false);
       });
   }, [params.id]);
 
-  if (!product) {
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center py-40 space-y-4 max-w-7xl mx-auto px-4">
+        <div className="relative flex items-center justify-center h-12 w-12">
+          <div className="absolute h-12 w-12 animate-ping rounded-full bg-brand-gold/20" />
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-brand-gold border-t-brand-crimson" />
+        </div>
+        <p className="font-serif text-sm font-medium text-brand-espresso/80 dark:text-brand-cream/80 animate-pulse">
+          {language === "en" ? "Fetching artisan details..." : "تحفہ کی تفصیلات لوڈ ہو رہی ہیں..."}
+        </p>
+      </div>
+    );
+  }
+
+  if (error || !product) {
     return (
       <div className="mx-auto max-w-7xl px-4 py-32 text-center">
         <h1 className="text-3xl font-serif font-bold text-brand-espresso mb-4">
