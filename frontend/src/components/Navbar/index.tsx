@@ -114,14 +114,17 @@ export default function Navbar() {
 
         {/* Logo */}
         <div className="flex lg:flex-1">
-          <Link href="/" className="flex items-center gap-2">
-            {logoUrl ? (
-              <img src={logoUrl} alt={brandName} className="h-8 w-auto object-contain" />
-            ) : (
-              <span className="font-serif text-2xl font-bold tracking-wide text-brand-crimson dark:text-brand-gold transition-colors duration-200">
-                {brandName || t.brand}
-              </span>
+          <Link href="/" className="flex items-center gap-2.5">
+            {logoUrl && (
+              <img
+                src={logoUrl}
+                alt={brandName || t.brand}
+                className="h-9 w-9 rounded-full object-cover border border-brand-sienna/10"
+              />
             )}
+            <span className="font-serif text-2xl font-bold tracking-wide text-brand-crimson dark:text-brand-gold transition-colors duration-200">
+              {brandName || t.brand}
+            </span>
           </Link>
         </div>
 
