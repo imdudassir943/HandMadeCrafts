@@ -34,15 +34,15 @@ class Product(models.Model):
 
     @property
     def average_rating(self):
-        reviews = self.reviews.all()
-        if not reviews.exists():
+        reviews = list(self.reviews.all())
+        if not reviews:
             return 0.0
         total = sum(review.rating for review in reviews)
-        return round(total / reviews.count(), 1)
+        return round(total / len(reviews), 1)
 
     @property
     def reviews_count(self):
-        return self.reviews.count()
+        return len(self.reviews.all())
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='additional_images')

@@ -4,7 +4,7 @@ from .models import Category, Product
 from .serializers import CategorySerializer, ProductSerializer
 
 class ProductViewSet(viewsets.ModelViewSet):
-    queryset = Product.objects.all().order_by('-created_at')
+    queryset = Product.objects.select_related('category').prefetch_related('reviews', 'additional_images').all().order_by('-created_at')
     serializer_class = ProductSerializer
 
     def get_permissions(self):
@@ -13,7 +13,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         return [permissions.IsAdminUser()]
 
     def get_queryset(self):
-        queryset = Product.objects.all().order_by('-created_at')
+        queryset = Product.objects.select_related('category').prefetch_related('reviews', 'additional_images').all().order_by('-created_at')
         category_name = self.request.query_params.get('category', None)
         search_query = self.request.query_params.get('search', None)
         featured = self.request.query_params.get('featured', None)
