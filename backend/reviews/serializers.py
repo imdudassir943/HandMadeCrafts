@@ -3,10 +3,12 @@ from .models import Review
 
 class ReviewSerializer(serializers.ModelSerializer):
     date = serializers.SerializerMethodField()
+    authorUr = serializers.CharField(source='author_ur', required=False, allow_blank=True)
+    commentUr = serializers.CharField(source='comment_ur', required=False, allow_blank=True)
 
     class Meta:
         model = Review
-        fields = ['id', 'product', 'author', 'author_ur', 'rating', 'comment', 'comment_ur', 'date']
+        fields = ['id', 'product', 'author', 'authorUr', 'rating', 'comment', 'commentUr', 'date']
         read_only_fields = ['id', 'date']
 
     def get_date(self, obj):

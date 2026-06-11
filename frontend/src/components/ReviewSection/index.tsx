@@ -62,10 +62,10 @@ export default function ReviewSection() {
       },
       body: JSON.stringify({
         author: newAuthor,
-        author_ur: newAuthor,
+        authorUr: newAuthor,
         rating: newRating,
         comment: newComment,
-        comment_ur: newComment,
+        commentUr: newComment,
       }),
     })
       .then((res) => {
