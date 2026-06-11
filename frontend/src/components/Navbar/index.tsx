@@ -127,15 +127,29 @@ export default function Navbar() {
 
         {/* Desktop Navigation */}
         <nav className="hidden lg:flex lg:gap-x-8">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-sm font-medium text-brand-espresso hover:text-brand-gold dark:text-brand-cream dark:hover:text-brand-gold transition-colors duration-200"
-            >
-              {link.label}
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+            const isActive = link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`relative py-1 text-sm font-semibold transition-colors duration-200 ${
+                  isActive
+                    ? "text-brand-crimson dark:text-brand-gold"
+                    : "text-brand-espresso hover:text-brand-gold dark:text-brand-cream dark:hover:text-brand-gold"
+                }`}
+              >
+                <span>{link.label}</span>
+                {isActive && (
+                  <motion.span
+                    layoutId="desktop-active-underline"
+                    className="absolute -bottom-1 left-0 right-0 h-[2px] rounded-full bg-brand-crimson dark:bg-brand-gold"
+                    transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                  />
+                )}
+              </Link>
+            );
+          })}
         </nav>
 
         {/* Actions */}
@@ -301,16 +315,27 @@ export default function Navbar() {
                 </button>
               </form>
 
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="block rounded-md px-3 py-2 text-base font-medium text-brand-espresso hover:bg-brand-cream/20 hover:text-brand-gold dark:text-brand-cream dark:hover:text-brand-gold"
-                >
-                  {link.label}
-                </Link>
-              ))}
+              {navLinks.map((link) => {
+                const isActive = link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`block rounded-md px-3 py-2 text-base font-medium transition-colors border-l-2 ${
+                      isActive
+                        ? "bg-brand-cream/20 text-brand-crimson border-brand-crimson dark:text-brand-gold dark:border-brand-gold"
+                        : "border-transparent text-brand-espresso hover:bg-brand-cream/10 hover:text-brand-gold dark:text-brand-cream dark:hover:text-brand-gold"
+                    }`}
+                    style={{
+                      borderLeftWidth: direction === "rtl" ? 0 : "2px",
+                      borderRightWidth: direction === "rtl" ? "2px" : 0,
+                    }}
+                  >
+                    {link.label}
+                  </Link>
+                );
+              })}
 
               <div className="border-t border-brand-sienna/10 dark:border-brand-gold/10 pt-2 mt-2">
                 {user ? (
