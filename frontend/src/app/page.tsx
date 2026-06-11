@@ -9,6 +9,7 @@ import ProductCard from "@/components/ProductCard";
 import ArtisanShowcase from "@/components/ArtisanShowcase";
 import AuthSection from "@/components/AuthSection";
 import ReviewSection from "@/components/ReviewSection";
+import CategoryCard from "@/components/CategoryCard";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 
 import { API_BASE_URL } from "@/config";
@@ -211,43 +212,32 @@ export default function Home() {
       </section>
 
       {/* 2. Categories Section */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <h2 className="text-3xl font-serif font-bold text-brand-espresso mb-3">
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 overflow-hidden">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="text-center max-w-3xl mx-auto mb-12"
+        >
+          <h2 className="text-3xl font-serif font-bold text-brand-espresso dark:text-brand-cream mb-3">
             {t.catTitle}
           </h2>
-          <p className="text-sm sm:text-base text-brand-sienna">
+          <p className="text-sm sm:text-base text-brand-sienna dark:text-brand-gold">
             {t.catSub}
           </p>
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-          {categories.map((cat) => (
-            <motion.div
+          {categories.map((cat, idx) => (
+            <CategoryCard
               key={cat.name}
-              whileHover={{ scale: 1.02 }}
-              className="group relative aspect-[3/4] overflow-hidden rounded-card border border-brand-sienna/5 bg-brand-cream/5 shadow-warm"
-            >
-              <Image
-                src={cat.image}
-                alt={cat.name}
-                fill
-                className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-                sizes="(max-width: 768px) 50vw, 25vw"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-brand-espresso/80 via-brand-espresso/35 to-transparent" />
-              <div className="absolute bottom-4 inset-x-4 flex flex-col justify-end text-center">
-                <h3 className="font-serif text-lg sm:text-xl font-bold text-white mb-2">
-                  {cat.name}
-                </h3>
-                <Link
-                  href={cat.href}
-                  className="text-xs font-semibold text-brand-gold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:text-white"
-                >
-                  {language === "en" ? "Explore" : "تفصیل دیکھیں"} &rarr;
-                </Link>
-              </div>
-            </motion.div>
+              name={cat.name}
+              image={cat.image}
+              href={cat.href}
+              language={language}
+              index={idx}
+            />
           ))}
         </div>
       </section>
