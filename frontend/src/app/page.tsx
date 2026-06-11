@@ -9,7 +9,7 @@ import ProductCard from "@/components/ProductCard";
 import ArtisanShowcase from "@/components/ArtisanShowcase";
 import AuthSection from "@/components/AuthSection";
 import ReviewSection from "@/components/ReviewSection";
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 
 import { API_BASE_URL } from "@/config";
 import { Product } from "@/types";
@@ -19,6 +19,41 @@ export default function Home() {
   const [heroTitle, setHeroTitle] = React.useState("");
   const [heroSub, setHeroSub] = React.useState("");
   const [featuredProducts, setFeaturedProducts] = React.useState<Product[]>([]);
+
+  // Parallax Motion Values
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  // Smooth spring configuration to prevent jitter
+  const springConfig = { damping: 50, stiffness: 300, mass: 0.5 };
+  const mouseXSpring = useSpring(mouseX, springConfig);
+  const mouseYSpring = useSpring(mouseY, springConfig);
+
+  // Background dots move slightly in the opposite direction (subtle, low intensity)
+  const bgX = useTransform(mouseXSpring, [-400, 400], [12, -12]);
+  const bgY = useTransform(mouseYSpring, [-400, 400], [12, -12]);
+
+  // Hero image moves in the same direction (slightly more pronounced)
+  const imageX = useTransform(mouseXSpring, [-400, 400], [-25, 25]);
+  const imageY = useTransform(mouseYSpring, [-400, 400], [-25, 25]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const { clientX, clientY, currentTarget } = e;
+    const { left, top, width, height } = currentTarget.getBoundingClientRect();
+    
+    // Relative coordinates from the center of the container
+    const x = clientX - left - width / 2;
+    const y = clientY - top - height / 2;
+    
+    mouseX.set(x);
+    mouseY.set(y);
+  };
+
+  const handleMouseLeave = () => {
+    // Return smoothly to the center
+    mouseX.set(0);
+    mouseY.set(0);
+  };
 
   React.useEffect(() => {
     fetch(`${API_BASE_URL}/dashboard/settings/`)
@@ -86,9 +121,16 @@ export default function Home() {
   return (
     <div className="space-y-16 sm:space-y-24 pb-12">
       {/* 1. Hero Section */}
-      <section className="relative overflow-hidden bg-brand-espresso text-brand-cream py-20 lg:py-32">
-        {/* Decorative background vectors */}
-        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#ffe6a7_1px,transparent_1px)] [background-size:24px_24px]" />
+      <section
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        className="relative overflow-hidden bg-brand-espresso text-brand-cream py-20 lg:py-32"
+      >
+        {/* Decorative background vectors (moves opposite) */}
+        <motion.div
+          style={{ x: bgX, y: bgY, scale: 1.05 }}
+          className="absolute inset-0 opacity-10 bg-[radial-gradient(#ffe6a7_1px,transparent_1px)] [background-size:24px_24px]"
+        />
         
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:items-center">
@@ -123,9 +165,12 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Hero Interactive Collage */}
+            {/* Hero Interactive Collage (moves with cursor) */}
             <div className="lg:col-span-5 relative hidden lg:flex justify-center">
-              <div className="relative w-80 h-96">
+              <motion.div
+                style={{ x: imageX, y: imageY }}
+                className="relative w-80 h-96"
+              >
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -159,7 +204,7 @@ export default function Home() {
                     </p>
                   </div>
                 </motion.div>
-              </div>
+              </motion.div>
             </div>
           </div>
         </div>
