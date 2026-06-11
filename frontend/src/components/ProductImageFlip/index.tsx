@@ -22,7 +22,7 @@ export default function ProductImageFlip({ product, language }: ProductImageFlip
 
   const t = {
     en: {
-      flipHint: "Hover / Click to Flip",
+      flipHint: "Hover to Flip",
       makerTitle: "Meet the Maker",
       certTitle: "Artisan Certification",
       certSub: "100% Handcrafted Heritage",
