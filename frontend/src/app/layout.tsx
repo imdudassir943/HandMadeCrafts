@@ -9,6 +9,7 @@ import Footer from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
 import ThemeToggle from "@/components/ThemeToggle";
 import InteractiveCursor from "@/components/InteractiveCursor";
+import InteractiveParticles from "@/components/InteractiveParticles";
 import "./globals.css";
 
 const inter = Inter({
@@ -79,6 +80,7 @@ export default function RootLayout({
                 <CartDrawer />
                 <ThemeToggle />
                 <InteractiveCursor />
+                <InteractiveParticles />
                 <Footer />
               </body>
             </html>
