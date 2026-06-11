@@ -7,6 +7,7 @@ import { ArrowLeft, ShoppingBag, ShieldCheck, Heart, Award, Star } from "lucide-
 import { useLanguage } from "@/context/LanguageContext";
 import { useCart } from "@/context/CartContext";
 import ProductCard from "@/components/ProductCard";
+import ProductImageFlip from "@/components/ProductImageFlip";
 
 import { API_BASE_URL } from "@/config";
 import { Product } from "@/types";
@@ -150,15 +151,8 @@ export default function ProductDetail({ params }: ProductDetailProps) {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start mb-16">
         {/* Product Image Panel */}
-        <div className="lg:col-span-6 relative aspect-square w-full overflow-hidden rounded-card bg-brand-cream/10 border border-brand-sienna/10 shadow-warm">
-          <Image
-            src={product.image}
-            alt={name}
-            fill
-            className="object-cover object-center"
-            sizes="(max-width: 1024px) 100vw, 50vw"
-            priority
-          />
+        <div className="lg:col-span-6">
+          <ProductImageFlip product={product} language={language} />
         </div>
 
         {/* Product Details Panel */}
