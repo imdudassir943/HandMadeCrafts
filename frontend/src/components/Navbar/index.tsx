@@ -100,7 +100,7 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-brand-sienna/10 bg-white/80 backdrop-blur-md dark:bg-brand-espresso/80 shadow-warm">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         {/* Mobile menu toggle */}
         <button
           type="button"
@@ -141,7 +141,10 @@ export default function Navbar() {
         {/* Actions */}
         <div className="flex flex-1 items-center justify-end gap-x-4 sm:gap-x-6">
           {/* Search bar (Desktop) */}
-          <form onSubmit={handleSearchSubmit} className="relative hidden sm:block max-w-xs w-full">
+          <form
+            onSubmit={handleSearchSubmit}
+            className="relative hidden sm:block w-full max-w-[180px] lg:max-w-[160px] xl:max-w-[240px] 2xl:max-w-xs transition-all duration-300 focus-within:max-w-[220px] focus-within:lg:max-w-[220px] focus-within:xl:max-w-[300px] focus-within:2xl:max-w-xs"
+          >
             <input
               type="text"
               placeholder={t.search}
