@@ -17,6 +17,7 @@ interface ProductCardProps {
 export default function ProductCard({ product, index }: ProductCardProps) {
   const { language } = useLanguage();
   const { addToCart } = useCart();
+  const [isHovered, setIsHovered] = React.useState(false);
 
   const name = language === "ur" ? product.nameUr : product.name;
   const category = language === "ur" ? product.categoryUr : product.category;
@@ -41,6 +42,10 @@ export default function ProductCard({ product, index }: ProductCardProps) {
   const springConfig = { damping: 20, stiffness: 150, mass: 0.6 };
   const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [8, -8]), springConfig);
   const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-8, 8]), springConfig);
+
+  // Elastic magnetic pull translation springs
+  const translateX = useSpring(useTransform(x, [-0.5, 0.5], [-6, 6]), springConfig);
+  const translateY = useSpring(useTransform(y, [-0.5, 0.5], [-6, 6]), springConfig);
 
   // Spotlight position relative coordinates
   const shineX = useSpring(useTransform(x, [-0.5, 0.5], ["0%", "100%"]), springConfig);
@@ -87,16 +92,28 @@ export default function ProductCard({ product, index }: ProductCardProps) {
     >
       <motion.div
         onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => {
+          handleMouseLeave();
+          setIsHovered(false);
+        }}
         style={{
           rotateX,
           rotateY,
+          x: translateX,
+          y: translateY,
           transformStyle: "preserve-3d",
         }}
         whileHover="hover"
         initial="initial"
         className="group relative flex flex-col flex-1 overflow-hidden rounded-card bg-white dark:bg-brand-espresso border border-brand-sienna/10 dark:border-brand-cream/10 shadow-warm hover:shadow-warm-hover hover:border-brand-sienna/20 dark:hover:border-brand-gold/30 transition-all duration-300 ease-out"
       >
+        {/* Glowing Halo Aura Outline Border on Hover */}
+        <div className="absolute inset-0 rounded-card opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-30">
+          <div className="absolute inset-0 border border-brand-gold/40 rounded-card" />
+          <div className="absolute -inset-[1.5px] bg-gradient-to-r from-brand-gold/45 via-brand-crimson/35 to-brand-gold/45 rounded-card blur-[3px] animate-spin [animation-duration:12s] -z-10" />
+        </div>
+
         {/* Product Image Panel */}
         <div 
           className="relative aspect-square w-full overflow-hidden bg-brand-cream/10"
@@ -142,7 +159,7 @@ export default function ProductCard({ product, index }: ProductCardProps) {
           className="absolute inset-0 pointer-events-none"
         />
 
-        {/* Sheen sweep animation sweep on hover */}
+        {/* Sheen sweep animation on hover */}
         <motion.div
           style={{ transform: "translateZ(10px)" }}
           className="absolute inset-0 bg-[linear-gradient(110deg,transparent_30%,rgba(255,255,255,0.15)_40%,rgba(255,255,255,0.2)_50%,rgba(255,255,255,0.15)_60%,transparent_70%)] pointer-events-none"
@@ -158,6 +175,39 @@ export default function ProductCard({ product, index }: ProductCardProps) {
             }
           }}
         />
+
+        {/* Floating Magical Golden Embers on Hover */}
+        {isHovered && (
+          <div className="absolute inset-0 pointer-events-none overflow-hidden z-20">
+            {[...Array(6)].map((_, i) => {
+              const startX = 15 + Math.random() * 70;
+              const driftX = startX + (Math.random() - 0.5) * 20;
+              return (
+                <motion.div
+                  key={i}
+                  initial={{ 
+                    opacity: 0, 
+                    y: "90%", 
+                    x: `${startX}%`,
+                    scale: 0.3 + Math.random() * 0.5
+                  }}
+                  animate={{ 
+                    opacity: [0, 0.8, 0], 
+                    y: ["90%", `${20 + Math.random() * 40}%`],
+                    x: [`${startX}%`, `${driftX}%`]
+                  }}
+                  transition={{ 
+                    duration: 1.5 + Math.random() * 1.2, 
+                    repeat: Infinity,
+                    ease: "easeOut",
+                    delay: Math.random() * 0.5
+                  }}
+                  className="absolute w-1.5 h-1.5 rounded-full bg-brand-gold/60 blur-[0.5px]"
+                />
+              );
+            })}
+          </div>
+        )}
 
         {/* Product Info Panel */}
         <div 
