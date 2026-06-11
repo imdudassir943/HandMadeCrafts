@@ -22,12 +22,20 @@ function ShopContent() {
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   
   const [products, setProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    setIsLoading(true);
     fetch(`${API_BASE_URL}/products/`)
       .then((res) => res.json())
-      .then((data) => setProducts(data))
-      .catch((err) => console.error("Failed to load products", err));
+      .then((data) => {
+        setProducts(data);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.error("Failed to load products", err);
+        setIsLoading(false);
+      });
   }, []);
 
   // Sync search query from URL on mount/change
@@ -153,7 +161,11 @@ function ShopContent() {
             <span>{t.toggleFilters}</span>
           </button>
           <span className="text-xs font-semibold text-brand-espresso/60">
-            {t.resultsCount.replace("{count}", filteredProducts.length.toString())}
+            {isLoading ? (
+              <span className="animate-pulse">...</span>
+            ) : (
+              t.resultsCount.replace("{count}", filteredProducts.length.toString())
+            )}
           </span>
         </div>
 
@@ -257,11 +269,25 @@ function ShopContent() {
         <main className="lg:col-span-3 space-y-6">
           <div className="hidden lg:flex items-center justify-between border-b border-brand-sienna/5 pb-2">
             <span className="text-sm text-brand-espresso/60 font-medium">
-              {t.resultsCount.replace("{count}", filteredProducts.length.toString())}
+              {isLoading ? (
+                <span className="animate-pulse">{language === "en" ? "Loading items..." : "لوڈ ہو رہا ہے..."}</span>
+              ) : (
+                t.resultsCount.replace("{count}", filteredProducts.length.toString())
+              )}
             </span>
           </div>
 
-          {filteredProducts.length === 0 ? (
+          {isLoading ? (
+            <div className="flex flex-col items-center justify-center py-24 space-y-4 bg-brand-cream/5 border border-brand-sienna/5 rounded-card shadow-sm">
+              <div className="relative flex items-center justify-center h-12 w-12">
+                <div className="absolute h-12 w-12 animate-ping rounded-full bg-brand-gold/20" />
+                <div className="h-8 w-8 animate-spin rounded-full border-2 border-brand-gold border-t-brand-crimson" />
+              </div>
+              <p className="font-serif text-sm font-medium text-brand-espresso/80 dark:text-brand-cream/80 animate-pulse">
+                {language === "en" ? "Unveiling handcrafted treasures..." : "دستکاریوں کے شاہکار تلاش کیے جا رہے ہیں..."}
+              </p>
+            </div>
+          ) : filteredProducts.length === 0 ? (
             <div className="text-center py-16 px-4 bg-brand-cream/5 border border-brand-sienna/10 rounded-card shadow-inner">
               <p className="text-lg font-bold text-brand-espresso mb-2">{t.noResults}</p>
               <button
