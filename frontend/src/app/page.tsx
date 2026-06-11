@@ -243,19 +243,25 @@ export default function Home() {
       </section>
 
       {/* 3. Featured Products Grid */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <h2 className="text-3xl font-serif font-bold text-brand-espresso mb-3">
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 overflow-hidden">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="text-center max-w-3xl mx-auto mb-12"
+        >
+          <h2 className="text-3xl font-serif font-bold text-brand-espresso dark:text-brand-cream mb-3">
             {t.featuredTitle}
           </h2>
-          <p className="text-sm sm:text-base text-brand-sienna">
+          <p className="text-sm sm:text-base text-brand-sienna dark:text-brand-gold">
             {t.featuredSub}
           </p>
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {featuredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
+          {featuredProducts.map((product, idx) => (
+            <ProductCard key={product.id} product={product} index={idx} />
           ))}
         </div>
       </section>

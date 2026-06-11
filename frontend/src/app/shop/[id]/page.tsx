@@ -304,8 +304,8 @@ export default function ProductDetail({ params }: ProductDetailProps) {
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            {relatedProducts.map((p) => (
-              <ProductCard key={p.id} product={p} />
+            {relatedProducts.map((p, idx) => (
+              <ProductCard key={p.id} product={p} index={idx} />
             ))}
           </div>
         </section>
