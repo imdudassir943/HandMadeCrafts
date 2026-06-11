@@ -3,7 +3,7 @@
 import React, { useRef } from "react";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, Variants } from "framer-motion";
 
 interface HeroSectionProps {
   imageSrc?: string;
@@ -47,7 +47,7 @@ export default function HeroSection({
   const subtitleDelay = (words.length * headlineStagger) + 0.4;
   const ctaDelay = subtitleDelay + 0.3;
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: {},
     visible: {
       transition: {
@@ -56,7 +56,7 @@ export default function HeroSection({
     },
   };
 
-  const wordVariants = {
+  const wordVariants: Variants = {
     hidden: { opacity: 0, y: 35 },
     visible: {
       opacity: 1,
@@ -70,7 +70,7 @@ export default function HeroSection({
   };
 
   // Subheadline animation: Fade in with delay
-  const subtitleVariants = {
+  const subtitleVariants: Variants = {
     hidden: { opacity: 0, y: 15 },
     visible: {
       opacity: 1,
@@ -84,7 +84,7 @@ export default function HeroSection({
   };
 
   // CTAs animation: Spring up from bottom
-  const ctaVariants = {
+  const ctaVariants: Variants = {
     hidden: { opacity: 0, y: 40 },
     visible: {
       opacity: 1,
