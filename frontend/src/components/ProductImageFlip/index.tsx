@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Product } from "@/types";
@@ -13,7 +13,18 @@ interface ProductImageFlipProps {
 
 export default function ProductImageFlip({ product, language }: ProductImageFlipProps) {
   const [isFlipped, setIsFlipped] = useState(false);
+  const [hasHover, setHasHover] = useState(false);
   const isUr = language === "ur";
+
+  useEffect(() => {
+    // Check if the primary input supports hover
+    const mediaQuery = window.matchMedia("(hover: hover)");
+    setHasHover(mediaQuery.matches);
+
+    const handler = (e: MediaQueryListEvent) => setHasHover(e.matches);
+    mediaQuery.addEventListener("change", handler);
+    return () => mediaQuery.removeEventListener("change", handler);
+  }, []);
   
   const name = isUr ? product.nameUr : product.name;
   const artisan = isUr ? product.artisanUr : product.artisan;
@@ -22,7 +33,8 @@ export default function ProductImageFlip({ product, language }: ProductImageFlip
 
   const t = {
     en: {
-      flipHint: "Hover to Flip",
+      flipHintHover: "Hover to Flip",
+      flipHintClick: "Click to Flip",
       makerTitle: "Meet the Maker",
       certTitle: "Artisan Certification",
       certSub: "100% Handcrafted Heritage",
@@ -31,7 +43,8 @@ export default function ProductImageFlip({ product, language }: ProductImageFlip
       supportNote: `${artisan} takes immense pride in creating this work of art using heritage techniques preserved and passed down through generations. Every purchase directly sustains our family workshops.`,
     },
     ur: {
-      flipHint: "معلومات کے لیے کلک کریں",
+      flipHintHover: "پلٹنے کے لیے ہوور کریں",
+      flipHintClick: "پلٹنے کے لیے کلک کریں",
       makerTitle: "دستکار کا تعارف",
       certTitle: "خالص دستکاری کی تصدیق",
       certSub: "100٪ روایتی اور پائیدار کام",
@@ -41,14 +54,28 @@ export default function ProductImageFlip({ product, language }: ProductImageFlip
     },
   }[language === "ur" ? "ur" : "en"];
 
+  const flipHintText = hasHover ? t.flipHintHover : t.flipHintClick;
+
   // Rotate transition spring/ease setup
   const flipTransition = { duration: 0.7, ease: [0.4, 0, 0.2, 1] as const };
 
   return (
     <div
-      onClick={() => setIsFlipped(!isFlipped)}
-      onMouseEnter={() => setIsFlipped(true)}
-      onMouseLeave={() => setIsFlipped(false)}
+      onClick={() => {
+        if (!hasHover) {
+          setIsFlipped(!isFlipped);
+        }
+      }}
+      onMouseEnter={() => {
+        if (hasHover) {
+          setIsFlipped(true);
+        }
+      }}
+      onMouseLeave={() => {
+        if (hasHover) {
+          setIsFlipped(false);
+        }
+      }}
       className="relative aspect-square w-full cursor-pointer select-none rounded-card"
       style={{ perspective: "1200px" }}
     >
@@ -74,11 +101,11 @@ export default function ProductImageFlip({ product, language }: ProductImageFlip
           
           {/* Dark Overlay Gradient */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/10" />
-
+ 
           {/* Interactive Flip Badge Hint */}
           <div className="absolute top-4 right-4 bg-brand-espresso/80 dark:bg-brand-cream/90 text-brand-cream dark:text-brand-espresso text-xs font-semibold px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-lg backdrop-blur-sm hover:scale-105 transition-transform">
             <span className="w-2 h-2 rounded-full bg-brand-gold animate-ping" />
-            <span>{t.flipHint}</span>
+            <span>{flipHintText}</span>
           </div>
         </div>
 
