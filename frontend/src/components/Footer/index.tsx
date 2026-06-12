@@ -26,6 +26,7 @@ export default function Footer() {
       faq: "FAQs & Help",
       shipping: "Shipping & Returns",
       contact: "Get in Touch",
+      developer: "About the Developer",
     },
     ur: {
       tagline: "دنیا بھر کے دستکاروں کی تیار کردہ نفیس اور ہاتھ سے بنی آرائشی اشیاء۔",
@@ -43,6 +44,7 @@ export default function Footer() {
       faq: "سوالات اور مدد",
       shipping: "شپنگ اور واپسی",
       contact: "رابطہ کریں",
+      developer: "ڈویلپر کے بارے میں",
     },
   }[language];
 
@@ -115,11 +117,21 @@ export default function Footer() {
                   {t.support}
                 </h3>
                 <ul className="mt-4 space-y-2">
-                  {["faq", "shipping", "contact"].map((key) => (
+                  {["faq", "shipping", "contact", "developer"].map((key) => (
                     <li key={key}>
-                      <a href="#" className="text-base text-brand-cream/75 hover:text-white transition-colors">
-                        {t[key as keyof typeof t]}
-                      </a>
+                      {key === "contact" ? (
+                        <Link href="/contact" className="text-base text-brand-cream/75 hover:text-white transition-colors">
+                          {t[key as keyof typeof t]}
+                        </Link>
+                      ) : key === "developer" ? (
+                        <Link href="/about-developer" className="text-base text-brand-cream/75 hover:text-white transition-colors font-medium text-brand-gold hover:text-brand-cream">
+                          {t[key as keyof typeof t]}
+                        </Link>
+                      ) : (
+                        <a href="#" className="text-base text-brand-cream/75 hover:text-white transition-colors">
+                          {t[key as keyof typeof t]}
+                        </a>
+                      )}
                     </li>
                   ))}
                 </ul>
