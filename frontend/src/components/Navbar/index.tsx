@@ -119,7 +119,7 @@ export default function Navbar() {
               <img
                 src={logoUrl}
                 alt={brandName || t.brand}
-                className="h-9 w-9 rounded-full object-cover border border-brand-sienna/10"
+                className="hidden min-[540px]:block h-9 w-9 rounded-full object-cover border border-brand-sienna/10"
               />
             )}
             <span className="font-serif text-2xl font-bold tracking-wide text-brand-crimson dark:text-brand-gold transition-colors duration-200">
