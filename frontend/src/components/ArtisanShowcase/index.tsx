@@ -31,10 +31,10 @@ export default function ArtisanShowcase() {
     <section className="relative overflow-hidden bg-brand-cream/15 py-16 sm:py-24 border-y border-brand-sienna/5">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-3xl sm:text-4xl font-serif font-bold text-brand-espresso mb-4">
+          <h2 className="text-3xl sm:text-4xl font-serif font-bold text-brand-espresso dark:text-brand-cream mb-4">
             {t.heading}
           </h2>
-          <p className="text-base sm:text-lg text-brand-sienna">
+          <p className="text-base sm:text-lg text-brand-sienna dark:text-brand-gold">
             {t.subheading}
           </p>
         </div>
@@ -43,24 +43,24 @@ export default function ArtisanShowcase() {
           {/* Quote & Biography */}
           <div className="lg:col-span-7 space-y-8">
             <blockquote className="relative">
-              <p className="font-serif text-xl sm:text-2xl italic text-brand-crimson leading-relaxed">
+              <p className="font-serif text-xl sm:text-2xl italic text-brand-crimson dark:text-brand-gold leading-relaxed">
                 {t.quote}
               </p>
-              <cite className="mt-4 block not-italic text-sm font-semibold text-brand-espresso/80">
+              <cite className="mt-4 block not-italic text-sm font-semibold text-brand-espresso/80 dark:text-brand-cream/80">
                 — {t.author}
               </cite>
             </blockquote>
 
             <div className="h-px w-24 bg-brand-gold/60" />
 
-            <p className="text-base text-brand-espresso/70 leading-relaxed max-w-xl">
+            <p className="text-base text-brand-espresso/70 dark:text-brand-cream/70 leading-relaxed max-w-xl">
               {t.bio}
             </p>
 
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="rounded-button bg-brand-espresso text-brand-cream px-6 py-3 font-semibold hover:bg-brand-espresso/90 shadow-md transition-all"
+              className="rounded-button bg-brand-espresso text-brand-cream px-6 py-3 font-semibold hover:bg-brand-espresso/90 dark:bg-brand-gold dark:text-brand-espresso dark:hover:bg-brand-gold/90 shadow-md transition-all"
             >
               {t.cta}
             </motion.button>

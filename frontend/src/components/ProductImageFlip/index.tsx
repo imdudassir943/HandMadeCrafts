@@ -56,6 +56,12 @@ export default function ProductImageFlip({ product, language }: ProductImageFlip
 
   const flipHintText = hasHover ? t.flipHintHover : t.flipHintClick;
 
+  const [artisanImgSrc, setArtisanImgSrc] = useState(product.artisanImage);
+
+  useEffect(() => {
+    setArtisanImgSrc(product.artisanImage);
+  }, [product.artisanImage]);
+
   // Rotate transition spring/ease setup
   const flipTransition = { duration: 0.7, ease: [0.4, 0, 0.2, 1] as const };
 
@@ -136,10 +142,11 @@ export default function ProductImageFlip({ product, language }: ProductImageFlip
             <div className="relative h-24 w-24 mx-auto rounded-full border-2 border-brand-gold p-1 bg-brand-cream/10 shadow-lg">
               <div className="relative w-full h-full rounded-full overflow-hidden bg-brand-cream/5">
                 <Image
-                  src={product.artisanImage}
+                  src={artisanImgSrc || "/images/artisan_portrait.png"}
                   alt={artisan}
                   fill
                   className="object-cover"
+                  onError={() => setArtisanImgSrc("/images/artisan_portrait.png")}
                 />
               </div>
               <div className="absolute -bottom-1 -right-1 bg-brand-gold text-brand-espresso p-1.5 rounded-full shadow-md">

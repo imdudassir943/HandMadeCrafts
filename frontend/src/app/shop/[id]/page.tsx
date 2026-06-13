@@ -26,6 +26,13 @@ export default function ProductDetail({ params }: ProductDetailProps) {
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [artisanImgSrc, setArtisanImgSrc] = useState("");
+
+  useEffect(() => {
+    if (product) {
+      setArtisanImgSrc(product.artisanImage);
+    }
+  }, [product]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -142,7 +149,7 @@ export default function ProductDetail({ params }: ProductDetailProps) {
       <div className="mb-6">
         <Link
           href="/shop"
-          className="inline-flex items-center gap-2 text-sm font-semibold text-brand-espresso hover:text-brand-sienna"
+          className="inline-flex items-center gap-2 text-sm font-semibold text-brand-espresso hover:text-brand-sienna dark:text-brand-cream/80 dark:hover:text-brand-gold"
         >
           <ArrowLeft className={`h-4 w-4 ${direction === "rtl" ? "rotate-180" : ""}`} />
           <span>{t.back}</span>
@@ -158,60 +165,60 @@ export default function ProductDetail({ params }: ProductDetailProps) {
         {/* Product Details Panel */}
         <div className="lg:col-span-6 space-y-6">
           <div>
-            <span className="text-xs font-semibold uppercase tracking-wider text-brand-sienna">
+            <span className="text-xs font-semibold uppercase tracking-wider text-brand-sienna dark:text-brand-gold">
               {category}
             </span>
-            <h1 className="font-serif text-3xl sm:text-4xl font-bold text-brand-espresso mt-1 mb-2">
+            <h1 className="font-serif text-3xl sm:text-4xl font-bold text-brand-espresso dark:text-brand-cream mt-1 mb-2">
               {name}
             </h1>
             <div className="flex items-center gap-4">
-              <span className="text-2xl font-bold text-brand-crimson">${product.price}</span>
-              <div className="flex items-center gap-1 border-l border-brand-sienna/20 pl-4 rtl:border-l-0 rtl:border-r rtl:pl-0 rtl:pr-4">
+              <span className="text-2xl font-bold text-brand-crimson dark:text-brand-gold">${product.price}</span>
+              <div className="flex items-center gap-1 border-l border-brand-sienna/20 dark:border-brand-cream/20 pl-4 rtl:border-l-0 rtl:border-r rtl:pl-0 rtl:pr-4">
                 <Star className="h-4 w-4 fill-brand-gold text-brand-gold" />
-                <span className="text-sm font-bold text-brand-espresso">{product.rating}</span>
-                <span className="text-xs text-brand-espresso/60">({product.reviewsCount} reviews)</span>
+                <span className="text-sm font-bold text-brand-espresso dark:text-brand-cream">{product.rating}</span>
+                <span className="text-xs text-brand-espresso/60 dark:text-brand-cream/60">({product.reviewsCount} reviews)</span>
               </div>
             </div>
           </div>
 
-          <p className="text-base text-brand-espresso/80 leading-relaxed">
+          <p className="text-base text-brand-espresso/80 dark:text-brand-cream/80 leading-relaxed">
             {description}
           </p>
 
           {/* Specs List */}
-          <div className="border-y border-brand-sienna/10 py-4 space-y-3">
+          <div className="border-y border-brand-sienna/10 dark:border-brand-cream/10 py-4 space-y-3">
             <div className="flex justify-between text-sm">
-              <span className="font-semibold text-brand-espresso/70">{t.materials}:</span>
-              <span className="text-brand-espresso font-medium">{material}</span>
+              <span className="font-semibold text-brand-espresso/70 dark:text-brand-cream/70">{t.materials}:</span>
+              <span className="text-brand-espresso dark:text-brand-cream font-medium">{material}</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="font-semibold text-brand-espresso/70">{t.dimensions}:</span>
-              <span className="text-brand-espresso font-medium">{dimensions}</span>
+              <span className="font-semibold text-brand-espresso/70 dark:text-brand-cream/70">{t.dimensions}:</span>
+              <span className="text-brand-espresso dark:text-brand-cream font-medium">{dimensions}</span>
             </div>
           </div>
 
           {/* Quantity selector and Add Button */}
           <div className="flex flex-wrap gap-4 items-end">
             <div className="space-y-1">
-              <label className="block text-xs font-semibold text-brand-espresso/70">
+              <label className="block text-xs font-semibold text-brand-espresso/70 dark:text-brand-cream/70">
                 {t.quantity}
               </label>
-              <div className="flex items-center border border-brand-sienna/20 rounded-button bg-white">
+              <div className="flex items-center border border-brand-sienna/20 dark:border-brand-cream/20 rounded-button bg-white dark:bg-brand-espresso/40">
                 <button
                   type="button"
                   onClick={decrementQty}
-                  className="p-2.5 hover:text-brand-crimson"
+                  className="p-2.5 hover:text-brand-crimson dark:text-brand-cream dark:hover:text-brand-gold"
                   aria-label="Decrease quantity"
                 >
                   -
                 </button>
-                <span className="px-4 text-sm font-semibold min-w-[32px] text-center">
+                <span className="px-4 text-sm font-semibold min-w-[32px] text-center text-brand-espresso dark:text-brand-cream">
                   {quantity}
                 </span>
                 <button
                   type="button"
                   onClick={incrementQty}
-                  className="p-2.5 hover:text-brand-crimson"
+                  className="p-2.5 hover:text-brand-crimson dark:text-brand-cream dark:hover:text-brand-gold"
                   aria-label="Increase quantity"
                 >
                   +
@@ -229,8 +236,8 @@ export default function ProductDetail({ params }: ProductDetailProps) {
           </div>
 
           {/* Guarantees Box */}
-          <div className="bg-brand-cream/15 p-4 rounded-card border border-brand-sienna/5 space-y-3">
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-brand-sienna">
+          <div className="bg-brand-cream/15 p-4 rounded-card border border-brand-sienna/5 dark:border-brand-cream/10 space-y-3">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-brand-sienna dark:text-brand-gold">
               {t.guarantees}
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -243,7 +250,7 @@ export default function ProductDetail({ params }: ProductDetailProps) {
                 return (
                   <div key={idx} className="flex items-center gap-2">
                     <Icon className="h-4 w-4 text-brand-gold flex-shrink-0" />
-                    <span className="text-xs text-brand-espresso/80 font-medium leading-tight">
+                    <span className="text-xs text-brand-espresso/80 dark:text-brand-cream/80 font-medium leading-tight">
                       {item.text}
                     </span>
                   </div>
@@ -255,15 +262,16 @@ export default function ProductDetail({ params }: ProductDetailProps) {
       </div>
 
       {/* 6. Meet The Maker Subsection */}
-      <section className="border-t border-brand-sienna/10 pt-12 mb-16">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center bg-brand-cream/5 rounded-card p-6 border border-brand-sienna/10">
+      <section className="border-t border-brand-sienna/10 dark:border-brand-cream/10 pt-12 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center bg-brand-cream/5 rounded-card p-6 border border-brand-sienna/10 dark:border-brand-cream/10">
           <div className="md:col-span-3 flex justify-center">
-            <div className="relative h-32 w-32 rounded-full overflow-hidden border-4 border-white shadow bg-brand-cream/10">
+            <div className="relative h-32 w-32 rounded-full overflow-hidden border-4 border-white dark:border-brand-espresso shadow bg-brand-cream/10">
               <Image
-                src={product.artisanImage}
+                src={artisanImgSrc || "/images/artisan_portrait.png"}
                 alt={artisan}
                 fill
                 className="object-cover"
+                onError={() => setArtisanImgSrc("/images/artisan_portrait.png")}
               />
             </div>
           </div>
@@ -271,13 +279,13 @@ export default function ProductDetail({ params }: ProductDetailProps) {
             <span className="text-xs font-semibold text-brand-gold uppercase tracking-wider">
               {t.artisanTitle}
             </span>
-            <h3 className="font-serif text-2xl font-bold text-brand-espresso">
+            <h3 className="font-serif text-2xl font-bold text-brand-espresso dark:text-brand-cream">
               {artisan}
             </h3>
-            <p className="text-sm text-brand-espresso/60 italic">
+            <p className="text-sm text-brand-espresso/60 dark:text-brand-cream/60 italic">
               {t.artisanSub}
             </p>
-            <p className="text-sm text-brand-espresso/80 leading-relaxed">
+            <p className="text-sm text-brand-espresso/80 dark:text-brand-cream/80 leading-relaxed">
               {language === "ur"
                 ? `${artisan} کو ان روایتی طریقوں کا استعمال کرتے ہوئے اس خوبصورت فن پارے کو تیار کرنے پر فخر ہے جو نسل در نسل ان کے خاندان میں منتقل ہوتے آ رہے ہیں۔ ہر خریداری براہ راست ہمارے ہنرمندوں کے خاندانوں کی کفالت کرتی ہے۔`
                 : `${artisan} takes immense pride in creating this work of art using heritage techniques preserved and passed down through generations. Every purchase directly sustains our workshop families and keeps centuries-old heritage crafts alive.`}
@@ -288,12 +296,12 @@ export default function ProductDetail({ params }: ProductDetailProps) {
 
       {/* Related Products Section */}
       {relatedProducts.length > 0 && (
-        <section className="border-t border-brand-sienna/10 pt-12">
+        <section className="border-t border-brand-sienna/10 dark:border-brand-cream/10 pt-12">
           <div className="text-center sm:text-start mb-8">
-            <h2 className="text-2xl font-serif font-bold text-brand-espresso mb-2">
+            <h2 className="text-2xl font-serif font-bold text-brand-espresso dark:text-brand-cream mb-2">
               {t.relatedTitle}
             </h2>
-            <p className="text-sm text-brand-sienna">
+            <p className="text-sm text-brand-sienna dark:text-brand-gold">
               {t.relatedSub}
             </p>
           </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { MailOpen, MapPin, Send, X } from "lucide-react";
@@ -38,6 +38,11 @@ export default function ArtisanBioCard({
   const [messageText, setMessageText] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [imgSrc, setImgSrc] = useState(artisanImage);
+
+  useEffect(() => {
+    setImgSrc(artisanImage);
+  }, [artisanImage]);
 
   const name = language === "ur" ? artisanNameUr : artisanName;
   const loc = language === "ur" ? locationUr : location;
@@ -90,23 +95,24 @@ export default function ArtisanBioCard({
   };
 
   return (
-    <div className="bg-white dark:bg-brand-espresso border border-brand-sienna/10 rounded-card p-6 md:p-8 shadow-warm flex flex-col md:grid md:grid-cols-12 md:gap-8 items-start">
+    <div className="bg-white dark:bg-brand-espresso border border-brand-sienna/10 dark:border-brand-cream/10 rounded-card p-6 md:p-8 shadow-warm flex flex-col md:grid md:grid-cols-12 md:gap-8 items-start">
       {/* 1. Portrait Section */}
-      <div className="col-span-12 md:col-span-4 flex flex-col items-center text-center space-y-4 w-full border-b border-brand-sienna/5 pb-6 md:border-b-0 md:pb-0">
+      <div className="col-span-12 md:col-span-4 flex flex-col items-center text-center space-y-4 w-full border-b border-brand-sienna/5 dark:border-brand-cream/5 pb-6 md:border-b-0 md:pb-0">
         <div className="relative h-44 w-44 rounded-full overflow-hidden border-8 border-brand-cream/20 shadow-md bg-brand-cream/10">
           <Image
-            src={artisanImage}
+            src={imgSrc || "/images/artisan_portrait.png"}
             alt={name}
             fill
             className="object-cover"
             sizes="(max-width: 768px) 176px, 176px"
+            onError={() => setImgSrc("/images/artisan_portrait.png")}
           />
         </div>
         <div>
-          <h2 className="font-serif text-2xl font-bold text-brand-espresso">
+          <h2 className="font-serif text-2xl font-bold text-brand-espresso dark:text-brand-cream">
             {name}
           </h2>
-          <p className="text-xs font-semibold text-brand-sienna uppercase tracking-wider flex items-center justify-center gap-1 mt-1">
+          <p className="text-xs font-semibold text-brand-sienna dark:text-brand-gold uppercase tracking-wider flex items-center justify-center gap-1 mt-1">
             <MapPin className="h-3.5 w-3.5 text-brand-gold" />
             <span>{loc}</span>
           </p>
@@ -115,7 +121,7 @@ export default function ArtisanBioCard({
         {/* Message Button */}
         <button
           onClick={() => setIsModalOpen(true)}
-          className="w-full text-xs font-bold rounded-button border border-brand-crimson text-brand-crimson hover:bg-brand-crimson hover:text-brand-cream py-2.5 transition-all flex items-center justify-center gap-1.5 shadow-sm"
+          className="w-full text-xs font-bold rounded-button border border-brand-crimson text-brand-crimson dark:border-brand-gold dark:text-brand-gold hover:bg-brand-crimson dark:hover:bg-brand-gold hover:text-brand-cream dark:hover:text-brand-espresso py-2.5 transition-all flex items-center justify-center gap-1.5 shadow-sm"
         >
           <MailOpen className="h-4 w-4" />
           <span>{t.writeBtn}</span>
@@ -125,18 +131,18 @@ export default function ArtisanBioCard({
       {/* 2. Biography & Bio Quote */}
       <div className="col-span-12 md:col-span-8 space-y-6 mt-6 md:mt-0 w-full">
         <blockquote className="border-l-4 border-brand-gold pl-4 rtl:border-l-0 rtl:border-r-4 rtl:pr-4">
-          <p className="font-serif text-lg sm:text-xl italic text-brand-crimson leading-relaxed">
+          <p className="font-serif text-lg sm:text-xl italic text-brand-crimson dark:text-brand-gold leading-relaxed">
             {q}
           </p>
         </blockquote>
 
-        <p className="text-sm text-brand-espresso/80 leading-relaxed">
+        <p className="text-sm text-brand-espresso/80 dark:text-brand-cream/80 leading-relaxed">
           {biography}
         </p>
 
         {/* Co-located products */}
         <div className="space-y-3">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-brand-sienna border-b border-brand-sienna/10 pb-1">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-brand-sienna dark:text-brand-gold border-b border-brand-sienna/10 dark:border-brand-cream/10 pb-1">
             {t.productsTitle}
           </h3>
           <div className="grid grid-cols-2 gap-4">
@@ -145,16 +151,16 @@ export default function ArtisanBioCard({
               return (
                 <div
                   key={product.id}
-                  className="flex items-center gap-3 p-2 rounded bg-brand-cream/5 border border-brand-sienna/5 group hover:border-brand-gold/30 transition-all"
+                  className="flex items-center gap-3 p-2 rounded bg-brand-cream/5 border border-brand-sienna/5 dark:border-brand-cream/5 group hover:border-brand-gold/30 transition-all"
                 >
                   <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded bg-brand-cream/10">
                     <Image src={product.image} alt={productName} fill className="object-cover" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-serif text-xs font-semibold text-brand-espresso truncate">
+                    <h4 className="font-serif text-xs font-semibold text-brand-espresso dark:text-brand-cream truncate">
                       {productName}
                     </h4>
-                    <span className="text-xs font-bold text-brand-crimson">${product.price}</span>
+                    <span className="text-xs font-bold text-brand-crimson dark:text-brand-gold">${product.price}</span>
                   </div>
                   <Link
                     href={`/shop/${product.id}`}
@@ -196,13 +202,13 @@ export default function ArtisanBioCard({
             >
               {/* Header */}
               <div className="flex items-center justify-between pb-3 border-b border-brand-sienna/10 mb-4">
-                <h3 id="modal-title" className="font-serif text-lg font-bold text-brand-espresso">
+                <h3 id="modal-title" className="font-serif text-lg font-bold text-brand-espresso dark:text-brand-cream">
                   {t.modalTitle}
                 </h3>
                 <button
                   onClick={() => setIsModalOpen(false)}
                   disabled={isSending || isSuccess}
-                  className="rounded-button p-2 text-brand-espresso hover:bg-brand-cream/30 hover:text-brand-sienna disabled:opacity-50"
+                  className="rounded-button p-2 text-brand-espresso dark:text-brand-cream hover:bg-brand-cream/30 dark:hover:bg-brand-cream/10 hover:text-brand-sienna dark:hover:text-brand-gold disabled:opacity-50"
                   aria-label={t.close}
                 >
                   <X className="h-5 w-5" />
@@ -217,12 +223,12 @@ export default function ArtisanBioCard({
                     onSubmit={handleSendMessage}
                     className="space-y-4"
                   >
-                    <p className="text-xs text-brand-espresso/70 leading-relaxed">
+                    <p className="text-xs text-brand-espresso/70 dark:text-brand-cream/70 leading-relaxed">
                       {t.modalSub}
                     </p>
 
                     <div>
-                      <label className="block text-xs font-semibold text-brand-espresso/70 mb-1">
+                      <label className="block text-xs font-semibold text-brand-espresso/70 dark:text-brand-cream/70 mb-1">
                         {t.messageLabel}
                       </label>
                       <textarea
@@ -236,7 +242,7 @@ export default function ArtisanBioCard({
                             ? "I love your work! The details on the piece are beautiful..."
                             : "مجھے آپ کا کام بہت پسند آیا! اس شاہکار کی تفصیلات بہت خوبصورت ہیں..."
                         }
-                        className="w-full rounded-input border border-brand-sienna/20 bg-brand-cream/5 px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30 disabled:opacity-50"
+                        className="w-full rounded-input border border-brand-sienna/20 bg-brand-cream/5 px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30 dark:text-brand-cream disabled:opacity-50"
                       />
                     </div>
 
@@ -276,7 +282,7 @@ export default function ArtisanBioCard({
                         <Send className="h-8 w-8 text-brand-gold" />
                       </motion.div>
                     </div>
-                    <p className="text-sm font-semibold text-brand-espresso max-w-sm mx-auto leading-relaxed">
+                    <p className="text-sm font-semibold text-brand-espresso dark:text-brand-cream max-w-sm mx-auto leading-relaxed">
                       {t.success}
                     </p>
                   </motion.div>
