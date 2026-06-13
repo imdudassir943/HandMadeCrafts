@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useLanguage } from "@/context/LanguageContext";
-import { motion, Variants } from "framer-motion";
+import { motion, Variants, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { MapPin, Calendar, Sparkles, Code2, ArrowRight } from "lucide-react";
 
 /**
@@ -25,6 +25,34 @@ const DEVELOPER_CONFIG = {
 
 export default function AboutDeveloper() {
   const { language, direction } = useLanguage();
+
+  // Motion values for cursor position (relative to card center)
+  const xVal = useMotionValue(0);
+  const yVal = useMotionValue(0);
+
+  // Smooth springs for interactive 3D tilt
+  const springConfig = { damping: 25, stiffness: 120, mass: 0.6 };
+  const rotateX = useSpring(useTransform(yVal, [-0.5, 0.5], [10, -10]), springConfig);
+  const rotateY = useSpring(useTransform(xVal, [-0.5, 0.5], [-10, 10]), springConfig);
+
+  // Elastic translation pull
+  const translateX = useSpring(useTransform(xVal, [-0.5, 0.5], [-8, 8]), springConfig);
+  const translateY = useSpring(useTransform(yVal, [-0.5, 0.5], [-8, 8]), springConfig);
+
+  // Spotlight position relative coordinates
+  const shineX = useSpring(useTransform(xVal, [-0.5, 0.5], ["0%", "100%"]), springConfig);
+  const shineY = useSpring(useTransform(yVal, [-0.5, 0.5], ["0%", "100%"]), springConfig);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    xVal.set((e.clientX - rect.left) / rect.width - 0.5);
+    yVal.set((e.clientY - rect.top) / rect.height - 0.5);
+  };
+
+  const handleMouseLeave = () => {
+    xVal.set(0);
+    yVal.set(0);
+  };
 
   const t = {
     en: {
@@ -140,19 +168,54 @@ export default function AboutDeveloper() {
     <section className="relative overflow-hidden py-16 sm:py-24 bg-brand-cream/5 dark:bg-transparent">
       {/* Decorative craft elements / background particles */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {/* Soft radial glow */}
-        <div className="absolute -top-1/4 -left-1/4 w-96 h-96 rounded-full bg-brand-gold/10 dark:bg-brand-gold/5 blur-[100px]" />
-        <div className="absolute -bottom-1/4 -right-1/4 w-96 h-96 rounded-full bg-brand-crimson/10 dark:bg-brand-crimson/5 blur-[100px]" />
+        {/* Soft radial glow - slow pulsing */}
+        <motion.div 
+          animate={{
+            scale: [1, 1.15, 1],
+            opacity: [0.6, 0.9, 0.6],
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+          className="absolute -top-1/4 -left-1/4 w-96 h-96 rounded-full bg-brand-gold/10 dark:bg-brand-gold/5 blur-[100px]" 
+        />
+        <motion.div 
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.5, 0.8, 0.5],
+          }}
+          transition={{
+            duration: 15,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 2
+          }}
+          className="absolute -bottom-1/4 -right-1/4 w-96 h-96 rounded-full bg-brand-crimson/10 dark:bg-brand-crimson/5 blur-[100px]" 
+        />
         
-        {/* Craft line path motif */}
-        <svg className="absolute top-10 right-10 w-48 h-48 text-brand-sienna/5 dark:text-brand-gold/5" fill="none" viewBox="0 0 100 100">
+        {/* Craft line path motif - slow rotation */}
+        <motion.svg 
+          animate={{ rotate: 360 }}
+          transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+          className="absolute top-10 right-10 w-48 h-48 text-brand-sienna/5 dark:text-brand-gold/5" 
+          fill="none" 
+          viewBox="0 0 100 100"
+        >
           <circle cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" />
           <path d="M50 10 L50 90 M10 50 L90 50" stroke="currentColor" strokeWidth="0.5" />
-        </svg>
-        <svg className="absolute bottom-10 left-10 w-36 h-36 text-brand-sienna/5 dark:text-brand-gold/5" fill="none" viewBox="0 0 100 100">
+        </motion.svg>
+        <motion.svg 
+          animate={{ rotate: -360 }}
+          transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
+          className="absolute bottom-10 left-10 w-36 h-36 text-brand-sienna/5 dark:text-brand-gold/5" 
+          fill="none" 
+          viewBox="0 0 100 100"
+        >
           <rect x="20" y="20" width="60" height="60" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" />
           <polygon points="50,15 85,85 15,85" stroke="currentColor" strokeWidth="0.5" />
-        </svg>
+        </motion.svg>
       </div>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
@@ -208,7 +271,12 @@ export default function AboutDeveloper() {
                 {skills.map((skill) => (
                   <motion.span
                     key={skill}
-                    whileHover={{ scale: 1.06, backgroundColor: "rgba(187, 148, 87, 0.2)" }}
+                    whileHover={{ 
+                      scale: 1.1, 
+                      backgroundColor: "rgba(187, 148, 87, 0.25)",
+                      borderColor: "rgba(187, 148, 87, 0.6)",
+                      boxShadow: "0 4px 12px rgba(187, 148, 87, 0.15)"
+                    }}
                     className="cursor-default rounded-full bg-brand-cream/35 dark:bg-brand-gold/10 border border-brand-sienna/10 dark:border-brand-gold/20 px-3.5 py-1 text-xs font-semibold text-brand-espresso dark:text-brand-cream transition-colors"
                   >
                     {skill}
@@ -227,7 +295,7 @@ export default function AboutDeveloper() {
                   href={DEVELOPER_CONFIG.socialLinks.whatsapp}
                   target="_blank"
                   rel="noopener noreferrer"
-                  whileHover={{ scale: 1.02 }}
+                  whileHover={{ scale: 1.05, boxShadow: "0 10px 20px rgba(111,29,27,0.15)" }}
                   whileTap={{ scale: 0.98 }}
                   className="inline-flex items-center gap-2 rounded-button bg-brand-crimson text-brand-cream px-6 py-3 font-semibold hover:bg-brand-crimson/90 shadow-md transition-all duration-200"
                 >
@@ -243,9 +311,19 @@ export default function AboutDeveloper() {
           <motion.div 
             variants={itemVariants}
             className="lg:col-span-5 relative"
+            style={{ perspective: "1000px" }}
           >
-            {/* Animated Gradient Border Outer Wrapper */}
+            {/* Animated Gradient Border Outer Wrapper with 3D Tilt */}
             <motion.div
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
+              style={{
+                rotateX,
+                rotateY,
+                x: translateX,
+                y: translateY,
+                transformStyle: "preserve-3d",
+              }}
               animate={{ 
                 backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] 
               }}
@@ -254,18 +332,33 @@ export default function AboutDeveloper() {
                 repeat: Infinity, 
                 ease: "easeInOut" 
               }}
-              className="relative p-[3px] rounded-card overflow-hidden bg-gradient-to-r from-brand-crimson via-brand-gold to-brand-sienna bg-[length:200%_200%] shadow-xl group"
+              className="relative p-[3px] rounded-card overflow-hidden bg-gradient-to-r from-brand-crimson via-brand-gold to-brand-sienna bg-[length:200%_200%] shadow-xl group cursor-pointer transition-shadow duration-300 hover:shadow-2xl"
             >
               
               {/* Glassmorphism Inner Card */}
               <div className="relative rounded-[6px] bg-white/95 dark:bg-brand-espresso/95 backdrop-blur-md p-6 sm:p-8 space-y-6">
                 
-                <h3 className="font-serif text-xl font-bold text-brand-espresso dark:text-brand-cream text-center border-b border-brand-sienna/10 dark:border-brand-gold/10 pb-4">
+                {/* Cursor-following spotlight reflection */}
+                <motion.div
+                  style={{
+                    background: `radial-gradient(circle 150px at ${shineX} ${shineY}, rgba(187, 148, 87, 0.15), transparent)`,
+                    transform: "translateZ(10px)",
+                  }}
+                  className="absolute inset-0 pointer-events-none rounded-[6px] z-20"
+                />
+                
+                <h3 
+                  className="font-serif text-xl font-bold text-brand-espresso dark:text-brand-cream text-center border-b border-brand-sienna/10 dark:border-brand-gold/10 pb-4"
+                  style={{ transform: "translateZ(15px)" }}
+                >
                   {t.cardTitle}
                 </h3>
 
                 {/* Profile Avatar Placeholder with hover scale */}
-                <div className="relative group-hover:scale-[1.02] transition-transform duration-300">
+                <div 
+                  className="relative group-hover:scale-[1.05] transition-transform duration-500 ease-out"
+                  style={{ transform: "translateZ(30px)" }}
+                >
                   <div className="relative w-32 h-32 mx-auto rounded-full overflow-hidden border-4 border-brand-gold/50 shadow-inner bg-gradient-to-br from-brand-espresso to-brand-crimson flex items-center justify-center">
                     <span className="text-4xl font-serif font-bold text-brand-cream tracking-widest select-none">
                       MS
@@ -290,7 +383,10 @@ export default function AboutDeveloper() {
                   </span>
                 </div>
 
-                <div className="text-center space-y-1">
+                <div 
+                  className="text-center space-y-1"
+                  style={{ transform: "translateZ(20px)" }}
+                >
                   <h4 className="font-serif text-lg font-bold text-brand-espresso dark:text-brand-cream">
                     {t.devName}
                   </h4>
@@ -300,7 +396,10 @@ export default function AboutDeveloper() {
                 </div>
 
                 {/* Details Section */}
-                <div className="space-y-4 border-t border-brand-sienna/10 dark:border-brand-gold/10 pt-4">
+                <div 
+                  className="space-y-4 border-t border-brand-sienna/10 dark:border-brand-gold/10 pt-4"
+                  style={{ transform: "translateZ(15px)" }}
+                >
                   <div className="flex items-center gap-3 text-brand-espresso/90 dark:text-brand-cream/90 text-sm">
                     <div className="flex h-8 w-8 items-center justify-center rounded bg-brand-cream/30 dark:bg-brand-gold/10">
                       <MapPin className="h-4.5 w-4.5 text-brand-sienna dark:text-brand-gold" />
@@ -327,7 +426,10 @@ export default function AboutDeveloper() {
                 </div>
 
                 {/* Social Links Section */}
-                <div className="border-t border-brand-sienna/10 dark:border-brand-gold/10 pt-5 space-y-3 text-center">
+                <div 
+                  className="border-t border-brand-sienna/10 dark:border-brand-gold/10 pt-5 space-y-3 text-center"
+                  style={{ transform: "translateZ(10px)" }}
+                >
                   <h4 className="text-xs font-bold uppercase tracking-wider text-brand-espresso/60 dark:text-brand-cream/60">
                     {t.socialHeading}
                   </h4>
