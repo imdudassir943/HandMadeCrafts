@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { motion, Variants, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { MapPin, Calendar, Sparkles, Code2, ArrowRight } from "lucide-react";
@@ -53,6 +53,203 @@ export default function AboutDeveloper() {
     xVal.set(0);
     yVal.set(0);
   };
+
+  const starsCanvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = starsCanvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let animationFrameId: number;
+    let width = canvas.width = canvas.offsetWidth;
+    let height = canvas.height = canvas.offsetHeight;
+
+    // Handle canvas resizing dynamically
+    const handleResize = () => {
+      if (!canvas) return;
+      width = canvas.width = canvas.offsetWidth;
+      height = canvas.height = canvas.offsetHeight;
+    };
+    window.addEventListener("resize", handleResize);
+
+    // Star representations
+    interface TwinkleStar {
+      x: number;
+      y: number;
+      size: number;
+      phase: number;
+      twinkleSpeed: number;
+      isCrossStar: boolean;
+      color: string;
+    }
+
+    interface CursorSparkle {
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      size: number;
+      angle: number;
+      spinSpeed: number;
+      opacity: number;
+      decay: number;
+      color: string;
+    }
+
+    const brandColors = ["#bb9457", "#ffe6a7", "#ffe6a7", "#99582a"];
+
+    // Initialize 60 continuously twinkling background stars
+    const backgroundStars: TwinkleStar[] = [];
+    for (let i = 0; i < 60; i++) {
+      backgroundStars.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        size: Math.random() * 1.5 + 0.8, // 0.8px to 2.3px
+        phase: Math.random() * Math.PI * 2,
+        twinkleSpeed: Math.random() * 0.03 + 0.01,
+        isCrossStar: Math.random() < 0.25, // 25% are 4-pointed stars
+        color: brandColors[Math.floor(Math.random() * brandColors.length)],
+      });
+    }
+
+    // Keep track of cursor sparkles locally
+    let cursorSparkles: CursorSparkle[] = [];
+    let activePointer = false;
+    let lastX = 0;
+    let lastY = 0;
+
+    const spawnSparkle = (x: number, y: number) => {
+      const color = brandColors[Math.floor(Math.random() * brandColors.length)];
+      cursorSparkles.push({
+        x,
+        y,
+        vx: (Math.random() - 0.5) * 1.5,
+        vy: (Math.random() - 0.5) * 1.5 - 0.3, // upward bias
+        size: Math.random() * 3.5 + 1.5, // 1.5px to 5px
+        angle: Math.random() * Math.PI * 2,
+        spinSpeed: (Math.random() - 0.5) * 0.1,
+        opacity: 1,
+        decay: Math.random() * 0.02 + 0.015,
+        color,
+      });
+    };
+
+    // Track cursor move relative to canvas element
+    const handleMouseMoveGlobal = (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      // Spawn only if the pointer is within bounds of the developer section
+      if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
+        if (!activePointer) {
+          lastX = x;
+          lastY = y;
+          activePointer = true;
+          return;
+        }
+
+        const dx = x - lastX;
+        const dy = y - lastY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist > 4) {
+          const spawnCount = Math.min(Math.floor(dist / 6), 3);
+          for (let i = 0; i < spawnCount; i++) {
+            const t = i / spawnCount;
+            spawnSparkle(lastX + dx * t, lastY + dy * t);
+          }
+          lastX = x;
+          lastY = y;
+        }
+      } else {
+        activePointer = false;
+      }
+    };
+
+    window.addEventListener("mousemove", handleMouseMoveGlobal);
+
+    // Star draw helpers
+    const drawCrossStar = (c: CanvasRenderingContext2D, cx: number, cy: number, size: number) => {
+      c.beginPath();
+      c.moveTo(cx, cy - size);
+      c.lineTo(cx + size * 0.25, cy - size * 0.25);
+      c.lineTo(cx + size, cy);
+      c.lineTo(cx + size * 0.25, cy + size * 0.25);
+      c.lineTo(cx, cy + size);
+      c.lineTo(cx - size * 0.25, cy + size * 0.25);
+      c.lineTo(cx - size, cy);
+      c.lineTo(cx - size * 0.25, cy - size * 0.25);
+      c.closePath();
+      c.fill();
+    };
+
+    const renderLoop = () => {
+      ctx.clearRect(0, 0, width, height);
+
+      // Render background twinkling stars
+      backgroundStars.forEach((star) => {
+        // Regenerate positions if canvas resized
+        if (star.x > width) star.x = Math.random() * width;
+        if (star.y > height) star.y = Math.random() * height;
+
+        star.phase += star.twinkleSpeed;
+        const opacity = 0.25 + ((Math.sin(star.phase) + 1) / 2) * 0.75; // twinkle between 0.25 and 1
+
+        ctx.fillStyle = star.color;
+        ctx.globalAlpha = opacity;
+
+        if (star.isCrossStar) {
+          drawCrossStar(ctx, star.x, star.y, star.size * 2);
+        } else {
+          ctx.beginPath();
+          ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      });
+
+      // Update and render cursor sparkles
+      const nextSparkles: CursorSparkle[] = [];
+      cursorSparkles.forEach((s) => {
+        s.x += s.vx;
+        s.y += s.vy;
+        s.vy += 0.01; // soft gravity gravity
+        s.angle += s.spinSpeed;
+        s.opacity -= s.decay;
+        s.size = Math.max(0, s.size - 0.05);
+
+        if (s.opacity > 0 && s.size > 0) {
+          ctx.fillStyle = s.color;
+          ctx.globalAlpha = s.opacity;
+
+          ctx.save();
+          ctx.translate(s.x, s.y);
+          ctx.rotate(s.angle);
+          drawCrossStar(ctx, 0, 0, s.size);
+          ctx.restore();
+
+          nextSparkles.push(s);
+        }
+      });
+      cursorSparkles = nextSparkles;
+
+      // Reset alpha for safety
+      ctx.globalAlpha = 1;
+
+      animationFrameId = requestAnimationFrame(renderLoop);
+    };
+
+    renderLoop();
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("mousemove", handleMouseMoveGlobal);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
 
   const t = {
     en: {
@@ -166,6 +363,11 @@ export default function AboutDeveloper() {
 
   return (
     <section className="relative overflow-hidden py-16 sm:py-24 bg-brand-cream/5 dark:bg-transparent">
+      {/* Twinkling background stars and cursor sparkles canvas */}
+      <canvas
+        ref={starsCanvasRef}
+        className="absolute inset-0 pointer-events-none z-0 w-full h-full"
+      />
       {/* Decorative craft elements / background particles */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {/* Soft radial glow - slow pulsing */}
