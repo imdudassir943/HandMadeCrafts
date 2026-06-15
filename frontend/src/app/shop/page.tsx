@@ -176,13 +176,13 @@ function ShopContent() {
           }`}
         >
           <div className="flex justify-between items-center pb-2 border-b border-brand-sienna/10">
-            <h2 className="font-serif text-lg font-bold text-brand-espresso flex items-center gap-2">
+            <h2 className="font-serif text-lg font-bold text-brand-espresso dark:text-brand-cream flex items-center gap-2">
               <Filter className="h-4 w-4 text-brand-gold" />
               <span>{t.filters}</span>
             </h2>
             <button
               onClick={clearAllFilters}
-              className="text-xs font-semibold text-brand-crimson hover:text-brand-sienna flex items-center gap-1"
+              className="text-xs font-semibold text-brand-crimson dark:text-brand-gold hover:text-brand-sienna dark:hover:text-brand-cream flex items-center gap-1"
               aria-label="Clear all filters"
             >
               <RotateCcw className="h-3 w-3" />
@@ -192,7 +192,7 @@ function ShopContent() {
 
           {/* Search Box */}
           <div className="space-y-2">
-            <label className="block text-xs font-semibold uppercase tracking-wider text-brand-espresso/80">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-brand-espresso/80 dark:text-brand-cream/80">
               {t.searchLabel}
             </label>
             <div className="relative">
@@ -201,7 +201,7 @@ function ShopContent() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder={t.searchPlaceholder}
-                className="w-full rounded-input border border-brand-sienna/20 bg-white px-3 py-2 pl-9 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30"
+                className="w-full rounded-input border border-brand-sienna/20 bg-white px-3 py-2 pl-9 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30 text-brand-espresso dark:text-brand-cream"
               />
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-sienna/50" />
             </div>
@@ -209,7 +209,7 @@ function ShopContent() {
 
           {/* Categories Filter */}
           <div className="space-y-2">
-            <label className="block text-xs font-semibold uppercase tracking-wider text-brand-espresso/80">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-brand-espresso/80 dark:text-brand-cream/80">
               {t.categoryLabel}
             </label>
             <div className="space-y-1">
@@ -220,7 +220,7 @@ function ShopContent() {
                   className={`w-full text-start px-2 py-1.5 rounded-button text-sm transition-colors ${
                     selectedCategory === cat.value
                       ? "bg-brand-gold text-brand-espresso font-semibold"
-                      : "hover:bg-brand-cream/30 text-brand-espresso/80"
+                      : "hover:bg-brand-cream/30 text-brand-espresso/80 dark:text-brand-cream/80"
                   }`}
                 >
                   {cat.label}
@@ -232,10 +232,10 @@ function ShopContent() {
           {/* Price Range Slider */}
           <div className="space-y-2">
             <div className="flex justify-between items-center">
-              <label className="text-xs font-semibold uppercase tracking-wider text-brand-espresso/80">
+              <label className="text-xs font-semibold uppercase tracking-wider text-brand-espresso/80 dark:text-brand-cream/80">
                 {t.priceLabel}
               </label>
-              <span className="text-sm font-bold text-brand-crimson">${priceLimit}</span>
+              <span className="text-sm font-bold text-brand-crimson dark:text-brand-gold">${priceLimit}</span>
             </div>
             <input
               type="range"
@@ -250,13 +250,13 @@ function ShopContent() {
 
           {/* Sort By Select */}
           <div className="space-y-2">
-            <label className="block text-xs font-semibold uppercase tracking-wider text-brand-espresso/80">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-brand-espresso/80 dark:text-brand-cream/80">
               {t.sortLabel}
             </label>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="w-full rounded-input border border-brand-sienna/20 bg-white px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30 text-brand-espresso"
+              className="w-full rounded-input border border-brand-sienna/20 bg-white px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30 text-brand-espresso dark:text-brand-cream"
             >
               <option value="default">{t.sortDefault}</option>
               <option value="price-asc">{t.sortLowHigh}</option>
@@ -268,7 +268,7 @@ function ShopContent() {
         {/* Product Catalog Grid */}
         <main className="lg:col-span-3 space-y-6">
           <div className="hidden lg:flex items-center justify-between border-b border-brand-sienna/5 pb-2">
-            <span className="text-sm text-brand-espresso/60 font-medium">
+            <span className="text-sm text-brand-espresso/60 dark:text-brand-cream/60 font-medium">
               {isLoading ? (
                 <span className="animate-pulse">{language === "en" ? "Loading items..." : "لوڈ ہو رہا ہے..."}</span>
               ) : (

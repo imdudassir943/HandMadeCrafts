@@ -90,7 +90,7 @@ export default function ReviewSection() {
     <section className="py-16 sm:py-24 bg-white dark:bg-brand-espresso">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-3xl sm:text-4xl font-serif font-bold text-brand-espresso mb-4">
+          <h2 className="text-3xl sm:text-4xl font-serif font-bold text-brand-espresso dark:text-brand-cream mb-4">
             {t.heading}
           </h2>
           <p className="text-base sm:text-lg text-brand-sienna">
@@ -116,10 +116,10 @@ export default function ReviewSection() {
                   >
                     <div className="flex justify-between items-center mb-3">
                       <div>
-                        <h4 className="font-serif text-base font-bold text-brand-espresso">
+                        <h4 className="font-serif text-base font-bold text-brand-espresso dark:text-brand-cream">
                           {author}
                         </h4>
-                        <span className="text-xs text-brand-espresso/60">{review.date}</span>
+                        <span className="text-xs text-brand-espresso/60 dark:text-brand-cream/60">{review.date}</span>
                       </div>
                       {/* Stars */}
                       <div className="flex">
@@ -135,7 +135,7 @@ export default function ReviewSection() {
                         ))}
                       </div>
                     </div>
-                    <p className="text-sm text-brand-espresso/80 leading-relaxed italic">
+                    <p className="text-sm text-brand-espresso/80 dark:text-brand-cream/80 leading-relaxed italic">
                       {comment}
                     </p>
                   </motion.div>
@@ -146,14 +146,14 @@ export default function ReviewSection() {
 
           {/* Submission Form */}
           <div className="p-6 rounded-card border border-brand-sienna/20 bg-brand-cream/10 h-fit shadow-warm">
-            <h3 className="font-serif text-xl font-bold text-brand-espresso mb-4">
+            <h3 className="font-serif text-xl font-bold text-brand-espresso dark:text-brand-cream mb-4">
               {t.writeTitle}
             </h3>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Name input */}
               <div>
-                <label className="block text-xs font-semibold text-brand-espresso/70 mb-1">
+                <label className="block text-xs font-semibold text-brand-espresso/70 dark:text-brand-cream/70 mb-1">
                   {t.nameLabel}
                 </label>
                 <input
@@ -161,13 +161,13 @@ export default function ReviewSection() {
                   required
                   value={newAuthor}
                   onChange={(e) => setNewAuthor(e.target.value)}
-                  className="w-full rounded-input border border-brand-sienna/20 bg-white/70 px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30"
+                  className="w-full rounded-input border border-brand-sienna/20 bg-white/70 px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30 text-brand-espresso dark:text-brand-cream"
                 />
               </div>
 
               {/* Rating select */}
               <div>
-                <label className="block text-xs font-semibold text-brand-espresso/70 mb-1">
+                <label className="block text-xs font-semibold text-brand-espresso/70 dark:text-brand-cream/70 mb-1">
                   {t.ratingLabel}
                 </label>
                 <div className="flex gap-2">
@@ -196,7 +196,7 @@ export default function ReviewSection() {
 
               {/* Comment text area */}
               <div>
-                <label className="block text-xs font-semibold text-brand-espresso/70 mb-1">
+                <label className="block text-xs font-semibold text-brand-espresso/70 dark:text-brand-cream/70 mb-1">
                   {t.commentLabel}
                 </label>
                 <textarea
@@ -204,7 +204,7 @@ export default function ReviewSection() {
                   required
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
-                  className="w-full rounded-input border border-brand-sienna/20 bg-white/70 px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30"
+                  className="w-full rounded-input border border-brand-sienna/20 bg-white/70 px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30 text-brand-espresso dark:text-brand-cream"
                 />
               </div>
 
@@ -223,7 +223,7 @@ export default function ReviewSection() {
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
-                  className="mt-4 p-3 bg-brand-gold/20 border border-brand-gold/40 rounded-card text-xs text-brand-espresso text-center font-semibold"
+                  className="mt-4 p-3 bg-brand-gold/20 border border-brand-gold/40 rounded-card text-xs text-brand-espresso dark:text-brand-cream text-center font-semibold"
                 >
                   {t.successMsg}
                 </motion.div>

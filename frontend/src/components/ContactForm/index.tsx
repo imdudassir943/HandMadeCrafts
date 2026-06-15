@@ -100,11 +100,11 @@ export default function ContactForm() {
             className="space-y-6"
           >
             <div>
-              <h2 className="font-serif text-2xl font-bold text-brand-espresso mb-2 flex items-center gap-2">
+              <h2 className="font-serif text-2xl font-bold text-brand-espresso dark:text-brand-cream mb-2 flex items-center gap-2">
                 <MessageSquare className="h-5.5 w-5.5 text-brand-gold" />
                 <span>{t.title}</span>
               </h2>
-              <p className="text-sm text-brand-espresso/60 leading-relaxed">
+              <p className="text-sm text-brand-espresso/60 dark:text-brand-cream/60 leading-relaxed">
                 {t.sub}
               </p>
             </div>
@@ -113,7 +113,7 @@ export default function ContactForm() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Name */}
                 <div>
-                  <label className="block text-xs font-semibold text-brand-espresso/70 mb-1">
+                  <label className="block text-xs font-semibold text-brand-espresso/70 dark:text-brand-cream/70 mb-1">
                     {t.nameLabel}
                   </label>
                   <input
@@ -122,12 +122,12 @@ export default function ContactForm() {
                     disabled={isSubmitting}
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full rounded-input border border-brand-sienna/20 bg-brand-cream/5 px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30 disabled:opacity-50"
+                    className="w-full rounded-input border border-brand-sienna/20 bg-brand-cream/5 px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30 text-brand-espresso dark:text-brand-cream disabled:opacity-50"
                   />
                 </div>
                 {/* Email */}
                 <div>
-                  <label className="block text-xs font-semibold text-brand-espresso/70 mb-1">
+                  <label className="block text-xs font-semibold text-brand-espresso/70 dark:text-brand-cream/70 mb-1">
                     {t.emailLabel}
                   </label>
                   <input
@@ -136,21 +136,21 @@ export default function ContactForm() {
                     disabled={isSubmitting}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full rounded-input border border-brand-sienna/20 bg-brand-cream/5 px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30 disabled:opacity-50"
+                    className="w-full rounded-input border border-brand-sienna/20 bg-brand-cream/5 px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30 text-brand-espresso dark:text-brand-cream disabled:opacity-50"
                   />
                 </div>
               </div>
 
               {/* Subject Category Select */}
               <div>
-                <label className="block text-xs font-semibold text-brand-espresso/70 mb-1">
+                <label className="block text-xs font-semibold text-brand-espresso/70 dark:text-brand-cream/70 mb-1">
                   {t.subjectLabel}
                 </label>
                 <select
                   value={subject}
                   disabled={isSubmitting}
                   onChange={(e) => setSubject(e.target.value)}
-                  className="w-full rounded-input border border-brand-sienna/20 bg-brand-cream/5 px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30 text-brand-espresso"
+                  className="w-full rounded-input border border-brand-sienna/20 bg-brand-cream/5 px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30 text-brand-espresso dark:text-brand-cream"
                 >
                   <option value="general">{t.subjectGeneral}</option>
                   <option value="custom">{t.subjectCustom}</option>
@@ -161,7 +161,7 @@ export default function ContactForm() {
 
               {/* Message */}
               <div>
-                <label className="block text-xs font-semibold text-brand-espresso/70 mb-1">
+                <label className="block text-xs font-semibold text-brand-espresso/70 dark:text-brand-cream/70 mb-1">
                   {t.messageLabel}
                 </label>
                 <textarea
@@ -171,7 +171,7 @@ export default function ContactForm() {
                   placeholder={t.messagePlaceholder}
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  className="w-full rounded-input border border-brand-sienna/20 bg-brand-cream/5 px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30 disabled:opacity-50"
+                  className="w-full rounded-input border border-brand-sienna/20 bg-brand-cream/5 px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30 text-brand-espresso dark:text-brand-cream disabled:opacity-50"
                 />
               </div>
 
@@ -208,10 +208,10 @@ export default function ContactForm() {
             </div>
 
             <div className="space-y-2">
-              <h3 className="font-serif text-2xl font-bold text-brand-espresso">
+              <h3 className="font-serif text-2xl font-bold text-brand-espresso dark:text-brand-cream">
                 {t.successTitle}
               </h3>
-              <p className="text-sm text-brand-espresso/75 max-w-sm mx-auto leading-relaxed">
+              <p className="text-sm text-brand-espresso/75 dark:text-brand-cream/75 max-w-sm mx-auto leading-relaxed">
                 {t.successSub}
               </p>
             </div>
@@ -219,7 +219,7 @@ export default function ContactForm() {
             <div>
               <button
                 onClick={() => setShowSuccess(false)}
-                className="rounded-button border border-brand-sienna/30 text-brand-espresso px-5 py-2.5 text-xs font-semibold hover:bg-brand-cream/10"
+                className="rounded-button border border-brand-sienna/30 dark:border-brand-gold/30 text-brand-espresso dark:text-brand-cream px-5 py-2.5 text-xs font-semibold hover:bg-brand-cream/10"
               >
                 {t.backBtn}
               </button>

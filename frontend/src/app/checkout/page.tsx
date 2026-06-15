@@ -177,7 +177,7 @@ export default function Checkout() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       {step !== "success" && (
-        <h1 className="text-3xl font-serif font-bold text-brand-espresso mb-8 border-b border-brand-sienna/10 pb-4">
+        <h1 className="text-3xl font-serif font-bold text-brand-espresso dark:text-brand-cream mb-8 border-b border-brand-sienna/10 pb-4">
           {t.heading}
         </h1>
       )}
@@ -194,7 +194,7 @@ export default function Checkout() {
                 exit={{ opacity: 0, x: direction === "rtl" ? -20 : 20 }}
                 className="bg-white dark:bg-brand-espresso p-6 rounded-card border border-brand-sienna/10 shadow-warm"
               >
-                <h2 className="font-serif text-xl font-bold text-brand-espresso mb-6 flex items-center gap-2">
+                <h2 className="font-serif text-xl font-bold text-brand-espresso dark:text-brand-cream mb-6 flex items-center gap-2">
                   <Truck className="h-5 w-5 text-brand-gold" />
                   <span>{t.shippingTitle}</span>
                 </h2>
@@ -202,7 +202,7 @@ export default function Checkout() {
                 <form onSubmit={handleShippingSubmit} className="space-y-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-semibold text-brand-espresso/70 mb-1">
+                      <label className="block text-xs font-semibold text-brand-espresso/70 dark:text-brand-cream/70 mb-1">
                         {t.nameLabel}
                       </label>
                       <input
@@ -210,11 +210,11 @@ export default function Checkout() {
                         required
                         value={shippingName}
                         onChange={(e) => setShippingName(e.target.value)}
-                        className="w-full rounded-input border border-brand-sienna/20 bg-brand-cream/5 px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30"
+                        className="w-full rounded-input border border-brand-sienna/20 bg-brand-cream/5 px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30 text-brand-espresso dark:text-brand-cream"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-brand-espresso/70 mb-1">
+                      <label className="block text-xs font-semibold text-brand-espresso/70 dark:text-brand-cream/70 mb-1">
                         {t.emailLabel}
                       </label>
                       <input
@@ -222,13 +222,13 @@ export default function Checkout() {
                         required
                         value={shippingEmail}
                         onChange={(e) => setShippingEmail(e.target.value)}
-                        className="w-full rounded-input border border-brand-sienna/20 bg-brand-cream/5 px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30"
+                        className="w-full rounded-input border border-brand-sienna/20 bg-brand-cream/5 px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30 text-brand-espresso dark:text-brand-cream"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-brand-espresso/70 mb-1">
+                    <label className="block text-xs font-semibold text-brand-espresso/70 dark:text-brand-cream/70 mb-1">
                       {t.addressLabel}
                     </label>
                     <input
@@ -236,13 +236,13 @@ export default function Checkout() {
                       required
                       value={shippingAddress}
                       onChange={(e) => setShippingAddress(e.target.value)}
-                      className="w-full rounded-input border border-brand-sienna/20 bg-brand-cream/5 px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30"
+                      className="w-full rounded-input border border-brand-sienna/20 bg-brand-cream/5 px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30 text-brand-espresso dark:text-brand-cream"
                     />
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-semibold text-brand-espresso/70 mb-1">
+                      <label className="block text-xs font-semibold text-brand-espresso/70 dark:text-brand-cream/70 mb-1">
                         {t.cityLabel}
                       </label>
                       <input
@@ -250,11 +250,11 @@ export default function Checkout() {
                         required
                         value={shippingCity}
                         onChange={(e) => setShippingCity(e.target.value)}
-                        className="w-full rounded-input border border-brand-sienna/20 bg-brand-cream/5 px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30"
+                        className="w-full rounded-input border border-brand-sienna/20 bg-brand-cream/5 px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30 text-brand-espresso dark:text-brand-cream"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-brand-espresso/70 mb-1">
+                      <label className="block text-xs font-semibold text-brand-espresso/70 dark:text-brand-cream/70 mb-1">
                         {t.countryLabel}
                       </label>
                       <input
@@ -262,7 +262,7 @@ export default function Checkout() {
                         required
                         value={shippingCountry}
                         onChange={(e) => setShippingCountry(e.target.value)}
-                        className="w-full rounded-input border border-brand-sienna/20 bg-brand-cream/5 px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30"
+                        className="w-full rounded-input border border-brand-sienna/20 bg-brand-cream/5 px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30 text-brand-espresso dark:text-brand-cream"
                       />
                     </div>
                   </div>
@@ -288,14 +288,14 @@ export default function Checkout() {
                 exit={{ opacity: 0, x: direction === "rtl" ? -20 : 20 }}
                 className="bg-white dark:bg-brand-espresso p-6 rounded-card border border-brand-sienna/10 shadow-warm"
               >
-                <h2 className="font-serif text-xl font-bold text-brand-espresso mb-6 flex items-center gap-2">
+                <h2 className="font-serif text-xl font-bold text-brand-espresso dark:text-brand-cream mb-6 flex items-center gap-2">
                   <CreditCard className="h-5 w-5 text-brand-gold" />
                   <span>{t.paymentTitle}</span>
                 </h2>
 
                 <form onSubmit={handlePaymentSubmit} className="space-y-4">
                   <div>
-                    <label className="block text-xs font-semibold text-brand-espresso/70 mb-1">
+                    <label className="block text-xs font-semibold text-brand-espresso/70 dark:text-brand-cream/70 mb-1">
                       {t.cardLabel}
                     </label>
                     <input
@@ -304,13 +304,13 @@ export default function Checkout() {
                       placeholder="1234 5678 9012 3456"
                       value={cardNumber}
                       onChange={(e) => setCardNumber(e.target.value)}
-                      className="w-full rounded-input border border-brand-sienna/20 bg-brand-cream/5 px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30"
+                      className="w-full rounded-input border border-brand-sienna/20 bg-brand-cream/5 px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30 text-brand-espresso dark:text-brand-cream"
                     />
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-semibold text-brand-espresso/70 mb-1">
+                      <label className="block text-xs font-semibold text-brand-espresso/70 dark:text-brand-cream/70 mb-1">
                         {t.expiryLabel}
                       </label>
                       <input
@@ -319,11 +319,11 @@ export default function Checkout() {
                         placeholder="MM/YY"
                         value={cardExpiry}
                         onChange={(e) => setCardExpiry(e.target.value)}
-                        className="w-full rounded-input border border-brand-sienna/20 bg-brand-cream/5 px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30"
+                        className="w-full rounded-input border border-brand-sienna/20 bg-brand-cream/5 px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30 text-brand-espresso dark:text-brand-cream"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-brand-espresso/70 mb-1">
+                      <label className="block text-xs font-semibold text-brand-espresso/70 dark:text-brand-cream/70 mb-1">
                         {t.cvvLabel}
                       </label>
                       <input
@@ -333,7 +333,7 @@ export default function Checkout() {
                         placeholder="123"
                         value={cardCvv}
                         onChange={(e) => setCardCvv(e.target.value)}
-                        className="w-full rounded-input border border-brand-sienna/20 bg-brand-cream/5 px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30"
+                        className="w-full rounded-input border border-brand-sienna/20 bg-brand-cream/5 px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30 text-brand-espresso dark:text-brand-cream"
                       />
                     </div>
                   </div>
@@ -342,7 +342,7 @@ export default function Checkout() {
                     <button
                       type="button"
                       onClick={() => setStep("shipping")}
-                      className="rounded-button border border-brand-sienna/30 text-brand-espresso px-5 py-2.5 font-semibold hover:bg-brand-cream/10 flex items-center gap-2"
+                      className="rounded-button border border-brand-sienna/30 dark:border-brand-gold/30 text-brand-espresso dark:text-brand-cream px-5 py-2.5 font-semibold hover:bg-brand-cream/10 flex items-center gap-2"
                     >
                       <ArrowLeft className={`h-4 w-4 ${direction === "rtl" ? "rotate-180" : ""}`} />
                       <span>{t.backBtn}</span>
@@ -372,31 +372,31 @@ export default function Checkout() {
                 </div>
 
                 <div className="space-y-2">
-                  <h2 className="font-serif text-3xl font-bold text-brand-espresso">
+                  <h2 className="font-serif text-3xl font-bold text-brand-espresso dark:text-brand-cream">
                     {t.successTitle}
                   </h2>
-                  <p className="text-sm text-brand-espresso/70 leading-relaxed">
+                  <p className="text-sm text-brand-espresso/70 dark:text-brand-cream/70 leading-relaxed">
                     {t.successSub}
                   </p>
                 </div>
 
                 <div className="bg-brand-cream/15 p-4 rounded-card border border-brand-sienna/10 inline-block">
-                  <span className="text-xs font-semibold text-brand-sienna uppercase tracking-wider block">
+                  <span className="text-xs font-semibold text-brand-sienna dark:text-brand-gold uppercase tracking-wider block">
                     {t.orderNumber}
                   </span>
-                  <span className="text-xl font-bold font-serif text-brand-crimson mt-1 block">
+                  <span className="text-xl font-bold font-serif text-brand-crimson dark:text-brand-gold mt-1 block">
                     {orderId}
                   </span>
                 </div>
 
-                <p className="text-xs text-brand-espresso/60 font-medium">
+                <p className="text-xs text-brand-espresso/60 dark:text-brand-cream/60 font-medium">
                   {t.trackSub}
                 </p>
 
                 <div className="pt-2">
                   <Link
                     href="/"
-                    className="inline-flex rounded-button bg-brand-espresso text-brand-cream px-6 py-2.5 font-semibold hover:bg-brand-espresso/90 shadow-md"
+                    className="inline-flex rounded-button bg-brand-espresso dark:bg-brand-gold text-brand-cream dark:text-brand-espresso px-6 py-2.5 font-semibold hover:bg-brand-espresso/90 dark:hover:bg-brand-gold/90 shadow-md"
                   >
                     {t.homeBtn}
                   </Link>
@@ -409,7 +409,7 @@ export default function Checkout() {
         {/* Right column: Sticky Checkout Order Summary Panel */}
         {step !== "success" && (
           <div className="lg:col-span-4 bg-white dark:bg-brand-espresso border border-brand-sienna/10 rounded-card p-6 shadow-warm lg:sticky lg:top-24">
-            <h2 className="font-serif text-lg font-bold text-brand-espresso pb-3 border-b border-brand-sienna/10 flex items-center gap-2 mb-4">
+            <h2 className="font-serif text-lg font-bold text-brand-espresso dark:text-brand-cream pb-3 border-b border-brand-sienna/10 dark:border-brand-gold/15 flex items-center gap-2 mb-4">
               <Receipt className="h-4.5 w-4.5 text-brand-gold" />
               <span>{t.cartSummary}</span>
             </h2>
@@ -421,30 +421,30 @@ export default function Checkout() {
                 return (
                   <div key={item.product.id} className="flex justify-between text-sm items-center gap-2">
                     <div className="flex items-center gap-2">
-                      <span className="text-xs text-brand-espresso/60 font-bold border border-brand-sienna/10 rounded px-1.5 py-0.5 bg-brand-cream/5">
+                      <span className="text-xs text-brand-espresso/60 dark:text-brand-cream/60 font-bold border border-brand-sienna/10 dark:border-brand-gold/20 rounded px-1.5 py-0.5 bg-brand-cream/5">
                         {item.quantity}x
                       </span>
-                      <span className="font-medium text-brand-espresso/80 line-clamp-1">{itemName}</span>
+                      <span className="font-medium text-brand-espresso/80 dark:text-brand-cream/80 line-clamp-1">{itemName}</span>
                     </div>
-                    <span className="font-bold text-brand-crimson">${item.product.price * item.quantity}</span>
+                    <span className="font-bold text-brand-crimson dark:text-brand-gold">${item.product.price * item.quantity}</span>
                   </div>
                 );
               })}
             </div>
 
             {/* Calculations */}
-            <div className="border-t border-brand-sienna/10 pt-4 space-y-2 text-sm">
+            <div className="border-t border-brand-sienna/10 dark:border-brand-gold/15 pt-4 space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-brand-espresso/70 font-medium">Subtotal:</span>
-                <span className="font-bold text-brand-espresso">${cartTotal}</span>
+                <span className="text-brand-espresso/70 dark:text-brand-cream/70 font-medium">Subtotal:</span>
+                <span className="font-bold text-brand-espresso dark:text-brand-cream">${cartTotal}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-brand-espresso/70 font-medium">{t.shippingCost}:</span>
+                <span className="text-brand-espresso/70 dark:text-brand-cream/70 font-medium">{t.shippingCost}:</span>
                 <span className="font-bold text-brand-gold uppercase">{t.free}</span>
               </div>
-              <div className="border-t border-brand-sienna/10 pt-3 flex justify-between items-center text-base font-bold text-brand-espresso">
+              <div className="border-t border-brand-sienna/10 dark:border-brand-gold/15 pt-3 flex justify-between items-center text-base font-bold text-brand-espresso dark:text-brand-cream">
                 <span>{t.total}:</span>
-                <span className="text-xl text-brand-crimson">${cartTotal}</span>
+                <span className="text-xl text-brand-crimson dark:text-brand-gold">${cartTotal}</span>
               </div>
             </div>
           </div>
