@@ -23,6 +23,7 @@ export default function Checkout() {
   const [shippingCountry, setShippingCountry] = useState("");
 
   // Payment Form States
+  const [paymentMethod, setPaymentMethod] = useState<"Card" | "Cash on Delivery">("Card");
   const [cardNumber, setCardNumber] = useState("");
   const [cardExpiry, setCardExpiry] = useState("");
   const [cardCvv, setCardCvv] = useState("");
@@ -57,6 +58,9 @@ export default function Checkout() {
       homeBtn: "Return Home",
       emptyCart: "Your cart is empty",
       emptySub: "Please add products to your cart before checking out.",
+      cardPayment: "Pay with Card",
+      codPayment: "Cash on Delivery",
+      codInfo: "You will pay cash when your handcrafted treasures are delivered to your door.",
     },
     ur: {
       heading: "چیک آؤٹ",
@@ -84,6 +88,9 @@ export default function Checkout() {
       homeBtn: "ہوم پیج پر جائیں",
       emptyCart: "آپ کی کارٹ خالی ہے",
       emptySub: "چیک آؤٹ کرنے سے پہلے کارٹ میں مصنوعات شامل کریں۔",
+      cardPayment: "کارڈ سے ادائیگی",
+      codPayment: "کیش آن ڈیلیوری",
+      codInfo: "جب آپ کی دستکاریاں آپ کے دروازے پر پہنچائی جائیں گی تو آپ نقد رقم ادا کریں گے۔",
     },
   }[language];
 
@@ -96,7 +103,7 @@ export default function Checkout() {
 
   const handlePaymentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (cardNumber && cardExpiry && cardCvv) {
+    if (paymentMethod === "Cash on Delivery" || (cardNumber && cardExpiry && cardCvv)) {
       setIsSubmitting(true);
       try {
         // Prepare items list
@@ -139,7 +146,7 @@ export default function Checkout() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             order_number: orderData.order_number,
-            payment_method: "Card"
+            payment_method: paymentMethod
           })
         });
 
@@ -293,50 +300,96 @@ export default function Checkout() {
                   <span>{t.paymentTitle}</span>
                 </h2>
 
-                <form onSubmit={handlePaymentSubmit} className="space-y-4">
-                  <div>
-                    <label className="block text-xs font-semibold text-brand-espresso/70 dark:text-brand-cream/70 mb-1">
-                      {t.cardLabel}
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="1234 5678 9012 3456"
-                      value={cardNumber}
-                      onChange={(e) => setCardNumber(e.target.value)}
-                      className="w-full rounded-input border border-brand-sienna/20 bg-brand-cream/5 px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30 text-brand-espresso dark:text-brand-cream"
-                    />
+                <form onSubmit={handlePaymentSubmit} className="space-y-6">
+                  {/* Payment Method Tabs */}
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <button
+                      type="button"
+                      onClick={() => setPaymentMethod("Card")}
+                      className={`flex flex-col items-center justify-center p-4 rounded-card border text-sm font-semibold transition-all ${
+                        paymentMethod === "Card"
+                          ? "border-brand-gold bg-brand-gold/10 text-brand-espresso dark:text-brand-cream"
+                          : "border-brand-sienna/20 hover:bg-brand-cream/5 text-brand-espresso/60 dark:text-brand-cream/60"
+                      }`}
+                    >
+                      <CreditCard className="h-5 w-5 mb-2 text-brand-gold" />
+                      <span>{t.cardPayment}</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setPaymentMethod("Cash on Delivery")}
+                      className={`flex flex-col items-center justify-center p-4 rounded-card border text-sm font-semibold transition-all ${
+                        paymentMethod === "Cash on Delivery"
+                          ? "border-brand-gold bg-brand-gold/10 text-brand-espresso dark:text-brand-cream"
+                          : "border-brand-sienna/20 hover:bg-brand-cream/5 text-brand-espresso/60 dark:text-brand-cream/60"
+                      }`}
+                    >
+                      <Truck className="h-5 w-5 mb-2 text-brand-gold" />
+                      <span>{t.codPayment}</span>
+                    </button>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-semibold text-brand-espresso/70 dark:text-brand-cream/70 mb-1">
-                        {t.expiryLabel}
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        placeholder="MM/YY"
-                        value={cardExpiry}
-                        onChange={(e) => setCardExpiry(e.target.value)}
-                        className="w-full rounded-input border border-brand-sienna/20 bg-brand-cream/5 px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30 text-brand-espresso dark:text-brand-cream"
-                      />
+                  {paymentMethod === "Card" ? (
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-xs font-semibold text-brand-espresso/70 dark:text-brand-cream/70 mb-1">
+                          {t.cardLabel}
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          placeholder="1234 5678 9012 3456"
+                          value={cardNumber}
+                          onChange={(e) => setCardNumber(e.target.value)}
+                          className="w-full rounded-input border border-brand-sienna/20 bg-brand-cream/5 px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30 text-brand-espresso dark:text-brand-cream"
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-xs font-semibold text-brand-espresso/70 dark:text-brand-cream/70 mb-1">
+                            {t.expiryLabel}
+                          </label>
+                          <input
+                            type="text"
+                            required
+                            placeholder="MM/YY"
+                            value={cardExpiry}
+                            onChange={(e) => setCardExpiry(e.target.value)}
+                            className="w-full rounded-input border border-brand-sienna/20 bg-brand-cream/5 px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30 text-brand-espresso dark:text-brand-cream"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-semibold text-brand-espresso/70 dark:text-brand-cream/70 mb-1">
+                            {t.cvvLabel}
+                          </label>
+                          <input
+                            type="password"
+                            required
+                            maxLength={4}
+                            placeholder="123"
+                            value={cardCvv}
+                            onChange={(e) => setCardCvv(e.target.value)}
+                            className="w-full rounded-input border border-brand-sienna/20 bg-brand-cream/5 px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30 text-brand-espresso dark:text-brand-cream"
+                          />
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <label className="block text-xs font-semibold text-brand-espresso/70 dark:text-brand-cream/70 mb-1">
-                        {t.cvvLabel}
-                      </label>
-                      <input
-                        type="password"
-                        required
-                        maxLength={4}
-                        placeholder="123"
-                        value={cardCvv}
-                        onChange={(e) => setCardCvv(e.target.value)}
-                        className="w-full rounded-input border border-brand-sienna/20 bg-brand-cream/5 px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30 text-brand-espresso dark:text-brand-cream"
-                      />
-                    </div>
-                  </div>
+                  ) : (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="p-5 bg-brand-gold/10 border border-brand-gold/30 rounded-card flex items-start gap-3 text-sm text-brand-espresso dark:text-brand-cream"
+                    >
+                      <Truck className="h-5 w-5 text-brand-gold flex-shrink-0 mt-0.5" />
+                      <div>
+                        <p className="font-semibold mb-1">{t.codPayment}</p>
+                        <p className="text-xs text-brand-espresso/80 dark:text-brand-cream/80">
+                          {t.codInfo}
+                        </p>
+                      </div>
+                    </motion.div>
+                  )}
 
                   <div className="pt-4 flex justify-between">
                     <button

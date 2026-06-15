@@ -25,12 +25,14 @@ class PaymentProcessView(views.APIView):
 
         transaction_id = f"TXN-{random.randint(10000000, 99999999)}"
 
+        status_val = 'Pending' if payment_method == 'Cash on Delivery' else 'Paid'
+
         payment = Payment.objects.create(
             order=order,
             payment_method=payment_method,
             transaction_id=transaction_id,
             amount=order.total_price,
-            status='Paid'
+            status=status_val
         )
 
         order.status = 'Processing'

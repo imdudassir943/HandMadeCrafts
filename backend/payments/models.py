@@ -4,6 +4,7 @@ from orders.models import Order
 class Payment(models.Model):
     STATUS_CHOICES = [
         ('Paid', 'Paid'),
+        ('Pending', 'Pending'),
         ('Failed', 'Failed'),
         ('Refunded', 'Refunded'),
     ]
