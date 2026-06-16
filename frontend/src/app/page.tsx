@@ -98,6 +98,7 @@ export default function Home() {
       textiles: "Textiles",
       woodwork: "Woodwork",
       lighting: "Lighting",
+      seeAll: "See All Products",
     },
     ur: {
       cta: "کلیکشن خریدیں",
@@ -109,6 +110,7 @@ export default function Home() {
       textiles: "منسوجات",
       woodwork: "لکڑی کا کام",
       lighting: "لائٹس اور فانوس",
+      seeAll: "تمام پروڈکٹس دیکھیں",
     },
   }[language];
 
@@ -264,6 +266,51 @@ export default function Home() {
             <ProductCard key={product.id} product={product} index={idx} />
           ))}
         </div>
+
+        {/* See All Products Button */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="mt-12 flex justify-center"
+        >
+          <Link href="/shop" passHref legacyBehavior>
+            <motion.a
+              whileHover="hover"
+              whileTap="tap"
+              className="relative overflow-hidden inline-flex items-center gap-3 rounded-button bg-brand-crimson px-8 py-3.5 font-semibold text-brand-cream shadow-lg hover:shadow-xl hover:shadow-brand-crimson/20 dark:hover:shadow-brand-gold/10 transition-all duration-300 group cursor-pointer border border-brand-crimson/10 dark:border-brand-gold/20"
+            >
+              {/* Glossy sweep overlay */}
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none -skew-x-12"
+                variants={{
+                  hover: {
+                    x: ["-100%", "200%"],
+                    transition: { duration: 1.2, ease: "easeInOut", repeat: Infinity, repeatDelay: 1 }
+                  }
+                }}
+                initial={{ x: "-100%" }}
+              />
+
+              <span className="relative z-10 tracking-wide text-sm sm:text-base">{t.seeAll}</span>
+              
+              <motion.span
+                className="relative z-10 flex items-center justify-center"
+                variants={{
+                  initial: { x: 0 },
+                  hover: { x: direction === "rtl" ? -5 : 5 }
+                }}
+                transition={{ type: "spring", stiffness: 300, damping: 12 }}
+              >
+                <ArrowRight className={`h-4 w-4 sm:h-5 sm:w-5 ${direction === "rtl" ? "rotate-180" : ""}`} />
+              </motion.span>
+
+              {/* Glowing background bloom on hover */}
+              <span className="absolute inset-0 bg-gradient-to-r from-brand-crimson via-brand-sienna to-brand-gold opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
+            </motion.a>
+          </Link>
+        </motion.div>
       </section>
 
       {/* 4. Storytelling Artisan Showcase */}
