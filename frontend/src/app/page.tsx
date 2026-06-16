@@ -15,6 +15,30 @@ import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { API_BASE_URL } from "@/config";
 import { Product } from "@/types";
 
+const heroContainerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.15,
+      delayChildren: 0.2,
+    },
+  },
+} as const;
+
+const heroItemVariants = {
+  hidden: { opacity: 0, y: 24 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: "spring",
+      stiffness: 90,
+      damping: 18,
+    },
+  },
+} as const;
+
 export default function Home() {
   const { language, direction } = useLanguage();
   const [heroTitle, setHeroTitle] = React.useState("");
@@ -138,26 +162,49 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:items-center">
             {/* Hero Copy */}
-            <div className="lg:col-span-7 space-y-6 text-center lg:text-start">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-gold/20 text-brand-gold text-xs font-semibold uppercase tracking-wider">
+            <motion.div
+              variants={heroContainerVariants}
+              initial="hidden"
+              animate="visible"
+              className="lg:col-span-7 space-y-6 text-center lg:text-start"
+            >
+              <motion.div
+                variants={heroItemVariants}
+                className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-gold/20 text-brand-gold text-xs font-semibold uppercase tracking-wider"
+              >
                 <Sparkles className="h-3.5 w-3.5" />
                 <span>{language === "en" ? "100% Authentic Handiwork" : "100% خالص دستکاری"}</span>
-              </div>
+              </motion.div>
               
               <motion.h1
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
+                variants={{
+                  hidden: { opacity: 0, y: 30 },
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    transition: {
+                      type: "spring",
+                      stiffness: 80,
+                      damping: 15,
+                    },
+                  },
+                }}
                 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] text-white"
               >
                 {heroTitle}
               </motion.h1>
               
-              <p className="text-base sm:text-lg lg:text-xl text-brand-cream/80 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+              <motion.p
+                variants={heroItemVariants}
+                className="text-base sm:text-lg lg:text-xl text-brand-cream/80 max-w-2xl mx-auto lg:mx-0 leading-relaxed"
+              >
                 {heroSub}
-              </p>
+              </motion.p>
 
-              <div className="pt-4 flex flex-wrap justify-center lg:justify-start gap-4">
+              <motion.div
+                variants={heroItemVariants}
+                className="pt-4 flex flex-wrap justify-center lg:justify-start gap-4"
+              >
                 <Link
                   href="/shop"
                   className="inline-flex items-center gap-2 rounded-button bg-brand-gold px-6 py-3 font-semibold text-brand-espresso hover:bg-brand-gold/90 transition-colors shadow-lg shadow-brand-crimson/20"
@@ -165,8 +212,8 @@ export default function Home() {
                   <span>{t.cta}</span>
                   <ArrowRight className={`h-4 w-4 ${direction === "rtl" ? "rotate-180" : ""}`} />
                 </Link>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
 
             {/* Hero Interactive Collage (moves with cursor) */}
             <div className="lg:col-span-5 relative hidden lg:flex justify-center">
