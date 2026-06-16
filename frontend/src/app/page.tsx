@@ -20,21 +20,63 @@ const heroContainerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.15,
-      delayChildren: 0.2,
+      staggerChildren: 0.18,
+      delayChildren: 0.1,
     },
   },
 } as const;
 
-const heroItemVariants = {
-  hidden: { opacity: 0, y: 24 },
+const heroBadgeVariants = {
+  hidden: { opacity: 0, y: -30, scale: 0.9 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      type: "spring",
+      stiffness: 100,
+      damping: 16,
+    },
+  },
+} as const;
+
+const heroHeadingVariants = {
+  hidden: { opacity: 0, y: 120, skewY: 6 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    skewY: 0,
+    transition: {
+      type: "spring",
+      stiffness: 65,
+      damping: 12,
+    },
+  },
+} as const;
+
+const heroParagraphVariants = {
+  hidden: { opacity: 0, y: 40 },
   visible: {
     opacity: 1,
     y: 0,
     transition: {
       type: "spring",
-      stiffness: 90,
+      stiffness: 80,
       damping: 18,
+    },
+  },
+} as const;
+
+const heroCtaVariants = {
+  hidden: { opacity: 0, y: 30, scale: 0.95 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      type: "spring",
+      stiffness: 90,
+      damping: 15,
     },
   },
 } as const;
@@ -168,51 +210,48 @@ export default function Home() {
               animate="visible"
               className="lg:col-span-7 space-y-6 text-center lg:text-start"
             >
-              <motion.div
-                variants={heroItemVariants}
-                className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-gold/20 text-brand-gold text-xs font-semibold uppercase tracking-wider"
-              >
-                <Sparkles className="h-3.5 w-3.5" />
-                <span>{language === "en" ? "100% Authentic Handiwork" : "100% خالص دستکاری"}</span>
-              </motion.div>
-              
-              <motion.h1
-                variants={{
-                  hidden: { opacity: 0, y: 30 },
-                  visible: {
-                    opacity: 1,
-                    y: 0,
-                    transition: {
-                      type: "spring",
-                      stiffness: 80,
-                      damping: 15,
-                    },
-                  },
-                }}
-                className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] text-white"
-              >
-                {heroTitle}
-              </motion.h1>
-              
-              <motion.p
-                variants={heroItemVariants}
-                className="text-base sm:text-lg lg:text-xl text-brand-cream/80 max-w-2xl mx-auto lg:mx-0 leading-relaxed"
-              >
-                {heroSub}
-              </motion.p>
-
-              <motion.div
-                variants={heroItemVariants}
-                className="pt-4 flex flex-wrap justify-center lg:justify-start gap-4"
-              >
-                <Link
-                  href="/shop"
-                  className="inline-flex items-center gap-2 rounded-button bg-brand-gold px-6 py-3 font-semibold text-brand-espresso hover:bg-brand-gold/90 transition-colors shadow-lg shadow-brand-crimson/20"
+              <div className="overflow-hidden py-1">
+                <motion.div
+                  variants={heroBadgeVariants}
+                  className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-gold/20 text-brand-gold text-xs font-semibold uppercase tracking-wider"
                 >
-                  <span>{t.cta}</span>
-                  <ArrowRight className={`h-4 w-4 ${direction === "rtl" ? "rotate-180" : ""}`} />
-                </Link>
-              </motion.div>
+                  <Sparkles className="h-3.5 w-3.5" />
+                  <span>{language === "en" ? "100% Authentic Handiwork" : "100% خالص دستکاری"}</span>
+                </motion.div>
+              </div>
+              
+              <div className="overflow-hidden py-2">
+                <motion.h1
+                  variants={heroHeadingVariants}
+                  className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] text-white origin-left"
+                >
+                  {heroTitle}
+                </motion.h1>
+              </div>
+              
+              <div className="overflow-hidden py-1">
+                <motion.p
+                  variants={heroParagraphVariants}
+                  className="text-base sm:text-lg lg:text-xl text-brand-cream/80 max-w-2xl mx-auto lg:mx-0 leading-relaxed"
+                >
+                  {heroSub}
+                </motion.p>
+              </div>
+
+              <div className="overflow-hidden py-2">
+                <motion.div
+                  variants={heroCtaVariants}
+                  className="pt-4 flex flex-wrap justify-center lg:justify-start gap-4"
+                >
+                  <Link
+                    href="/shop"
+                    className="inline-flex items-center gap-2 rounded-button bg-brand-gold px-6 py-3 font-semibold text-brand-espresso hover:bg-brand-gold/90 transition-colors shadow-lg shadow-brand-crimson/20"
+                  >
+                    <span>{t.cta}</span>
+                    <ArrowRight className={`h-4 w-4 ${direction === "rtl" ? "rotate-180" : ""}`} />
+                  </Link>
+                </motion.div>
+              </div>
             </motion.div>
 
             {/* Hero Interactive Collage (moves with cursor) */}
