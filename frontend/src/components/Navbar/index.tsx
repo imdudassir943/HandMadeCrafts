@@ -22,6 +22,15 @@ export default function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [brandName, setBrandName] = useState("");
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  React.useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   React.useEffect(() => {
     fetch(`${API_BASE_URL}/dashboard/settings/`)
@@ -99,8 +108,14 @@ export default function Navbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-brand-sienna/10 bg-white/80 backdrop-blur-md dark:bg-brand-espresso/80 shadow-warm">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+    <header className={`sticky top-0 z-40 w-full border-b transition-all duration-300 backdrop-blur-md ${
+      isScrolled
+        ? "bg-white/95 dark:bg-brand-espresso/95 shadow-md border-brand-sienna/15"
+        : "bg-white/80 dark:bg-brand-espresso/80 shadow-warm border-brand-sienna/10"
+    }`}>
+      <div className={`mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8 transition-all duration-300 ${
+        isScrolled ? "h-14" : "h-16"
+      }`}>
         {/* Mobile menu toggle */}
         <button
           type="button"
@@ -114,15 +129,16 @@ export default function Navbar() {
 
         {/* Logo */}
         <div className="flex lg:flex-1">
-          <Link href="/" className="flex items-center gap-2.5">
+          <Link href="/" className="flex items-center gap-2.5 group">
             {logoUrl && (
-              <img
+              <motion.img
                 src={logoUrl}
                 alt={brandName || t.brand}
-                className="hidden min-[540px]:block h-9 w-9 rounded-full object-cover border border-brand-sienna/10"
+                whileHover={{ scale: 1.08, rotate: 8 }}
+                className="hidden min-[540px]:block h-9 w-9 rounded-full object-cover border border-brand-sienna/10 transition-transform duration-300"
               />
             )}
-            <span className="font-serif text-2xl font-bold tracking-wide text-brand-crimson dark:text-brand-gold transition-colors duration-200">
+            <span className="font-serif text-2xl font-bold tracking-wide text-brand-crimson dark:text-brand-gold group-hover:text-brand-gold dark:group-hover:text-brand-cream transition-colors duration-300">
               {brandName || t.brand}
             </span>
           </Link>
@@ -136,19 +152,21 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`relative py-1 text-sm font-semibold transition-colors duration-200 ${
+                className={`relative py-1 text-sm font-semibold transition-colors duration-200 group ${
                   isActive
                     ? "text-brand-crimson dark:text-brand-gold"
                     : "text-brand-espresso hover:text-brand-gold dark:text-brand-cream dark:hover:text-brand-gold"
                 }`}
               >
                 <span>{link.label}</span>
-                {isActive && (
+                {isActive ? (
                   <motion.span
                     layoutId="desktop-active-underline"
                     className="absolute -bottom-1 left-0 right-0 h-[2px] rounded-full bg-brand-crimson dark:bg-brand-gold"
                     transition={{ type: "spring", stiffness: 350, damping: 30 }}
                   />
+                ) : (
+                  <span className="absolute -bottom-1 left-0 w-0 h-[2px] rounded-full bg-brand-gold/60 dark:bg-brand-gold/40 transition-all duration-300 group-hover:w-full" />
                 )}
               </Link>
             );
@@ -187,14 +205,22 @@ export default function Navbar() {
           </form>
 
           {/* Language Toggle */}
-          <button
+          <motion.button
             onClick={toggleLanguage}
+            whileHover="hover"
+            whileTap="tap"
             className="flex items-center gap-1 text-sm font-medium text-brand-espresso hover:text-brand-gold dark:text-brand-cream dark:hover:text-brand-gold p-2 rounded-button transition-colors duration-200"
             aria-label="Change language / زبان تبدیل کریں"
           >
-            <Globe className="h-4 w-4" />
+            <motion.span
+              variants={{
+                hover: { rotate: 360, transition: { duration: 0.8, ease: "easeInOut" } }
+              }}
+            >
+              <Globe className="h-4 w-4" />
+            </motion.span>
             <span className="hidden md:inline">{language === "en" ? "اردو" : "English"}</span>
-          </button>
+          </motion.button>
 
           {/* Account / User profile */}
           <div 
@@ -255,18 +281,35 @@ export default function Navbar() {
                 className="flex items-center p-2 text-brand-espresso hover:text-brand-gold dark:text-brand-cream dark:hover:text-brand-gold transition-colors duration-200"
                 aria-label={t.accountLabel}
               >
-                <UserIcon className="h-6 w-6" />
+                <motion.div
+                  whileHover={{ scale: 1.15, y: -1 }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <UserIcon className="h-6 w-6" />
+                </motion.div>
               </Link>
             )}
           </div>
 
           {/* Cart trigger */}
-          <button
+          <motion.button
             onClick={() => setIsCartOpen(true)}
+            whileHover="hover"
+            whileTap="tap"
             className="relative flex items-center p-2 text-brand-espresso hover:text-brand-gold dark:text-brand-cream dark:hover:text-brand-gold transition-colors duration-200"
             aria-label={t.cartLabel}
           >
-            <ShoppingBag className="h-6 w-6" />
+            <motion.div
+              variants={{
+                hover: {
+                  rotate: [0, -10, 10, -10, 10, 0],
+                  scale: 1.1,
+                  transition: { duration: 0.5 }
+                }
+              }}
+            >
+              <ShoppingBag className="h-6 w-6" />
+            </motion.div>
             {cartCount > 0 && (
               <motion.span
                 key={cartCount}
@@ -277,7 +320,7 @@ export default function Navbar() {
                 {cartCount}
               </motion.span>
             )}
-          </button>
+          </motion.button>
         </div>
       </div>
 
