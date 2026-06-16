@@ -11,6 +11,7 @@ import AuthSection from "@/components/AuthSection";
 import ReviewSection from "@/components/ReviewSection";
 import CategoryCard from "@/components/CategoryCard";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import AnimatedText from "@/components/AnimatedText";
 
 import { API_BASE_URL } from "@/config";
 import { Product } from "@/types";
@@ -40,32 +41,6 @@ const heroBadgeVariants = {
   },
 } as const;
 
-const heroHeadingVariants = {
-  hidden: { opacity: 0, y: 120, skewY: 6 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    skewY: 0,
-    transition: {
-      type: "spring",
-      stiffness: 65,
-      damping: 12,
-    },
-  },
-} as const;
-
-const heroParagraphVariants = {
-  hidden: { opacity: 0, y: 40 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      type: "spring",
-      stiffness: 80,
-      damping: 18,
-    },
-  },
-} as const;
 
 const heroCtaVariants = {
   hidden: { opacity: 0, y: 30, scale: 0.95 },
@@ -220,23 +195,23 @@ export default function Home() {
                 </motion.div>
               </div>
               
-              <div className="overflow-hidden py-2">
-                <motion.h1
-                  variants={heroHeadingVariants}
-                  className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] text-white origin-left"
-                >
-                  {heroTitle}
-                </motion.h1>
-              </div>
+              <AnimatedText
+                key={`title-${heroTitle}`}
+                text={heroTitle}
+                el="h1"
+                className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] text-white"
+                delay={0.15}
+                animateOnMount={true}
+              />
               
-              <div className="overflow-hidden py-1">
-                <motion.p
-                  variants={heroParagraphVariants}
-                  className="text-base sm:text-lg lg:text-xl text-brand-cream/80 max-w-2xl mx-auto lg:mx-0 leading-relaxed"
-                >
-                  {heroSub}
-                </motion.p>
-              </div>
+              <AnimatedText
+                key={`sub-${heroSub}`}
+                text={heroSub}
+                el="p"
+                className="text-base sm:text-lg lg:text-xl text-brand-cream/80 max-w-2xl mx-auto lg:mx-0 leading-relaxed"
+                delay={0.3}
+                animateOnMount={true}
+              />
 
               <div className="overflow-hidden py-2">
                 <motion.div
@@ -301,20 +276,20 @@ export default function Home() {
 
       {/* 2. Categories Section */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 overflow-hidden">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="text-center max-w-3xl mx-auto mb-12"
-        >
-          <h2 className="text-3xl font-serif font-bold text-brand-espresso dark:text-brand-cream mb-3">
-            {t.catTitle}
-          </h2>
-          <p className="text-sm sm:text-base text-brand-sienna dark:text-brand-gold">
-            {t.catSub}
-          </p>
-        </motion.div>
+        <div className="text-center max-w-3xl mx-auto mb-12 flex flex-col items-center">
+          <AnimatedText
+            text={t.catTitle}
+            el="h2"
+            className="text-3xl font-serif font-bold text-brand-espresso dark:text-brand-cream mb-3 justify-center"
+            delay={0.05}
+          />
+          <AnimatedText
+            text={t.catSub}
+            el="p"
+            className="text-sm sm:text-base text-brand-sienna dark:text-brand-gold justify-center"
+            delay={0.15}
+          />
+        </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {categories.map((cat, idx) => (
@@ -332,20 +307,20 @@ export default function Home() {
 
       {/* 3. Featured Products Grid */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 overflow-hidden">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="text-center max-w-3xl mx-auto mb-12"
-        >
-          <h2 className="text-3xl font-serif font-bold text-brand-espresso dark:text-brand-cream mb-3">
-            {t.featuredTitle}
-          </h2>
-          <p className="text-sm sm:text-base text-brand-sienna dark:text-brand-gold">
-            {t.featuredSub}
-          </p>
-        </motion.div>
+        <div className="text-center max-w-3xl mx-auto mb-12 flex flex-col items-center">
+          <AnimatedText
+            text={t.featuredTitle}
+            el="h2"
+            className="text-3xl font-serif font-bold text-brand-espresso dark:text-brand-cream mb-3 justify-center"
+            delay={0.05}
+          />
+          <AnimatedText
+            text={t.featuredSub}
+            el="p"
+            className="text-sm sm:text-base text-brand-sienna dark:text-brand-gold justify-center"
+            delay={0.15}
+          />
+        </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {featuredProducts.map((product, idx) => (

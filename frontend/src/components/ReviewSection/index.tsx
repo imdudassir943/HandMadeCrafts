@@ -5,6 +5,7 @@ import { Star } from "lucide-react";
 import { Review } from "@/types";
 import { useLanguage } from "@/context/LanguageContext";
 import { motion, AnimatePresence } from "framer-motion";
+import AnimatedText from "@/components/AnimatedText";
 
 import { API_BASE_URL } from "@/config";
 
@@ -89,28 +90,41 @@ export default function ReviewSection() {
   return (
     <section className="py-16 sm:py-24 bg-white dark:bg-brand-espresso">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-3xl sm:text-4xl font-serif font-bold text-brand-espresso dark:text-brand-cream mb-4">
-            {t.heading}
-          </h2>
-          <p className="text-base sm:text-lg text-brand-sienna">
-            {t.subheading}
-          </p>
+        <div className="text-center max-w-3xl mx-auto mb-16 flex flex-col items-center">
+          <AnimatedText
+            text={t.heading}
+            el="h2"
+            className="text-3xl sm:text-4xl font-serif font-bold text-brand-espresso dark:text-brand-cream mb-4 justify-center"
+            delay={0.05}
+          />
+          <AnimatedText
+            text={t.subheading}
+            el="p"
+            className="text-base sm:text-lg text-brand-sienna justify-center"
+            delay={0.15}
+          />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Reviews Grid */}
           <div className="lg:col-span-2 space-y-6">
             <AnimatePresence initial={false}>
-              {reviews.map((review) => {
+              {reviews.map((review, index) => {
                 const author = language === "ur" ? review.authorUr : review.author;
                 const comment = language === "ur" ? review.commentUr : review.comment;
 
                 return (
                   <motion.div
                     key={review.id}
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-40px" }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 80,
+                      damping: 14,
+                      delay: Math.min(index * 0.08, 0.4),
+                    }}
                     exit={{ opacity: 0, scale: 0.95 }}
                     className="p-6 rounded-card border border-brand-sienna/10 bg-brand-cream/5 shadow-warm"
                   >

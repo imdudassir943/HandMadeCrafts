@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { motion, AnimatePresence } from "framer-motion";
+import AnimatedText from "@/components/AnimatedText";
 import { 
   Mail, 
   Lock, 
@@ -170,6 +171,30 @@ export default function AuthSection() {
     }
   }[language];
 
+  const listContainerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.08,
+        delayChildren: 0.3,
+      },
+    },
+  } as const;
+
+  const listItemVariants = {
+    hidden: { opacity: 0, x: direction === "rtl" ? 15 : -15 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        type: "spring" as const,
+        stiffness: 100,
+        damping: 15,
+      },
+    },
+  } as const;
+
   if (!isLoaded) {
     return (
       <div className="flex h-64 items-center justify-center">
@@ -199,38 +224,56 @@ export default function AuthSection() {
                 <span>{language === "en" ? "Craft Membership" : "دستکاری کی رکنیت"}</span>
               </div>
               
-              <h2 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-white leading-tight">
-                {t.sectionTitle}
-              </h2>
+              <AnimatedText
+                text={t.sectionTitle}
+                el="h2"
+                className="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-white leading-tight"
+                delay={0.05}
+              />
               
-              <p className="text-sm sm:text-base text-brand-cream/80 leading-relaxed font-sans">
-                {t.sectionSub}
-              </p>
+              <AnimatedText
+                text={t.sectionSub}
+                el="p"
+                className="text-sm sm:text-base text-brand-cream/80 leading-relaxed font-sans"
+                delay={0.15}
+              />
 
               <hr className="border-brand-cream/10 my-4" />
 
               <div className="space-y-4">
-                <h3 className="text-xs uppercase tracking-wider text-brand-gold font-semibold font-sans">
+                <motion.h3
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.25 }}
+                  className="text-xs uppercase tracking-wider text-brand-gold font-semibold font-sans"
+                >
                   {t.benefitsTitle}
-                </h3>
-                <ul className="space-y-3 text-xs sm:text-sm text-brand-cream/95">
-                  <li className="flex items-start gap-2.5">
+                </motion.h3>
+                <motion.ul
+                  variants={listContainerVariants}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, margin: "-50px" }}
+                  className="space-y-3 text-xs sm:text-sm text-brand-cream/95"
+                >
+                  <motion.li variants={listItemVariants} className="flex items-start gap-2.5">
                     <ShieldCheck className="h-4.5 w-4.5 text-brand-gold shrink-0 mt-0.5" />
                     <span>{t.benefit1}</span>
-                  </li>
-                  <li className="flex items-start gap-2.5">
+                  </motion.li>
+                  <motion.li variants={listItemVariants} className="flex items-start gap-2.5">
                     <Gift className="h-4.5 w-4.5 text-brand-gold shrink-0 mt-0.5" />
                     <span>{t.benefit2}</span>
-                  </li>
-                  <li className="flex items-start gap-2.5">
+                  </motion.li>
+                  <motion.li variants={listItemVariants} className="flex items-start gap-2.5">
                     <Compass className="h-4.5 w-4.5 text-brand-gold shrink-0 mt-0.5" />
                     <span>{t.benefit3}</span>
-                  </li>
-                  <li className="flex items-start gap-2.5">
+                  </motion.li>
+                  <motion.li variants={listItemVariants} className="flex items-start gap-2.5">
                     <CheckCircle2 className="h-4.5 w-4.5 text-brand-gold shrink-0 mt-0.5" />
                     <span>{t.benefit4}</span>
-                  </li>
-                </ul>
+                  </motion.li>
+                </motion.ul>
               </div>
             </div>
 
