@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
-import { Search, ShoppingBag, Menu, X, Globe, User as UserIcon, LogOut } from "lucide-react";
+import { Search, ShoppingBag, Globe, User as UserIcon, LogOut } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
@@ -23,6 +23,8 @@ export default function Navbar() {
   const [brandName, setBrandName] = useState("");
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [hoveredLink, setHoveredLink] = useState<string | null>(null);
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
 
   React.useEffect(() => {
     const handleScroll = () => {
@@ -119,12 +121,43 @@ export default function Navbar() {
         {/* Mobile menu toggle */}
         <button
           type="button"
-          className="inline-flex items-center justify-center rounded-button p-2 text-brand-espresso hover:bg-brand-cream/30 hover:text-brand-sienna dark:text-brand-cream lg:hidden"
+          className="inline-flex items-center justify-center rounded-button p-2 text-brand-espresso hover:bg-brand-cream/30 hover:text-brand-sienna dark:text-brand-cream lg:hidden focus:outline-none"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           aria-label={t.menuLabel}
           aria-expanded={isMobileMenuOpen}
         >
-          {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          <svg className="h-6 w-6 fill-none stroke-current" viewBox="0 0 24 24">
+            <motion.path
+              variants={{
+                closed: { d: "M 4 6 L 20 6" },
+                open: { d: "M 6 18 L 18 6" }
+              }}
+              animate={isMobileMenuOpen ? "open" : "closed"}
+              transition={{ duration: 0.3 }}
+              strokeWidth="2.5"
+              strokeLinecap="round"
+            />
+            <motion.path
+              variants={{
+                closed: { opacity: 1, d: "M 4 12 L 20 12" },
+                open: { opacity: 0 }
+              }}
+              animate={isMobileMenuOpen ? "open" : "closed"}
+              transition={{ duration: 0.2 }}
+              strokeWidth="2.5"
+              strokeLinecap="round"
+            />
+            <motion.path
+              variants={{
+                closed: { d: "M 4 18 L 20 18" },
+                open: { d: "M 6 6 L 18 18" }
+              }}
+              animate={isMobileMenuOpen ? "open" : "closed"}
+              transition={{ duration: 0.3 }}
+              strokeWidth="2.5"
+              strokeLinecap="round"
+            />
+          </svg>
         </button>
 
         {/* Logo */}
@@ -145,28 +178,39 @@ export default function Navbar() {
         </div>
 
         {/* Desktop Navigation */}
-        <nav className="hidden lg:flex lg:gap-x-8">
+        <nav 
+          onMouseLeave={() => setHoveredLink(null)}
+          className="hidden lg:flex lg:gap-x-2 relative items-center"
+        >
           {navLinks.map((link) => {
             const isActive = link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
             return (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`relative py-1 text-sm font-semibold transition-colors duration-200 group ${
+                onMouseEnter={() => setHoveredLink(link.href)}
+                className={`relative px-4 py-2 text-sm font-semibold transition-colors duration-300 rounded-full ${
                   isActive
                     ? "text-brand-crimson dark:text-brand-gold"
                     : "text-brand-espresso hover:text-brand-gold dark:text-brand-cream dark:hover:text-brand-gold"
                 }`}
               >
-                <span>{link.label}</span>
-                {isActive ? (
+                <span className="relative z-10">{link.label}</span>
+                {/* Sliding hover pill */}
+                {hoveredLink === link.href && (
+                  <motion.span
+                    layoutId="hover-pill"
+                    className="absolute inset-0 rounded-full bg-brand-cream/65 dark:bg-brand-gold/15 -z-10"
+                    transition={{ type: "spring", stiffness: 350, damping: 26 }}
+                  />
+                )}
+                {/* Active link underline/glow */}
+                {isActive && (
                   <motion.span
                     layoutId="desktop-active-underline"
-                    className="absolute -bottom-1 left-0 right-0 h-[2px] rounded-full bg-brand-crimson dark:bg-brand-gold"
+                    className="absolute bottom-1 left-4 right-4 h-[2px] rounded-full bg-brand-crimson dark:bg-brand-gold"
                     transition={{ type: "spring", stiffness: 350, damping: 30 }}
                   />
-                ) : (
-                  <span className="absolute -bottom-1 left-0 w-0 h-[2px] rounded-full bg-brand-gold/60 dark:bg-brand-gold/40 transition-all duration-300 group-hover:w-full" />
                 )}
               </Link>
             );
@@ -176,23 +220,33 @@ export default function Navbar() {
         {/* Actions */}
         <div className="flex flex-1 items-center justify-end gap-x-4 sm:gap-x-6">
           {/* Search bar (Desktop) */}
-          <form
+          <motion.form
             onSubmit={handleSearchSubmit}
-            className="relative hidden sm:block w-full max-w-[180px] lg:max-w-[160px] xl:max-w-[240px] 2xl:max-w-xs transition-all duration-300 focus-within:max-w-[220px] focus-within:lg:max-w-[220px] focus-within:xl:max-w-[300px] focus-within:2xl:max-w-xs"
+            animate={{
+              width: isSearchFocused ? 240 : 160,
+              borderColor: isSearchFocused ? "#bb9457" : "rgba(153, 88, 42, 0.2)"
+            }}
+            transition={{ type: "spring", stiffness: 300, damping: 25 }}
+            className="relative hidden sm:block h-9 bg-brand-cream/10 dark:bg-brand-espresso/50 border rounded-input overflow-hidden"
           >
             <input
               type="text"
               placeholder={t.search}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded-input border border-brand-sienna/20 bg-brand-cream/10 py-1.5 pl-3 pr-10 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/50 dark:text-brand-cream"
+              onFocus={() => setIsSearchFocused(true)}
+              onBlur={() => setIsSearchFocused(false)}
+              className="w-full h-full bg-transparent px-3 py-1.5 pl-3 pr-10 text-sm focus:outline-none text-brand-espresso dark:text-brand-cream"
               style={{
                 paddingLeft: direction === "rtl" ? "2.5rem" : "0.75rem",
                 paddingRight: direction === "rtl" ? "0.75rem" : "2.5rem",
               }}
             />
-            <button
+            <motion.button
               type="submit"
+              animate={{
+                scale: isSearchFocused ? 1.15 : 1.0,
+              }}
               className="absolute top-1/2 -translate-y-1/2 text-brand-sienna dark:text-brand-gold hover:text-brand-crimson"
               style={{
                 right: direction === "rtl" ? "auto" : "0.75rem",
@@ -201,8 +255,8 @@ export default function Navbar() {
               aria-label="Submit Search"
             >
               <Search className="h-4 w-4" />
-            </button>
-          </form>
+            </motion.button>
+          </motion.form>
 
           {/* Language Toggle */}
           <motion.button
@@ -313,9 +367,11 @@ export default function Navbar() {
             {cartCount > 0 && (
               <motion.span
                 key={cartCount}
-                initial={{ scale: 0.6, opacity: 0 }}
+                initial={{ scale: 0, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-brand-crimson text-xs font-bold text-brand-cream"
+                exit={{ scale: 0, opacity: 0 }}
+                transition={{ type: "spring", stiffness: 500, damping: 15 }}
+                className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-brand-crimson text-[10px] font-bold text-brand-cream shadow-sm"
               >
                 {cartCount}
               </motion.span>
@@ -328,15 +384,43 @@ export default function Navbar() {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            initial="closed"
+            animate="open"
+            exit="closed"
+            variants={{
+              open: {
+                height: "auto",
+                opacity: 1,
+                transition: {
+                  height: { duration: 0.3, ease: "easeOut" },
+                  opacity: { duration: 0.2 },
+                  staggerChildren: 0.08,
+                  delayChildren: 0.05
+                }
+              },
+              closed: {
+                height: 0,
+                opacity: 0,
+                transition: {
+                  height: { duration: 0.25, ease: "easeIn" },
+                  opacity: { duration: 0.15 },
+                  staggerChildren: 0.05,
+                  staggerDirection: -1
+                }
+              }
+            }}
             className="border-t border-brand-sienna/10 bg-white dark:bg-brand-espresso lg:hidden overflow-hidden"
           >
             <div className="space-y-1 px-4 pb-4 pt-2">
               {/* Search (Mobile) */}
-              <form onSubmit={handleSearchSubmit} className="relative w-full pb-2">
+              <motion.form 
+                variants={{
+                  open: { y: 0, opacity: 1 },
+                  closed: { y: -10, opacity: 0 }
+                }}
+                onSubmit={handleSearchSubmit} 
+                className="relative w-full pb-2"
+              >
                 <input
                   type="text"
                   placeholder={t.search}
@@ -359,31 +443,45 @@ export default function Navbar() {
                 >
                   <Search className="h-4 w-4" />
                 </button>
-              </form>
+              </motion.form>
 
               {navLinks.map((link) => {
                 const isActive = link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
                 return (
-                  <Link
+                  <motion.div
                     key={link.href}
-                    href={link.href}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={`block rounded-md px-3 py-2 text-base font-medium transition-colors border-l-2 ${
-                      isActive
-                        ? "bg-brand-cream/20 text-brand-crimson border-brand-crimson dark:text-brand-gold dark:border-brand-gold"
-                        : "border-transparent text-brand-espresso hover:bg-brand-cream/10 hover:text-brand-gold dark:text-brand-cream dark:hover:text-brand-gold"
-                    }`}
-                    style={{
-                      borderLeftWidth: direction === "rtl" ? 0 : "2px",
-                      borderRightWidth: direction === "rtl" ? "2px" : 0,
+                    variants={{
+                      open: { x: 0, opacity: 1 },
+                      closed: { x: direction === "rtl" ? 20 : -20, opacity: 0 }
                     }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
                   >
-                    {link.label}
-                  </Link>
+                    <Link
+                      href={link.href}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={`block rounded-md px-3 py-2 text-base font-medium transition-colors border-l-2 ${
+                        isActive
+                          ? "bg-brand-cream/20 text-brand-crimson border-brand-crimson dark:text-brand-gold dark:border-brand-gold"
+                          : "border-transparent text-brand-espresso hover:bg-brand-cream/10 hover:text-brand-gold dark:text-brand-cream dark:hover:text-brand-gold"
+                      }`}
+                      style={{
+                        borderLeftWidth: direction === "rtl" ? 0 : "2px",
+                        borderRightWidth: direction === "rtl" ? "2px" : 0,
+                      }}
+                    >
+                      {link.label}
+                    </Link>
+                  </motion.div>
                 );
               })}
 
-              <div className="border-t border-brand-sienna/10 dark:border-brand-gold/10 pt-2 mt-2">
+              <motion.div 
+                variants={{
+                  open: { y: 0, opacity: 1 },
+                  closed: { y: 10, opacity: 0 }
+                }}
+                className="border-t border-brand-sienna/10 dark:border-brand-gold/10 pt-2 mt-2"
+              >
                 {user ? (
                   <div className="px-3 py-2 text-start">
                     <p className="text-xs font-semibold uppercase text-brand-gold">
@@ -418,7 +516,7 @@ export default function Navbar() {
                     {language === "en" ? "Sign In / Join Circle" : "سائن ان / سرکل میں شامل ہوں"}
                   </Link>
                 )}
-              </div>
+              </motion.div>
             </div>
           </motion.div>
         )}
