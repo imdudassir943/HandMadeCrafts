@@ -319,7 +319,7 @@ export default function Navbar() {
                             logout();
                             setIsDropdownOpen(false);
                           }}
-                          className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-xs font-semibold text-brand-crimson hover:bg-brand-crimson/10 dark:hover:bg-brand-crimson/20 transition-colors"
+                          className="flex w-full items-center justify-center gap-2 rounded-button bg-brand-crimson px-3 py-2 text-xs font-semibold text-brand-cream hover:bg-brand-crimson/90 transition-colors shadow-sm"
                         >
                           <LogOut className="h-3.5 w-3.5" />
                           <span>{language === "en" ? "Sign Out" : "لاگ آؤٹ"}</span>
@@ -499,7 +499,7 @@ export default function Navbar() {
                         logout();
                         setIsMobileMenuOpen(false);
                       }}
-                      className="mt-2 flex w-full items-center justify-center gap-2 rounded bg-brand-crimson/10 px-3 py-2 text-sm font-semibold text-brand-crimson hover:bg-brand-crimson/20 transition-colors"
+                      className="mt-2 flex w-full items-center justify-center gap-2 rounded-button bg-brand-crimson px-3 py-2 text-sm font-semibold text-brand-cream hover:bg-brand-crimson/90 transition-colors shadow-sm"
                     >
                       <LogOut className="h-4 w-4" />
                       <span>{language === "en" ? "Sign Out" : "لاگ آؤٹ"}</span>
