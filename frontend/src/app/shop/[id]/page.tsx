@@ -8,9 +8,34 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useCart } from "@/context/CartContext";
 import ProductCard from "@/components/ProductCard";
 import ProductImageFlip from "@/components/ProductImageFlip";
+import { motion } from "framer-motion";
 
 import { API_BASE_URL } from "@/config";
 import { Product } from "@/types";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.15,
+      delayChildren: 0.05,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 25 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: "spring" as const,
+      stiffness: 85,
+      damping: 15,
+    },
+  },
+};
 
 interface ProductDetailProps {
   params: {
@@ -144,9 +169,14 @@ export default function ProductDetail({ params }: ProductDetailProps) {
   const decrementQty = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <motion.div 
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8"
+    >
       {/* Back button */}
-      <div className="mb-6">
+      <motion.div variants={itemVariants} className="mb-6">
         <Link
           href="/shop"
           className="inline-flex items-center gap-2 text-sm font-semibold text-brand-espresso hover:text-brand-sienna dark:text-brand-cream/80 dark:hover:text-brand-gold"
@@ -154,9 +184,12 @@ export default function ProductDetail({ params }: ProductDetailProps) {
           <ArrowLeft className={`h-4 w-4 ${direction === "rtl" ? "rotate-180" : ""}`} />
           <span>{t.back}</span>
         </Link>
-      </div>
+      </motion.div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start mb-16">
+      <motion.div 
+        variants={itemVariants}
+        className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start mb-16"
+      >
         {/* Product Image Panel */}
         <div className="lg:col-span-6">
           <ProductImageFlip product={product} language={language} />
@@ -259,10 +292,13 @@ export default function ProductDetail({ params }: ProductDetailProps) {
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* 6. Meet The Maker Subsection */}
-      <section className="border-t border-brand-sienna/10 dark:border-brand-cream/10 pt-12 mb-16">
+      <motion.section 
+        variants={itemVariants}
+        className="border-t border-brand-sienna/10 dark:border-brand-cream/10 pt-12 mb-16"
+      >
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center bg-brand-cream/5 rounded-card p-6 border border-brand-sienna/10 dark:border-brand-cream/10">
           <div className="md:col-span-3 flex justify-center">
             <div className="relative h-32 w-32 rounded-full overflow-hidden border-4 border-white dark:border-brand-espresso shadow bg-brand-cream/10">
@@ -292,11 +328,14 @@ export default function ProductDetail({ params }: ProductDetailProps) {
             </p>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Related Products Section */}
       {relatedProducts.length > 0 && (
-        <section className="border-t border-brand-sienna/10 dark:border-brand-cream/10 pt-12">
+        <motion.section 
+          variants={itemVariants}
+          className="border-t border-brand-sienna/10 dark:border-brand-cream/10 pt-12"
+        >
           <div className="text-center sm:text-start mb-8">
             <h2 className="text-2xl font-serif font-bold text-brand-espresso dark:text-brand-cream mb-2">
               {t.relatedTitle}
@@ -310,8 +349,8 @@ export default function ProductDetail({ params }: ProductDetailProps) {
               <ProductCard key={p.id} product={p} index={idx} />
             ))}
           </div>
-        </section>
+        </motion.section>
       )}
-    </div>
+    </motion.div>
   );
 }

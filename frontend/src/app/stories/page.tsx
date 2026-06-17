@@ -3,9 +3,34 @@
 import React from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import ArtisanBioCard from "@/components/ArtisanBioCard";
+import { motion } from "framer-motion";
+import AnimatedText from "@/components/AnimatedText";
 
 import { API_BASE_URL } from "@/config";
 import { Product } from "@/types";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.18,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 35 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: "spring" as const,
+      stiffness: 80,
+      damping: 15,
+    },
+  },
+};
 
 export default function Stories() {
   const { language } = useLanguage();
@@ -84,16 +109,30 @@ export default function Stories() {
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-12">
       {/* Title Header */}
       <div className="border-b border-brand-sienna/10 pb-6 text-center sm:text-start">
-        <h1 className="text-3xl sm:text-4xl font-serif font-bold text-brand-espresso mb-2">
-          {t.heading}
-        </h1>
-        <p className="text-sm sm:text-base text-brand-sienna max-w-2xl">
-          {t.subheading}
-        </p>
+        <AnimatedText
+          text={t.heading}
+          el="h1"
+          className="text-3xl sm:text-4xl font-serif font-bold text-brand-espresso dark:text-brand-cream mb-2 justify-center sm:justify-start"
+          delay={0.05}
+          animateOnMount={true}
+        />
+        <AnimatedText
+          text={t.subheading}
+          el="p"
+          className="text-sm sm:text-base text-brand-sienna dark:text-brand-gold max-w-2xl justify-center sm:justify-start"
+          delay={0.15}
+          animateOnMount={true}
+        />
       </div>
 
       {/* Artisan List */}
-      <main className="space-y-12 pb-12">
+      <motion.main 
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-40px" }}
+        className="space-y-12 pb-12"
+      >
         {artisans.map((artisan, index) => {
           // Filter products made by this artisan
           const artisanProducts = products.filter(
@@ -101,22 +140,23 @@ export default function Stories() {
           );
 
           return (
-            <ArtisanBioCard
-              key={index}
-              artisanName={artisan.artisanName}
-              artisanNameUr={artisan.artisanNameUr}
-              artisanImage={artisan.artisanImage}
-              location={artisan.location}
-              locationUr={artisan.locationUr}
-              quote={artisan.quote}
-              quoteUr={artisan.quoteUr}
-              bio={artisan.bio}
-              bioUr={artisan.bioUr}
-              products={artisanProducts}
-            />
+            <motion.div key={index} variants={itemVariants}>
+              <ArtisanBioCard
+                artisanName={artisan.artisanName}
+                artisanNameUr={artisan.artisanNameUr}
+                artisanImage={artisan.artisanImage}
+                location={artisan.location}
+                locationUr={artisan.locationUr}
+                quote={artisan.quote}
+                quoteUr={artisan.quoteUr}
+                bio={artisan.bio}
+                bioUr={artisan.bioUr}
+                products={artisanProducts}
+              />
+            </motion.div>
           );
         })}
-      </main>
+      </motion.main>
     </div>
   );
 }

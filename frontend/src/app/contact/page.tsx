@@ -4,9 +4,36 @@ import React from "react";
 import { Mail, Phone, MapPin, Clock } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import ContactForm from "@/components/ContactForm";
+import { motion } from "framer-motion";
+import AnimatedText from "@/components/AnimatedText";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const makeColVariants = (xOffset: number) => ({
+  hidden: { opacity: 0, x: xOffset, y: 15 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    y: 0,
+    transition: {
+      type: "spring" as const,
+      stiffness: 80,
+      damping: 15,
+    },
+  },
+});
 
 export default function Contact() {
-  const { language } = useLanguage();
+  const { language, direction } = useLanguage();
 
   const t = {
     en: {
@@ -41,17 +68,34 @@ export default function Contact() {
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-12">
       {/* Page Header */}
       <div className="border-b border-brand-sienna/10 pb-6 text-center sm:text-start">
-        <h1 className="text-3xl sm:text-4xl font-serif font-bold text-brand-espresso mb-2">
-          {t.heading}
-        </h1>
-        <p className="text-sm sm:text-base text-brand-sienna max-w-2xl">
-          {t.subheading}
-        </p>
+        <AnimatedText
+          text={t.heading}
+          el="h1"
+          className="text-3xl sm:text-4xl font-serif font-bold text-brand-espresso mb-2 justify-center sm:justify-start"
+          delay={0.05}
+          animateOnMount={true}
+        />
+        <AnimatedText
+          text={t.subheading}
+          el="p"
+          className="text-sm sm:text-base text-brand-sienna max-w-2xl justify-center sm:justify-start"
+          delay={0.15}
+          animateOnMount={true}
+        />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-stretch pb-12">
+      <motion.div 
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-40px" }}
+        className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-stretch pb-12"
+      >
         {/* Info Column */}
-        <aside className="lg:col-span-5 space-y-8 flex flex-col justify-between">
+        <motion.aside 
+          variants={makeColVariants(direction === "rtl" ? 35 : -35)}
+          className="lg:col-span-5 space-y-8 flex flex-col justify-between"
+        >
           <div className="space-y-6">
             <h2 className="font-serif text-2xl font-bold text-brand-espresso">
               {t.officeTitle}
@@ -121,13 +165,16 @@ export default function Contact() {
               <a href="#" className="hover:text-brand-gold transition-colors">Pinterest</a>
             </div>
           </div>
-        </aside>
+        </motion.aside>
 
         {/* Form Column */}
-        <main className="lg:col-span-7 h-full">
+        <motion.main 
+          variants={makeColVariants(direction === "rtl" ? -35 : 35)}
+          className="lg:col-span-7 h-full"
+        >
           <ContactForm />
-        </main>
-      </div>
+        </motion.main>
+      </motion.div>
     </div>
   );
 }

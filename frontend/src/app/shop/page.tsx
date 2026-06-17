@@ -5,12 +5,14 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { Filter, RotateCcw, Search } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import ProductCard from "@/components/ProductCard";
+import { motion, AnimatePresence } from "framer-motion";
+import AnimatedText from "@/components/AnimatedText";
 
 import { API_BASE_URL } from "@/config";
 import { Product } from "@/types";
 
 function ShopContent() {
-  const { language } = useLanguage();
+  const { language, direction } = useLanguage();
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -142,12 +144,20 @@ function ShopContent() {
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       {/* Title Header */}
       <div className="border-b border-brand-sienna/10 pb-6 mb-8 text-center sm:text-start">
-        <h1 className="text-3xl sm:text-4xl font-serif font-bold text-brand-espresso mb-2">
-          {t.heading}
-        </h1>
-        <p className="text-sm sm:text-base text-brand-sienna max-w-2xl">
-          {t.subheading}
-        </p>
+        <AnimatedText
+          text={t.heading}
+          el="h1"
+          className="text-3xl sm:text-4xl font-serif font-bold text-brand-espresso dark:text-brand-cream mb-2 justify-center sm:justify-start"
+          delay={0.05}
+          animateOnMount={true}
+        />
+        <AnimatedText
+          text={t.subheading}
+          el="p"
+          className="text-sm sm:text-base text-brand-sienna dark:text-brand-gold max-w-2xl justify-center sm:justify-start"
+          delay={0.15}
+          animateOnMount={true}
+        />
       </div>
 
       <div className="lg:grid lg:grid-cols-4 lg:gap-8 items-start">
@@ -170,7 +180,10 @@ function ShopContent() {
         </div>
 
         {/* Sidebar Filters (Desktop & Mobile responsive) */}
-        <aside
+        <motion.aside
+          initial={{ opacity: 0, x: direction === "rtl" ? 30 : -30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ type: "spring", stiffness: 85, damping: 16 }}
           className={`lg:col-span-1 space-y-6 bg-brand-cream/10 border border-brand-sienna/10 rounded-card p-6 shadow-warm lg:block ${
             isMobileFilterOpen ? "block mb-6" : "hidden"
           }`}
@@ -263,7 +276,7 @@ function ShopContent() {
               <option value="price-desc">{t.sortHighLow}</option>
             </select>
           </div>
-        </aside>
+        </motion.aside>
 
         {/* Product Catalog Grid */}
         <main className="lg:col-span-3 space-y-6">
@@ -298,11 +311,25 @@ function ShopContent() {
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredProducts.map((product, idx) => (
-                <ProductCard key={product.id} product={product} index={idx} />
-              ))}
-            </div>
+            <motion.div 
+              layout
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+            >
+              <AnimatePresence mode="popLayout">
+                {filteredProducts.map((product, idx) => (
+                  <motion.div
+                    layout
+                    key={product.id}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
+                    transition={{ type: "spring", stiffness: 100, damping: 18 }}
+                  >
+                    <ProductCard product={product} index={idx} />
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </motion.div>
           )}
         </main>
       </div>
