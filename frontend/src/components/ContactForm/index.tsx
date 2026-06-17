@@ -15,6 +15,7 @@ export default function ContactForm() {
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [isSubjectOpen, setIsSubjectOpen] = useState(false);
 
   const t = {
     en: {
@@ -141,22 +142,71 @@ export default function ContactForm() {
                 </div>
               </div>
 
-              {/* Subject Category Select */}
-              <div>
+              {/* Subject Category Custom Select Dropdown */}
+              <div className="relative">
                 <label className="block text-xs font-semibold text-brand-espresso/70 dark:text-brand-cream/70 mb-1">
                   {t.subjectLabel}
                 </label>
-                <select
-                  value={subject}
-                  disabled={isSubmitting}
-                  onChange={(e) => setSubject(e.target.value)}
-                  className="w-full rounded-input border border-brand-sienna/20 bg-brand-cream/5 px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30 text-brand-espresso dark:text-brand-cream"
-                >
-                  <option value="general">{t.subjectGeneral}</option>
-                  <option value="custom">{t.subjectCustom}</option>
-                  <option value="shipping">{t.subjectShipping}</option>
-                  <option value="collab">{t.subjectCollab}</option>
-                </select>
+                <div className="relative">
+                  <button
+                    type="button"
+                    disabled={isSubmitting}
+                    onClick={() => setIsSubjectOpen(!isSubjectOpen)}
+                    className="w-full flex items-center justify-between rounded-input border border-brand-sienna/20 bg-brand-cream/5 px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30 text-brand-espresso dark:text-brand-cream text-start disabled:opacity-50"
+                  >
+                    <span>
+                      {subject === "general" && t.subjectGeneral}
+                      {subject === "custom" && t.subjectCustom}
+                      {subject === "shipping" && t.subjectShipping}
+                      {subject === "collab" && t.subjectCollab}
+                    </span>
+                    <span className="pointer-events-none flex items-center">
+                      <svg className="h-4 w-4 text-brand-sienna/60 dark:text-brand-gold/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </span>
+                  </button>
+
+                  <AnimatePresence>
+                    {isSubjectOpen && (
+                      <>
+                        <div 
+                          className="fixed inset-0 z-10" 
+                          onClick={() => setIsSubjectOpen(false)}
+                        />
+                        <motion.div
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                          className="absolute left-0 right-0 mt-1 rounded-card border border-brand-sienna/10 bg-white dark:bg-brand-espresso p-1 shadow-lg dark:border-brand-gold/15 z-20"
+                        >
+                          {[
+                            { value: "general", label: t.subjectGeneral },
+                            { value: "custom", label: t.subjectCustom },
+                            { value: "shipping", label: t.subjectShipping },
+                            { value: "collab", label: t.subjectCollab },
+                          ].map((option) => (
+                            <button
+                              key={option.value}
+                              type="button"
+                              onClick={() => {
+                                setSubject(option.value);
+                                setIsSubjectOpen(false);
+                              }}
+                              className={`w-full rounded-button px-3 py-2 text-sm text-start transition-colors ${
+                                subject === option.value
+                                  ? "bg-brand-gold text-brand-espresso font-semibold"
+                                  : "hover:bg-brand-cream/30 text-brand-espresso/80 dark:text-brand-cream/80 hover:text-brand-espresso dark:hover:text-brand-gold"
+                              }`}
+                            >
+                              {option.label}
+                            </button>
+                          ))}
+                        </motion.div>
+                      </>
+                    )}
+                  </AnimatePresence>
+                </div>
               </div>
 
               {/* Message */}

@@ -22,6 +22,7 @@ function ShopContent() {
   const [priceLimit, setPriceLimit] = useState(200);
   const [sortBy, setSortBy] = useState("default");
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+  const [isSortOpen, setIsSortOpen] = useState(false);
   
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -261,20 +262,68 @@ function ShopContent() {
             />
           </div>
 
-          {/* Sort By Select */}
-          <div className="space-y-2">
+          {/* Sort By Custom Select Dropdown */}
+          <div className="space-y-2 relative">
             <label className="block text-xs font-semibold uppercase tracking-wider text-brand-espresso/80 dark:text-brand-cream/80">
               {t.sortLabel}
             </label>
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="w-full rounded-input border border-brand-sienna/20 bg-white px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30 text-brand-espresso dark:text-brand-cream"
-            >
-              <option value="default">{t.sortDefault}</option>
-              <option value="price-asc">{t.sortLowHigh}</option>
-              <option value="price-desc">{t.sortHighLow}</option>
-            </select>
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setIsSortOpen(!isSortOpen)}
+                className="w-full flex items-center justify-between rounded-input border border-brand-sienna/20 bg-white px-3 py-2 text-sm focus:border-brand-gold focus:outline-none dark:border-brand-gold/30 dark:bg-brand-espresso/30 text-brand-espresso dark:text-brand-cream text-start"
+              >
+                <span>
+                  {sortBy === "default" && t.sortDefault}
+                  {sortBy === "price-asc" && t.sortLowHigh}
+                  {sortBy === "price-desc" && t.sortHighLow}
+                </span>
+                <span className="pointer-events-none flex items-center">
+                  <svg className="h-4 w-4 text-brand-sienna/60 dark:text-brand-gold/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </button>
+
+              <AnimatePresence>
+                {isSortOpen && (
+                  <>
+                    <div 
+                      className="fixed inset-0 z-10" 
+                      onClick={() => setIsSortOpen(false)}
+                    />
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="absolute left-0 right-0 mt-1 rounded-card border border-brand-sienna/10 bg-white dark:bg-brand-espresso p-1 shadow-lg dark:border-brand-gold/15 z-20"
+                    >
+                      {[
+                        { value: "default", label: t.sortDefault },
+                        { value: "price-asc", label: t.sortLowHigh },
+                        { value: "price-desc", label: t.sortHighLow },
+                      ].map((option) => (
+                        <button
+                          key={option.value}
+                          type="button"
+                          onClick={() => {
+                            setSortBy(option.value);
+                            setIsSortOpen(false);
+                          }}
+                          className={`w-full rounded-button px-3 py-2 text-sm text-start transition-colors ${
+                            sortBy === option.value
+                              ? "bg-brand-gold text-brand-espresso font-semibold"
+                              : "hover:bg-brand-cream/30 text-brand-espresso/80 dark:text-brand-cream/80 hover:text-brand-espresso dark:hover:text-brand-gold"
+                          }`}
+                        >
+                          {option.label}
+                        </button>
+                      ))}
+                    </motion.div>
+                  </>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
         </motion.aside>
 
