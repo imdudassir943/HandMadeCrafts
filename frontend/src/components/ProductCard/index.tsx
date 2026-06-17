@@ -3,11 +3,11 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Star, ShoppingCart } from "lucide-react";
+import { Star, ShoppingCart, ChevronLeft, ChevronRight } from "lucide-react";
 import { Product } from "@/types";
 import { useLanguage } from "@/context/LanguageContext";
 import { useCart } from "@/context/CartContext";
-import { motion, useMotionValue, useSpring, useTransform, Variants } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform, Variants, AnimatePresence } from "framer-motion";
 
 interface ProductCardProps {
   product: Product;
@@ -18,6 +18,26 @@ export default function ProductCard({ product, index }: ProductCardProps) {
   const { language } = useLanguage();
   const { addToCart } = useCart();
   const [isHovered, setIsHovered] = React.useState(false);
+  const productImages = product.images && product.images.length > 0 ? product.images : [product.image];
+  const [currentImageIndex, setCurrentImageIndex] = React.useState(0);
+
+  const handlePrevImage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setCurrentImageIndex((prev) => (prev === 0 ? productImages.length - 1 : prev - 1));
+  };
+
+  const handleNextImage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setCurrentImageIndex((prev) => (prev === productImages.length - 1 ? 0 : prev + 1));
+  };
+
+  const handleDotClick = (e: React.MouseEvent, idx: number) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setCurrentImageIndex(idx);
+  };
 
   const name = language === "ur" ? product.nameUr : product.name;
   const category = language === "ur" ? product.categoryUr : product.category;
@@ -116,16 +136,68 @@ export default function ProductCard({ product, index }: ProductCardProps) {
 
         {/* Product Image Panel */}
         <div 
-          className="relative aspect-square w-full overflow-hidden bg-brand-cream/10"
+          className="relative aspect-square w-full overflow-hidden bg-brand-cream/10 group/carousel"
           style={{ transform: "translateZ(-10px)" }}
         >
-          <Image
-            src={product.image}
-            alt={name}
-            fill
-            className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-110"
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          />
+          <AnimatePresence initial={false} mode="wait">
+            <motion.div
+              key={currentImageIndex}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="absolute inset-0"
+            >
+              <Image
+                src={productImages[currentImageIndex]}
+                alt={`${name} - View ${currentImageIndex + 1}`}
+                fill
+                className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              />
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Navigation Arrows */}
+          {productImages.length > 1 && (
+            <>
+              <button
+                type="button"
+                onClick={handlePrevImage}
+                className="absolute left-2.5 top-1/2 -translate-y-1/2 z-30 p-1.5 rounded-full bg-brand-espresso/70 text-brand-cream border border-brand-cream/10 shadow-md hover:bg-brand-gold hover:text-brand-espresso opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-auto"
+                aria-label="Previous image"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+              <button
+                type="button"
+                onClick={handleNextImage}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 z-30 p-1.5 rounded-full bg-brand-espresso/70 text-brand-cream border border-brand-cream/10 shadow-md hover:bg-brand-gold hover:text-brand-espresso opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-auto"
+                aria-label="Next image"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </>
+          )}
+
+          {/* Dots Indicator */}
+          {productImages.length > 1 && (
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-30 flex gap-1.5 p-1.5 rounded-full bg-brand-espresso/50 backdrop-blur-sm pointer-events-auto">
+              {productImages.map((_, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={(e) => handleDotClick(e, idx)}
+                  className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                    idx === currentImageIndex 
+                      ? "bg-brand-gold w-3" 
+                      : "bg-brand-cream/50 hover:bg-brand-cream"
+                  }`}
+                  aria-label={`Go to image ${idx + 1}`}
+                />
+              ))}
+            </div>
+          )}
 
           {/* Quick Add Overlay - Slides and Fades in on Hover */}
           <motion.div 
@@ -134,15 +206,16 @@ export default function ProductCard({ product, index }: ProductCardProps) {
               hover: { y: 0, opacity: 1 }
             }}
             transition={{ duration: 0.35, ease: "easeOut" }}
-            className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-brand-espresso/70 to-transparent flex justify-center z-10"
+            className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-brand-espresso/70 to-transparent flex justify-center z-20 pointer-events-none"
           >
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={(e) => {
                 e.preventDefault();
+                e.stopPropagation();
                 addToCart(product);
               }}
-              className="flex items-center gap-2 rounded-button bg-brand-crimson px-4 py-2 text-sm font-semibold text-brand-cream hover:bg-brand-crimson/90 shadow-md transition-colors"
+              className="flex items-center gap-2 rounded-button bg-brand-crimson px-4 py-2 text-sm font-semibold text-brand-cream hover:bg-brand-crimson/90 shadow-md transition-colors pointer-events-auto"
             >
               <ShoppingCart className="h-4 w-4" />
               {t.quickAdd}
