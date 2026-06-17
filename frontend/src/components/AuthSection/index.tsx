@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
+import { useToast } from "@/context/ToastContext";
 import { motion, AnimatePresence } from "framer-motion";
 import AnimatedText from "@/components/AnimatedText";
 import { 
@@ -23,6 +24,7 @@ import {
 export default function AuthSection() {
   const { user, login, signup, logout, isLoaded } = useAuth();
   const { language, direction } = useLanguage();
+  const { showToast } = useToast();
   const [activeTab, setActiveTab] = useState<"signin" | "signup">("signin");
   const sectionRef = useRef<HTMLDivElement>(null);
 
@@ -52,7 +54,9 @@ export default function AuthSection() {
     setSignInError("");
 
     if (!signInEmail.trim() || !signInPassword.trim()) {
-      setSignInError(language === "en" ? "Please fill in all fields" : "براہ کرم تمام خانے پُر کریں");
+      const msg = language === "en" ? "Please fill in all fields" : "براہ کرم تمام خانے پُر کریں";
+      setSignInError(msg);
+      showToast(msg, "error");
       return;
     }
 
@@ -60,14 +64,22 @@ export default function AuthSection() {
     try {
       const result = await login(signInEmail, signInPassword);
       if (!result.success && result.error) {
-        setSignInError(language === "en" ? result.error.en : result.error.ur);
+        const msg = language === "en" ? result.error.en : result.error.ur;
+        setSignInError(msg);
+        showToast(msg, "error");
       } else {
         // Clear fields
         setSignInEmail("");
         setSignInPassword("");
+        showToast(
+          language === "en" ? "Successfully logged in. Welcome back!" : "کامیابی سے لاگ ان ہو گئے۔ خوش آمدید!",
+          "success"
+        );
       }
     } catch {
-      setSignInError(language === "en" ? "An unexpected error occurred" : "کوئی غیر متوقع غلطی ہوئی ہے");
+      const msg = language === "en" ? "An unexpected error occurred" : "کوئی غیر متوقع غلطی ہوئی ہے";
+      setSignInError(msg);
+      showToast(msg, "error");
     } finally {
       setSignInLoading(false);
     }
@@ -78,17 +90,23 @@ export default function AuthSection() {
     setSignUpError("");
 
     if (!signUpName.trim() || !signUpEmail.trim() || !signUpPassword.trim() || !signUpConfirmPassword.trim()) {
-      setSignUpError(language === "en" ? "Please fill in all fields" : "براہ کرم تمام خانے پُر کریں");
+      const msg = language === "en" ? "Please fill in all fields" : "براہ کرم تمام خانے پُر کریں";
+      setSignUpError(msg);
+      showToast(msg, "error");
       return;
     }
 
     if (signUpPassword !== signUpConfirmPassword) {
-      setSignUpError(language === "en" ? "Passwords do not match" : "پاس ورڈز مطابقت نہیں رکھتے");
+      const msg = language === "en" ? "Passwords do not match" : "پاس ورڈز مطابقت نہیں رکھتے";
+      setSignUpError(msg);
+      showToast(msg, "error");
       return;
     }
 
     if (signUpPassword.length < 6) {
-      setSignUpError(language === "en" ? "Password must be at least 6 characters" : "پاس ورڈ کم از کم 6 حروف کا ہونا چاہیے");
+      const msg = language === "en" ? "Password must be at least 6 characters" : "پاس ورڈ کم از کم 6 حروف کا ہونا چاہیے";
+      setSignUpError(msg);
+      showToast(msg, "error");
       return;
     }
 
@@ -96,7 +114,9 @@ export default function AuthSection() {
     try {
       const result = await signup(signUpName, signUpEmail, signUpPassword);
       if (!result.success && result.error) {
-        setSignUpError(language === "en" ? result.error.en : result.error.ur);
+        const msg = language === "en" ? result.error.en : result.error.ur;
+        setSignUpError(msg);
+        showToast(msg, "error");
       } else {
         setSignUpSuccess(true);
         // Clear fields
@@ -104,11 +124,17 @@ export default function AuthSection() {
         setSignUpEmail("");
         setSignUpPassword("");
         setSignUpConfirmPassword("");
+        showToast(
+          language === "en" ? "Registration successful! Welcome to Aura Circle." : "رجسٹریشن کامیاب! اورا سرکل میں خوش آمدید۔",
+          "success"
+        );
         // Auto transition after 3 seconds
         setTimeout(() => setSignUpSuccess(false), 4000);
       }
     } catch {
-      setSignUpError(language === "en" ? "An unexpected error occurred" : "کوئی غیر متوقع غلطی ہوئی ہے");
+      const msg = language === "en" ? "An unexpected error occurred" : "کوئی غیر متوقع غلطی ہوئی ہے";
+      setSignUpError(msg);
+      showToast(msg, "error");
     } finally {
       setSignUpLoading(false);
     }
@@ -124,23 +150,23 @@ export default function AuthSection() {
       passwordLabel: "Password",
       confirmPasswordLabel: "Confirm Password",
       nameLabel: "Full Name",
-      signInBtn: "Authenticate Session",
-      signUpBtn: "Register Membership",
+      signInBtn: "Sign In",
+      signUpBtn: "Sign Up",
       submitting: "Processing...",
       noAccount: "Don't have an account?",
       haveAccount: "Already a member?",
       forgotPass: "Recover credentials?",
       welcomeBack: "Welcome back, {name}!",
-      memberSince: "Aura Membership Status: Active",
-      memberDesc: "You are currently signed in as a certified supporter of sustainable global handiwork.",
-      logoutBtn: "Terminate Session",
+      memberSince: "Aura Membership: Active",
+      memberDesc: "You are currently signed in to your Aura account.",
+      logoutBtn: "Sign Out",
       benefitsTitle: "Your Circle Benefits:",
       benefit1: "Priority access to upcoming collections before general release.",
       benefit2: "15% welcome discount auto-applied to checkout.",
       benefit3: "Direct-to-artisan chat platform and custom request portal.",
       benefit4: "Detailed provenance and heritage reports for every purchase.",
-      successReg: "Membership registration successful! Logging you in...",
-      orContinue: "Or continue with authentication services",
+      successReg: "Registration successful! Logging you in...",
+      orContinue: "Or continue with Sign In",
     },
     ur: {
       sectionTitle: "اورا سرکل",
@@ -151,23 +177,23 @@ export default function AuthSection() {
       passwordLabel: "پاس ورڈ",
       confirmPasswordLabel: "پاس ورڈ کی تصدیق",
       nameLabel: "مکمل نام",
-      signInBtn: "سیشن تصدیق کریں",
-      signUpBtn: "رکنیت رجسٹر کریں",
+      signInBtn: "سائن ان کریں",
+      signUpBtn: "سائن اپ کریں",
       submitting: "عمل ہو رہا ہے...",
       noAccount: "اکاؤنٹ نہیں ہے؟",
       haveAccount: "پہلے سے رکن ہیں؟",
       forgotPass: "پاس ورڈ بھول گئے؟",
       welcomeBack: "خوش آمدید، {name}!",
-      memberSince: "اورا رکنیت کا درجہ: فعال",
-      memberDesc: "آپ اس وقت پائیدار عالمی دستکاری کے ایک تصدیق شدہ حامی کے طور پر سائن ان ہیں۔",
-      logoutBtn: "سیشن ختم کریں",
+      memberSince: "اورا رکنیت: فعال",
+      memberDesc: "آپ اس وقت اپنے اورا اکاؤنٹ میں لاگ ان ہیں۔",
+      logoutBtn: "لاگ آؤٹ",
       benefitsTitle: "آپ کے خصوصی فوائد:",
       benefit1: "عام ریلیز سے پہلے آنے والی کلیکشنز تک ترجیحی رسائی۔",
       benefit2: "پہلی خریداری پر خودکار 15٪ ویلکم ڈسکاؤنٹ۔",
       benefit3: "دستکار کے ساتھ براہ راست گفتگو اور اپنی مرضی کی فرمائش۔",
       benefit4: "ہر خریداری کے ساتھ دستکاری کی اصل تاریخ اور رپورٹ۔",
       successReg: "رکنیت کی رجسٹریشن کامیاب! آپ کو لاگ ان کیا جا رہا ہے...",
-      orContinue: "یا متبادل تصدیقی خدمات کے ساتھ آگے بڑھیں",
+      orContinue: "یا سائن ان کے ساتھ جاری رکھیں",
     }
   }[language];
 
@@ -317,9 +343,15 @@ export default function AuthSection() {
 
                   <div className="pt-4 flex flex-wrap gap-4 justify-center lg:justify-start">
                     <button
-                      onClick={logout}
+                      onClick={() => {
+                        logout();
+                        showToast(
+                          language === "en" ? "Successfully logged out. Goodbye!" : "کامیابی سے لاگ آؤٹ ہو گیا۔ خدا حافظ!",
+                          "success"
+                        );
+                      }}
                       id="logout-btn"
-                      className="inline-flex items-center gap-2 rounded-button bg-brand-crimson px-5 py-2.5 text-sm font-semibold text-brand-cream hover:bg-brand-crimson/90 transition-colors shadow-sm"
+                      className="inline-flex items-center gap-2 rounded-button bg-brand-crimson px-5 py-2.5 text-sm font-semibold text-brand-cream border border-brand-crimson/10 dark:border-brand-gold/20 shadow-md hover:bg-brand-crimson/90 hover:shadow-lg hover:shadow-brand-crimson/20 dark:hover:shadow-brand-gold/10 transition-all duration-300"
                     >
                       <LogOut className="h-4 w-4" />
                       <span>{t.logoutBtn}</span>

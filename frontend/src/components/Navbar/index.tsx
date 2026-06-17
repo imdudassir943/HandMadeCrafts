@@ -7,6 +7,7 @@ import { Search, ShoppingBag, Globe, User as UserIcon, LogOut } from "lucide-rea
 import { useLanguage } from "@/context/LanguageContext";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
+import { useToast } from "@/context/ToastContext";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { API_BASE_URL } from "@/config";
@@ -15,6 +16,7 @@ export default function Navbar() {
   const { language, toggleLanguage, direction } = useLanguage();
   const { cartCount, setIsCartOpen } = useCart();
   const { user, logout } = useAuth();
+  const { showToast } = useToast();
   const router = useRouter();
   const pathname = usePathname();
   const [searchQuery, setSearchQuery] = useState("");
@@ -317,9 +319,13 @@ export default function Navbar() {
                         <button
                           onClick={() => {
                             logout();
+                            showToast(
+                              language === "en" ? "Successfully logged out. Goodbye!" : "کامیابی سے لاگ آؤٹ ہو گیا۔ خدا حافظ!",
+                              "success"
+                            );
                             setIsDropdownOpen(false);
                           }}
-                          className="flex w-full items-center justify-center gap-2 rounded-button bg-brand-crimson px-3 py-2 text-xs font-semibold text-brand-cream hover:bg-brand-crimson/90 transition-colors shadow-sm"
+                          className="flex w-full items-center justify-center gap-2 rounded-button bg-brand-crimson px-3 py-2 text-xs font-semibold text-brand-cream border border-brand-crimson/10 dark:border-brand-gold/20 shadow-md hover:bg-brand-crimson/90 hover:shadow-lg hover:shadow-brand-crimson/20 dark:hover:shadow-brand-gold/10 transition-all duration-300"
                         >
                           <LogOut className="h-3.5 w-3.5" />
                           <span>{language === "en" ? "Sign Out" : "لاگ آؤٹ"}</span>
@@ -497,9 +503,13 @@ export default function Navbar() {
                     <button
                       onClick={() => {
                         logout();
+                        showToast(
+                          language === "en" ? "Successfully logged out. Goodbye!" : "کامیابی سے لاگ آؤٹ ہو گیا۔ خدا حافظ!",
+                          "success"
+                        );
                         setIsMobileMenuOpen(false);
                       }}
-                      className="mt-2 flex w-full items-center justify-center gap-2 rounded-button bg-brand-crimson px-3 py-2 text-sm font-semibold text-brand-cream hover:bg-brand-crimson/90 transition-colors shadow-sm"
+                      className="mt-2 flex w-full items-center justify-center gap-2 rounded-button bg-brand-crimson px-3 py-2 text-sm font-semibold text-brand-cream border border-brand-crimson/10 dark:border-brand-gold/20 shadow-md hover:bg-brand-crimson/90 hover:shadow-lg hover:shadow-brand-crimson/20 dark:hover:shadow-brand-gold/10 transition-all duration-300"
                     >
                       <LogOut className="h-4 w-4" />
                       <span>{language === "en" ? "Sign Out" : "لاگ آؤٹ"}</span>

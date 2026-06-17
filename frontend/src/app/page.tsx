@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { useAuth } from "@/context/AuthContext";
 import ProductCard from "@/components/ProductCard";
 import ArtisanShowcase from "@/components/ArtisanShowcase";
 import AuthSection from "@/components/AuthSection";
@@ -15,6 +16,7 @@ import AnimatedText from "@/components/AnimatedText";
 
 import { API_BASE_URL } from "@/config";
 import { Product } from "@/types";
+
 
 const heroContainerVariants = {
   hidden: { opacity: 0 },
@@ -58,6 +60,7 @@ const heroCtaVariants = {
 
 export default function Home() {
   const { language, direction } = useLanguage();
+  const { user } = useAuth();
   const [heroTitle, setHeroTitle] = React.useState("");
   const [heroSub, setHeroSub] = React.useState("");
   const [featuredProducts, setFeaturedProducts] = React.useState<Product[]>([]);
@@ -378,7 +381,7 @@ export default function Home() {
       <ArtisanShowcase />
 
       {/* 5. Member Authentication & Sign Up (The Aura Circle) */}
-      <AuthSection />
+      {!user && <AuthSection />}
 
       {/* 6. Review Section */}
       <ReviewSection />

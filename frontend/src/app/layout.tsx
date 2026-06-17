@@ -26,6 +26,8 @@ const playfair = Playfair_Display({
 
 import { API_BASE_URL } from "@/config";
 
+import { ToastProvider } from "@/context/ToastContext";
+
 export async function generateMetadata(): Promise<Metadata> {
   try {
     const res = await fetch(`${API_BASE_URL}/dashboard/settings/`, { cache: "no-store" });
@@ -54,39 +56,42 @@ export default function RootLayout({
     <LanguageProvider>
       <ThemeProvider>
         <AuthProvider>
-          <CartProvider>
-            <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
-              <head>
-                <script
-                  dangerouslySetInnerHTML={{
-                    __html: `
-                      try {
-                        const theme = localStorage.getItem('handmade_theme');
-                        if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                          document.documentElement.classList.add('dark');
-                        } else {
-                          document.documentElement.classList.remove('dark');
-                        }
-                      } catch (_) {}
-                    `
-                  }}
-                />
-              </head>
-              <body className="antialiased min-h-screen flex flex-col justify-between">
-                <Navbar />
-                <main className="flex-grow">
-                  {children}
-                </main>
-                <CartDrawer />
-                <ThemeToggle />
-                <InteractiveCursor />
-                <InteractiveParticles />
-                <Footer />
-              </body>
-            </html>
-          </CartProvider>
+          <ToastProvider>
+            <CartProvider>
+              <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
+                <head>
+                  <script
+                    dangerouslySetInnerHTML={{
+                      __html: `
+                        try {
+                          const theme = localStorage.getItem('handmade_theme');
+                          if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                            document.documentElement.classList.add('dark');
+                          } else {
+                            document.documentElement.classList.remove('dark');
+                          }
+                        } catch (_) {}
+                      `
+                    }}
+                  />
+                </head>
+                <body className="antialiased min-h-screen flex flex-col justify-between">
+                  <Navbar />
+                  <main className="flex-grow">
+                    {children}
+                  </main>
+                  <CartDrawer />
+                  <ThemeToggle />
+                  <InteractiveCursor />
+                  <InteractiveParticles />
+                  <Footer />
+                </body>
+              </html>
+            </CartProvider>
+          </ToastProvider>
         </AuthProvider>
       </ThemeProvider>
     </LanguageProvider>
   );
 }
+
