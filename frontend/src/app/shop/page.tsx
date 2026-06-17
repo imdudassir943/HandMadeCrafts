@@ -313,7 +313,7 @@ function ShopContent() {
           ) : (
             <motion.div 
               layout
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+              className="flex flex-wrap justify-center gap-6"
             >
               <AnimatePresence mode="popLayout">
                 {filteredProducts.map((product, idx) => (
@@ -324,6 +324,7 @@ function ShopContent() {
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
                     transition={{ type: "spring", stiffness: 100, damping: 18 }}
+                    className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]"
                   >
                     <ProductCard product={product} index={idx} />
                   </motion.div>
