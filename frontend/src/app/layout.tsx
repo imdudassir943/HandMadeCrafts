@@ -56,26 +56,26 @@ export default function RootLayout({
     <LanguageProvider>
       <ThemeProvider>
         <AuthProvider>
-          <ToastProvider>
-            <CartProvider>
-              <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
-                <head>
-                  <script
-                    dangerouslySetInnerHTML={{
-                      __html: `
-                        try {
-                          const theme = localStorage.getItem('handmade_theme');
-                          if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                            document.documentElement.classList.add('dark');
-                          } else {
-                            document.documentElement.classList.remove('dark');
-                          }
-                        } catch (_) {}
-                      `
-                    }}
-                  />
-                </head>
-                <body className="antialiased min-h-screen flex flex-col justify-between">
+          <CartProvider>
+            <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
+              <head>
+                <script
+                  dangerouslySetInnerHTML={{
+                    __html: `
+                      try {
+                        const theme = localStorage.getItem('handmade_theme');
+                        if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                          document.documentElement.classList.add('dark');
+                        } else {
+                          document.documentElement.classList.remove('dark');
+                        }
+                      } catch (_) {}
+                    `
+                  }}
+                />
+              </head>
+              <body className="antialiased min-h-screen flex flex-col justify-between">
+                <ToastProvider>
                   <Navbar />
                   <main className="flex-grow">
                     {children}
@@ -85,10 +85,10 @@ export default function RootLayout({
                   <InteractiveCursor />
                   <InteractiveParticles />
                   <Footer />
-                </body>
-              </html>
-            </CartProvider>
-          </ToastProvider>
+                </ToastProvider>
+              </body>
+            </html>
+          </CartProvider>
         </AuthProvider>
       </ThemeProvider>
     </LanguageProvider>
