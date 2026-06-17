@@ -247,8 +247,9 @@ export default function Navbar() {
               animate={{
                 scale: isSearchFocused ? 1.15 : 1.0,
               }}
-              className="absolute top-1/2 -translate-y-1/2 text-brand-sienna dark:text-brand-gold hover:text-brand-crimson"
+              className="absolute top-1/2 text-brand-sienna dark:text-brand-gold hover:text-brand-crimson flex items-center justify-center"
               style={{
+                y: "-50%",
                 right: direction === "rtl" ? "auto" : "0.75rem",
                 left: direction === "rtl" ? "0.75rem" : "auto",
               }}
