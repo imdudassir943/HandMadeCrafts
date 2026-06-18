@@ -56,9 +56,13 @@ def seed():
 
     # Run copy files
     copy_file('ceramic_vase.png', products_media_dir)
+    copy_file('ceramic_vase_2.png', products_media_dir)
     copy_file('wall_hanging.png', products_media_dir)
+    copy_file('wall_hanging_2.png', products_media_dir)
     copy_file('wood_bowl.png', products_media_dir)
+    copy_file('wood_bowl_2.png', products_media_dir)
     copy_file('brass_lantern.png', products_media_dir)
+    copy_file('brass_lantern_2.png', products_media_dir)
     copy_file('artisan_portrait.png', artisans_media_dir)
     # Copy one of them as a mock website logo
     copy_file('ceramic_vase.png', site_media_dir)
@@ -178,6 +182,33 @@ def seed():
         )
         products[prod.name] = prod
         print(f"Product: {prod.name} ({'created' if created else 'exists'})")
+
+    # 5.5. Create Additional Product Images (Gallery)
+    gallery_data = [
+        {
+            "product": products["Terracotta Ceramic Vase"],
+            "image": "products/ceramic_vase_2.png"
+        },
+        {
+            "product": products["Woven Tapestry Wall Hanging"],
+            "image": "products/wall_hanging_2.png"
+        },
+        {
+            "product": products["Olive Wood Decorative Bowl"],
+            "image": "products/wood_bowl_2.png"
+        },
+        {
+            "product": products["Moroccan Brass Lantern"],
+            "image": "products/brass_lantern_2.png"
+        }
+    ]
+
+    for g_item in gallery_data:
+        ProductImage.objects.get_or_create(
+            product=g_item["product"],
+            image=g_item["image"]
+        )
+        print(f"Added additional image {g_item['image']} for {g_item['product'].name}")
 
     # 6. Create Reviews
     reviews_data = [

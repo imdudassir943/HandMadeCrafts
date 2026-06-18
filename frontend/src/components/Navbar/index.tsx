@@ -142,7 +142,7 @@ export default function Navbar() {
             <motion.path
               variants={{
                 closed: { opacity: 1, d: "M 4 12 L 20 12" },
-                open: { opacity: 0 }
+                open: { opacity: 0, d: "M 4 12 L 20 12" }
               }}
               animate={isMobileMenuOpen ? "open" : "closed"}
               transition={{ duration: 0.2 }}

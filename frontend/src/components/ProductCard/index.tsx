@@ -67,9 +67,14 @@ export default function ProductCard({ product, index }: ProductCardProps) {
   const translateX = useSpring(useTransform(x, [-0.5, 0.5], [-6, 6]), springConfig);
   const translateY = useSpring(useTransform(y, [-0.5, 0.5], [-6, 6]), springConfig);
 
-  // Spotlight position relative coordinates
-  const shineX = useSpring(useTransform(x, [-0.5, 0.5], ["0%", "100%"]), springConfig);
-  const shineY = useSpring(useTransform(y, [-0.5, 0.5], ["0%", "100%"]), springConfig);
+  // Spotlight position relative coordinates (numbers for smooth spring physics, then mapped to % in useTransform)
+  const shineX = useSpring(useTransform(x, [-0.5, 0.5], [0, 100]), springConfig);
+  const shineY = useSpring(useTransform(y, [-0.5, 0.5], [0, 100]), springConfig);
+
+  const spotlightBg = useTransform(
+    [shineX, shineY],
+    ([xVal, yVal]) => `radial-gradient(circle 120px at ${xVal}% ${yVal}%, rgba(187, 148, 87, 0.12), transparent)`
+  );
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -180,9 +185,11 @@ export default function ProductCard({ product, index }: ProductCardProps) {
             </>
           )}
 
-          {/* Dots Indicator */}
+          {/* Dots Indicator - Slides up on hover to clear the Add to Cart button */}
           {productImages.length > 1 && (
-            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-30 flex gap-1.5 p-1.5 rounded-full bg-brand-espresso/50 backdrop-blur-sm pointer-events-auto">
+            <div className={`absolute left-1/2 -translate-x-1/2 z-30 flex gap-1.5 p-1.5 rounded-full bg-brand-espresso/50 backdrop-blur-sm pointer-events-auto transition-all duration-300 ${
+              isHovered ? "bottom-16" : "bottom-3"
+            }`}>
               {productImages.map((_, idx) => (
                 <button
                   key={idx}
@@ -226,7 +233,7 @@ export default function ProductCard({ product, index }: ProductCardProps) {
         {/* Cursor-following spotlight reflection */}
         <motion.div
           style={{
-            background: `radial-gradient(circle 120px at ${shineX} ${shineY}, rgba(187, 148, 87, 0.1), transparent)`,
+            background: spotlightBg,
             transform: "translateZ(5px)",
           }}
           className="absolute inset-0 pointer-events-none"
