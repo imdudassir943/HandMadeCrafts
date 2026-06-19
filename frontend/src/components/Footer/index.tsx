@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
 
 export default function Footer() {
   const { language } = useLanguage();
@@ -129,37 +128,10 @@ export default function Footer() {
                         <div className="pt-2">
                           <Link href="/about-developer" passHref legacyBehavior>
                             <motion.a
-                              whileHover="hover"
-                              whileTap="tap"
-                              className="relative overflow-hidden inline-flex items-center gap-2 rounded-button bg-brand-crimson px-4 py-2 text-xs font-semibold text-brand-cream shadow-md hover:shadow-lg hover:shadow-brand-crimson/20 dark:hover:shadow-brand-gold/10 transition-all duration-300 group cursor-pointer border border-brand-crimson/10 dark:border-brand-gold/20"
+                              whileTap={{ scale: 0.97 }}
+                              className="inline-flex items-center justify-center rounded-button bg-brand-crimson text-brand-cream px-4 py-2 text-xs font-semibold hover:bg-brand-crimson/95 shadow-md transition-colors cursor-pointer"
                             >
-                              {/* Glossy sweep overlay */}
-                              <motion.div
-                                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none -skew-x-12"
-                                variants={{
-                                  hover: {
-                                    x: ["-100%", "200%"],
-                                    transition: { duration: 1.2, ease: "easeInOut", repeat: Infinity, repeatDelay: 1 }
-                                  }
-                                }}
-                                initial={{ x: "-100%" }}
-                              />
-
-                              <span className="relative z-10 tracking-wide">{t.developer}</span>
-                              
-                              <motion.span
-                                className="relative z-10 flex items-center justify-center"
-                                variants={{
-                                  initial: { x: 0 },
-                                  hover: { x: 4 }
-                                }}
-                                transition={{ type: "spring", stiffness: 300, damping: 12 }}
-                              >
-                                <ArrowRight className="h-3.5 w-3.5" />
-                              </motion.span>
-
-                              {/* Glowing background bloom on hover */}
-                              <span className="absolute inset-0 bg-gradient-to-r from-brand-crimson via-brand-sienna to-brand-gold opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
+                              {t.developer}
                             </motion.a>
                           </Link>
                         </div>
