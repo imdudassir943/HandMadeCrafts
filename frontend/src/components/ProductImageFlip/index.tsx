@@ -60,7 +60,7 @@ export default function ProductImageFlip({ product, language }: ProductImageFlip
             <button
               type="button"
               onClick={handlePrev}
-              className="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-2.5 rounded-full bg-brand-espresso/70 text-brand-cream border border-brand-cream/10 shadow-md hover:bg-brand-gold hover:text-brand-espresso opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-auto"
+              className="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-2.5 rounded-full bg-brand-espresso/70 text-brand-cream border border-brand-cream/10 shadow-md hover:bg-brand-gold hover:text-brand-espresso opacity-100 transition-all duration-300 pointer-events-auto [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100"
               aria-label="Previous image"
             >
               <ChevronLeft className="h-5 w-5" />
@@ -68,7 +68,7 @@ export default function ProductImageFlip({ product, language }: ProductImageFlip
             <button
               type="button"
               onClick={handleNext}
-              className="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-2.5 rounded-full bg-brand-espresso/70 text-brand-cream border border-brand-cream/10 shadow-md hover:bg-brand-gold hover:text-brand-espresso opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-auto"
+              className="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-2.5 rounded-full bg-brand-espresso/70 text-brand-cream border border-brand-cream/10 shadow-md hover:bg-brand-gold hover:text-brand-espresso opacity-100 transition-all duration-300 pointer-events-auto [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100"
               aria-label="Next image"
             >
               <ChevronRight className="h-5 w-5" />
