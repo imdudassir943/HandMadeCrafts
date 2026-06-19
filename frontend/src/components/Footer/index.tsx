@@ -128,8 +128,9 @@ export default function Footer() {
                         <div className="pt-2">
                           <Link href="/about-developer" passHref legacyBehavior>
                             <motion.a
+                              whileHover={{ y: -2, scale: 1.03 }}
                               whileTap={{ scale: 0.97 }}
-                              className="inline-flex items-center justify-center rounded-button bg-brand-crimson text-brand-cream px-4 py-2 text-xs font-semibold hover:bg-brand-crimson/95 shadow-md transition-colors cursor-pointer"
+                              className="inline-flex items-center justify-center rounded-button bg-brand-crimson text-brand-cream px-4 py-2 text-xs font-semibold hover:bg-brand-crimson/90 shadow-md hover:shadow-lg hover:shadow-brand-crimson/20 dark:hover:shadow-brand-crimson/30 transition-all duration-300 ease-out cursor-pointer"
                             >
                               {t.developer}
                             </motion.a>

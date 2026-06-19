@@ -223,9 +223,10 @@ export default function ReviewSection() {
               </div>
 
               <motion.button
+                whileHover={{ y: -2, scale: 1.02 }}
                 whileTap={{ scale: 0.97 }}
                 type="submit"
-                className="w-full rounded-button bg-brand-crimson text-brand-cream py-2.5 text-sm font-semibold hover:bg-brand-crimson/95 shadow-md"
+                className="w-full rounded-button bg-brand-crimson text-brand-cream py-2.5 text-sm font-semibold hover:bg-brand-crimson/90 shadow-md hover:shadow-lg hover:shadow-brand-crimson/20 dark:hover:shadow-brand-crimson/30 transition-all duration-300 ease-out"
               >
                 {t.submitBtn}
               </motion.button>
