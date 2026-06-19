@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Product } from "@/types";
-import { Award, Compass } from "lucide-react";
 
 interface ProductImageFlipProps {
   product: Product;
@@ -12,183 +12,96 @@ interface ProductImageFlipProps {
 }
 
 export default function ProductImageFlip({ product, language }: ProductImageFlipProps) {
-  const [isFlipped, setIsFlipped] = useState(false);
-  const [hasHover, setHasHover] = useState(false);
+  const productImages = product.images && product.images.length > 0 ? product.images : [product.image];
+  const [selectedIdx, setSelectedIdx] = useState(0);
+
+  const handlePrev = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setSelectedIdx((prev) => (prev === 0 ? productImages.length - 1 : prev - 1));
+  };
+
+  const handleNext = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setSelectedIdx((prev) => (prev === productImages.length - 1 ? 0 : prev + 1));
+  };
+
   const isUr = language === "ur";
-
-  useEffect(() => {
-    // Check if the primary input supports hover
-    const mediaQuery = window.matchMedia("(hover: hover)");
-    setHasHover(mediaQuery.matches);
-
-    const handler = (e: MediaQueryListEvent) => setHasHover(e.matches);
-    mediaQuery.addEventListener("change", handler);
-    return () => mediaQuery.removeEventListener("change", handler);
-  }, []);
-  
   const name = isUr ? product.nameUr : product.name;
-  const artisan = isUr ? product.artisanUr : product.artisan;
-  const material = isUr ? product.materialUr : product.material;
-  const dimensions = isUr ? product.dimensionsUr : product.dimensions;
-
-  const t = {
-    en: {
-      flipHintHover: "Hover to Flip",
-      flipHintClick: "Click to Flip",
-      makerTitle: "Meet the Maker",
-      certTitle: "Artisan Certification",
-      certSub: "100% Handcrafted Heritage",
-      materials: "Materials",
-      dimensions: "Dimensions",
-      supportNote: `${artisan} takes immense pride in creating this work of art using heritage techniques preserved and passed down through generations. Every purchase directly sustains our family workshops.`,
-    },
-    ur: {
-      flipHintHover: "پلٹنے کے لیے ہوور کریں",
-      flipHintClick: "پلٹنے کے لیے کلک کریں",
-      makerTitle: "دستکار کا تعارف",
-      certTitle: "خالص دستکاری کی تصدیق",
-      certSub: "100٪ روایتی اور پائیدار کام",
-      materials: "مواد",
-      dimensions: "پیمائش",
-      supportNote: `${artisan} کو ان روایتی طریقوں کا استعمال کرتے ہوئے اس خوبصورت فن پارے کو تیار کرنے پر فخر ہے جو نسل در نسل ان کے خاندان میں منتقل ہوتے آ رہے ہیں۔ ہر خریداری براہ راست ہمارے ہنرمندوں کی کفالت کرتی ہے۔`,
-    },
-  }[language === "ur" ? "ur" : "en"];
-
-  const flipHintText = hasHover ? t.flipHintHover : t.flipHintClick;
-
-  const [artisanImgSrc, setArtisanImgSrc] = useState(product.artisanImage);
-
-  useEffect(() => {
-    setArtisanImgSrc(product.artisanImage);
-  }, [product.artisanImage]);
-
-  // Rotate transition spring/ease setup
-  const flipTransition = { duration: 0.7, ease: [0.4, 0, 0.2, 1] as const };
 
   return (
-    <div
-      onClick={() => {
-        if (!hasHover) {
-          setIsFlipped(!isFlipped);
-        }
-      }}
-      onMouseEnter={() => {
-        if (hasHover) {
-          setIsFlipped(true);
-        }
-      }}
-      onMouseLeave={() => {
-        if (hasHover) {
-          setIsFlipped(false);
-        }
-      }}
-      className="relative aspect-square w-full cursor-pointer select-none rounded-card"
-      style={{ perspective: "1200px" }}
-    >
-      <motion.div
-        animate={{ rotateY: isFlipped ? 180 : 0 }}
-        transition={flipTransition}
-        style={{ transformStyle: "preserve-3d" }}
-        className="relative w-full h-full"
-      >
-        {/* FRONT FACE */}
-        <div
-          className="absolute inset-0 w-full h-full rounded-card overflow-hidden bg-brand-cream/10 border border-brand-sienna/10 dark:border-brand-cream/10 shadow-warm"
-          style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}
-        >
-          <Image
-            src={product.image}
-            alt={name}
-            fill
-            className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
-            sizes="(max-width: 1024px) 100vw, 50vw"
-            priority
-          />
-          
-          {/* Dark Overlay Gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/10" />
- 
-          {/* Interactive Flip Badge Hint */}
-          <div className="absolute top-4 right-4 bg-brand-espresso/80 dark:bg-brand-cream/90 text-brand-cream dark:text-brand-espresso text-xs font-semibold px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-lg backdrop-blur-sm hover:scale-105 transition-transform">
-            <span className="w-2 h-2 rounded-full bg-brand-gold animate-ping" />
-            <span>{flipHintText}</span>
-          </div>
+    <div className="flex flex-col gap-4 w-full select-none">
+      {/* Main Image Viewport */}
+      <div className="relative aspect-square w-full rounded-card overflow-hidden bg-brand-cream/10 border border-brand-sienna/10 dark:border-brand-cream/10 shadow-warm group">
+        <AnimatePresence initial={false} mode="wait">
+          <motion.div
+            key={selectedIdx}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="absolute inset-0"
+          >
+            <Image
+              src={productImages[selectedIdx]}
+              alt={`${name} - View ${selectedIdx + 1}`}
+              fill
+              className="object-cover object-center"
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              priority
+            />
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Navigation Arrows (Only show if multiple images exist) */}
+        {productImages.length > 1 && (
+          <>
+            <button
+              type="button"
+              onClick={handlePrev}
+              className="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-2.5 rounded-full bg-brand-espresso/70 text-brand-cream border border-brand-cream/10 shadow-md hover:bg-brand-gold hover:text-brand-espresso opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-auto"
+              aria-label="Previous image"
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+            <button
+              type="button"
+              onClick={handleNext}
+              className="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-2.5 rounded-full bg-brand-espresso/70 text-brand-cream border border-brand-cream/10 shadow-md hover:bg-brand-gold hover:text-brand-espresso opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-auto"
+              aria-label="Next image"
+            >
+              <ChevronRight className="h-5 w-5" />
+            </button>
+          </>
+        )}
+      </div>
+
+      {/* Thumbnails Row (Only show if multiple images exist) */}
+      {productImages.length > 1 && (
+        <div className="flex gap-3 justify-center overflow-x-auto py-1.5 scrollbar-thin">
+          {productImages.map((img, idx) => (
+            <button
+              key={idx}
+              type="button"
+              onClick={() => setSelectedIdx(idx)}
+              className={`relative w-16 h-16 sm:w-20 sm:h-20 rounded-card overflow-hidden border-2 bg-brand-cream/5 transition-all duration-300 outline-none flex-shrink-0 ${
+                selectedIdx === idx
+                  ? "border-brand-gold scale-105 shadow-md"
+                  : "border-brand-sienna/10 hover:border-brand-sienna/30 dark:border-brand-cream/10 dark:hover:border-brand-cream/30 hover:scale-102"
+              }`}
+            >
+              <Image
+                src={img}
+                alt={`${name} thumbnail ${idx + 1}`}
+                fill
+                className="object-cover object-center"
+                sizes="(max-width: 640px) 80px, 100px"
+              />
+            </button>
+          ))}
         </div>
-
-        {/* BACK FACE */}
-        <div
-          className="absolute inset-0 w-full h-full rounded-card overflow-hidden bg-brand-espresso border border-brand-gold/30 shadow-2xl flex flex-col p-4 sm:p-6 justify-between select-none"
-          style={{
-            backfaceVisibility: "hidden",
-            WebkitBackfaceVisibility: "hidden",
-            transform: "rotateY(180deg)",
-          }}
-        >
-          {/* Stylized background lines */}
-          <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(#ffe6a7_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
-
-          {/* Header */}
-          <div className="space-y-2 sm:space-y-4 text-center z-10">
-            <div className="text-center">
-              <span className="text-[10px] uppercase tracking-widest text-brand-gold font-bold">
-                {t.makerTitle}
-              </span>
-              <h4 className="font-serif text-lg sm:text-2xl font-bold text-white mt-0.5">
-                {artisan}
-              </h4>
-            </div>
-
-            {/* Circular Artisan Image */}
-            <div className="relative h-16 w-16 sm:h-24 sm:w-24 mx-auto rounded-full border-2 border-brand-gold p-1 bg-brand-cream/10 shadow-lg">
-              <div className="relative w-full h-full rounded-full overflow-hidden bg-brand-cream/5">
-                <Image
-                  src={artisanImgSrc || "/images/artisan_portrait.png"}
-                  alt={artisan}
-                  fill
-                  className="object-cover"
-                  onError={() => setArtisanImgSrc("/images/artisan_portrait.png")}
-                />
-              </div>
-              <div className="absolute -bottom-1 -right-1 bg-brand-gold text-brand-espresso p-1 sm:p-1.5 rounded-full shadow-md">
-                <Award className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
-              </div>
-            </div>
-          </div>
-
-          {/* Body Narrative */}
-          <div className="text-center z-10 px-2">
-            <p className="text-[11px] sm:text-xs text-brand-cream/80 leading-normal sm:leading-relaxed italic line-clamp-3 sm:line-clamp-4">
-              &ldquo;{t.supportNote}&rdquo;
-            </p>
-          </div>
-
-          {/* Specs Details */}
-          <div className="grid grid-cols-2 gap-2 sm:gap-3 z-10 border-t border-brand-cream/10 pt-3 sm:pt-4">
-            <div className="bg-brand-cream/5 rounded p-1.5 sm:p-2 text-center border border-brand-cream/10">
-              <span className="block text-[8px] sm:text-[9px] uppercase tracking-wider text-brand-gold font-semibold mb-0.5">
-                {t.materials}
-              </span>
-              <span className="text-[10px] sm:text-xs font-medium text-white truncate block">
-                {material}
-              </span>
-            </div>
-            
-            <div className="bg-brand-cream/5 rounded p-1.5 sm:p-2 text-center border border-brand-cream/10">
-              <span className="block text-[8px] sm:text-[9px] uppercase tracking-wider text-brand-gold font-semibold mb-0.5">
-                {t.dimensions}
-              </span>
-              <span className="text-[10px] sm:text-xs font-medium text-white truncate block">
-                {dimensions}
-              </span>
-            </div>
-          </div>
-
-          {/* Compass layout background */}
-          <div className="absolute bottom-12 sm:bottom-16 right-4 opacity-5 pointer-events-none">
-            <Compass className="h-16 w-16 sm:h-24 sm:w-24 text-brand-gold" />
-          </div>
-        </div>
-      </motion.div>
+      )}
     </div>
   );
 }
