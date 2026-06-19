@@ -21,6 +21,12 @@ class SiteSettings(models.Model):
 
     def save(self, *args, **kwargs):
         self.pk = 1
+        # Compress logo if newly uploaded
+        if self.logo:
+            from django.core.files.uploadedfile import UploadedFile
+            if hasattr(self.logo, 'file') and isinstance(self.logo.file, UploadedFile):
+                from products.models import compress_image
+                self.logo = compress_image(self.logo)
         super().save(*args, **kwargs)
 
     @classmethod
