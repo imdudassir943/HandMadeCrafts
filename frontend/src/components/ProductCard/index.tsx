@@ -33,12 +33,6 @@ export default function ProductCard({ product, index }: ProductCardProps) {
     setCurrentImageIndex((prev) => (prev === productImages.length - 1 ? 0 : prev + 1));
   };
 
-  const handleDotClick = (e: React.MouseEvent, idx: number) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setCurrentImageIndex(idx);
-  };
-
   const name = language === "ur" ? product.nameUr : product.name;
   const category = language === "ur" ? product.categoryUr : product.category;
   const artisan = language === "ur" ? product.artisanUr : product.artisan;
