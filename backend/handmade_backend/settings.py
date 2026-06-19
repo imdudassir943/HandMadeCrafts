@@ -230,11 +230,23 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 # Cloudinary Configuration for uploaded media files
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME'),
-    'API_KEY': os.getenv('CLOUDINARY_API_KEY'),
-    'API_SECRET': os.getenv('CLOUDINARY_API_SECRET'),
-}
+cloudinary_url = os.getenv('CLOUDINARY_URL')
+if cloudinary_url:
+    import urllib.parse
+    parsed_url = urllib.parse.urlparse(cloudinary_url)
+    CLOUDINARY_STORAGE = {
+        'CLOUD_NAME': parsed_url.hostname,
+        'API_KEY': parsed_url.username,
+        'API_SECRET': parsed_url.password,
+    }
+else:
+    CLOUDINARY_STORAGE = {
+        'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME'),
+        'API_KEY': os.getenv('CLOUDINARY_API_KEY'),
+        'API_SECRET': os.getenv('CLOUDINARY_API_SECRET'),
+    }
+
+
 
 # Storage configurations for Cloudinary media and WhiteNoise static files
 STORAGES = {
