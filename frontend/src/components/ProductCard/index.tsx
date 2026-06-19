@@ -58,8 +58,14 @@ export default function ProductCard({ product, index }: ProductCardProps) {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
-  // Smooth springs for spotlight effect
+  // Smooth springs for interactive 3D tilt
   const springConfig = { damping: 20, stiffness: 150, mass: 0.6 };
+  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [8, -8]), springConfig);
+  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-8, 8]), springConfig);
+
+  // Elastic magnetic pull translation springs
+  const translateX = useSpring(useTransform(x, [-0.5, 0.5], [-6, 6]), springConfig);
+  const translateY = useSpring(useTransform(y, [-0.5, 0.5], [-6, 6]), springConfig);
 
   // Spotlight position relative coordinates (numbers for smooth spring physics, then mapped to % in useTransform)
   const shineX = useSpring(useTransform(x, [-0.5, 0.5], [0, 100]), springConfig);
@@ -106,7 +112,7 @@ export default function ProductCard({ product, index }: ProductCardProps) {
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: "-50px" }}
-      style={{}}
+      style={{ perspective: "1000px" }}
       className="w-full h-full flex flex-col"
     >
       <motion.div
@@ -116,16 +122,18 @@ export default function ProductCard({ product, index }: ProductCardProps) {
           handleMouseLeave();
           setIsHovered(false);
         }}
-        style={{}}
+        style={{
+          rotateX,
+          rotateY,
+          x: translateX,
+          y: translateY,
+          transformStyle: "preserve-3d",
+        }}
         whileHover="hover"
         initial="initial"
         className="group relative flex flex-col flex-1 overflow-hidden rounded-card bg-white dark:bg-brand-espresso border border-brand-sienna/10 dark:border-brand-cream/10 shadow-warm hover:shadow-warm-hover hover:border-brand-sienna/20 dark:hover:border-brand-gold/30 transition-all duration-300 ease-out"
       >
-        {/* Glowing Halo Aura Outline Border on Hover */}
-        <div className="absolute inset-0 rounded-card opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-30">
-          <div className="absolute inset-0 border border-brand-gold/40 rounded-card" />
-          <div className="absolute -inset-[1.5px] bg-gradient-to-r from-brand-gold/45 via-brand-crimson/35 to-brand-gold/45 rounded-card blur-[3px] animate-spin [animation-duration:12s] -z-10" />
-        </div>
+
 
         {/* Product Image Panel */}
         <div 
