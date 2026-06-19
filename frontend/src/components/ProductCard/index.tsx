@@ -181,24 +181,15 @@ export default function ProductCard({ product, index }: ProductCardProps) {
             </>
           )}
 
-          {/* Dots Indicator - Slides up on hover to clear the Add to Cart button */}
+          {/* Multiple Images Indicator (Stacked Cards) in Top Right */}
           {productImages.length > 1 && (
-            <div className={`absolute left-1/2 -translate-x-1/2 z-30 flex gap-1.5 p-1.5 rounded-full bg-brand-espresso/50 backdrop-blur-sm pointer-events-auto transition-all duration-300 ${
-              isHovered ? "bottom-16" : "bottom-3"
-            }`}>
-              {productImages.map((_, idx) => (
-                <button
-                  key={idx}
-                  type="button"
-                  onClick={(e) => handleDotClick(e, idx)}
-                  className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
-                    idx === currentImageIndex 
-                      ? "bg-brand-gold w-3" 
-                      : "bg-brand-cream/50 hover:bg-brand-cream"
-                  }`}
-                  aria-label={`Go to image ${idx + 1}`}
-                />
-              ))}
+            <div className="absolute top-3 right-3 z-30 pointer-events-none transition-all duration-300">
+              <div className="relative w-6 h-6">
+                {/* Back card */}
+                <div className="absolute top-1.5 left-1.5 w-4 h-4 rounded-[4px] bg-white/70 dark:bg-white/80 shadow-[1px_1px_2px_rgba(0,0,0,0.15)] border border-black/[0.04] transition-transform duration-300 group-hover/carousel:translate-x-0.5 group-hover/carousel:translate-y-0.5" />
+                {/* Front card */}
+                <div className="absolute top-0.5 left-0.5 w-4 h-4 rounded-[4px] bg-white dark:bg-white shadow-[1px_1px_3px_rgba(0,0,0,0.25)] border border-black/[0.06] transition-transform duration-300 group-hover/carousel:-translate-x-0.5 group-hover/carousel:-translate-y-0.5" />
+              </div>
             </div>
           )}
 
