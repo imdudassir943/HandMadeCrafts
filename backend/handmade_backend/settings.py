@@ -9,6 +9,8 @@ from pathlib import Path
 from datetime import timedelta
 import dj_database_url
 from dotenv import load_dotenv
+from decouple import config
+import cloudinary
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -59,6 +61,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
+    'cloudinary',
+    'cloudinary_storage',
     
     # Local Modular Apps
     'accounts',
@@ -225,15 +229,23 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# Storage configurations for local media and WhiteNoise static files
+# Cloudinary Configuration for uploaded media files
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': os.getenv('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.getenv('CLOUDINARY_API_SECRET'),
+}
+
+# Storage configurations for Cloudinary media and WhiteNoise static files
 STORAGES = {
     "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
     },
     "staticfiles": {
         "BACKEND": "handmade_backend.storage.CustomCompressedManifestStaticFilesStorage",
     },
 }
+
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
