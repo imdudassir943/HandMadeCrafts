@@ -492,19 +492,42 @@ export default function AboutDeveloper() {
               <h4 className="font-serif text-lg sm:text-xl font-bold text-brand-espresso dark:text-brand-cream">
                 {t.ctaHeading}
               </h4>
-              <div>
                 <motion.a
                   href={DEVELOPER_CONFIG.socialLinks.whatsapp}
                   target="_blank"
                   rel="noopener noreferrer"
-                  whileHover={{ scale: 1.05, boxShadow: "0 10px 20px rgba(111,29,27,0.15)" }}
-                  whileTap={{ scale: 0.98 }}
-                  className="inline-flex items-center gap-2 rounded-button bg-brand-crimson text-brand-cream px-6 py-3 font-semibold hover:bg-brand-crimson/90 shadow-md transition-all duration-200"
+                  whileHover="hover"
+                  whileTap="tap"
+                  className="relative overflow-hidden inline-flex items-center gap-3 rounded-button bg-brand-crimson px-8 py-3.5 font-semibold text-brand-cream shadow-lg hover:shadow-xl hover:shadow-brand-crimson/20 dark:hover:shadow-brand-gold/10 transition-all duration-300 group cursor-pointer border border-brand-crimson/10 dark:border-brand-gold/20"
                 >
-                  <span>{t.ctaButton}</span>
-                  <ArrowRight className={`h-4.5 w-4.5 ${direction === "rtl" ? "rotate-180" : ""}`} />
+                  {/* Glossy sweep overlay */}
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none -skew-x-12"
+                    variants={{
+                      hover: {
+                        x: ["-100%", "200%"],
+                        transition: { duration: 1.2, ease: "easeInOut", repeat: Infinity, repeatDelay: 1 }
+                      }
+                    }}
+                    initial={{ x: "-100%" }}
+                  />
+
+                  <span className="relative z-10 tracking-wide text-sm sm:text-base">{t.ctaButton}</span>
+                  
+                  <motion.span
+                    className="relative z-10 flex items-center justify-center"
+                    variants={{
+                      initial: { x: 0 },
+                      hover: { x: direction === "rtl" ? -5 : 5 }
+                    }}
+                    transition={{ type: "spring", stiffness: 300, damping: 12 }}
+                  >
+                    <ArrowRight className={`h-4 w-4 sm:h-5 sm:w-5 ${direction === "rtl" ? "rotate-180" : ""}`} />
+                  </motion.span>
+
+                  {/* Glowing background bloom on hover */}
+                  <span className="absolute inset-0 bg-gradient-to-r from-brand-crimson via-brand-sienna to-brand-gold opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
                 </motion.a>
-              </div>
             </div>
 
           </motion.div>
