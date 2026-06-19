@@ -159,7 +159,7 @@ export default function ProductCard({ product, index }: ProductCardProps) {
               <button
                 type="button"
                 onClick={handlePrevImage}
-                className="absolute left-2.5 top-1/2 -translate-y-1/2 z-30 p-1.5 rounded-full bg-brand-espresso/70 text-brand-cream border border-brand-cream/10 shadow-md hover:bg-brand-gold hover:text-brand-espresso opacity-80 hover:opacity-100 transition-all duration-300 pointer-events-auto"
+                className="absolute left-2.5 top-1/2 -translate-y-1/2 z-30 p-1.5 rounded-full bg-brand-espresso/70 text-brand-cream border border-brand-cream/10 shadow-md hover:bg-brand-gold hover:text-brand-espresso opacity-100 transition-all duration-300 pointer-events-auto [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100"
                 aria-label="Previous image"
               >
                 <ChevronLeft className="h-4 w-4" />
@@ -167,7 +167,7 @@ export default function ProductCard({ product, index }: ProductCardProps) {
               <button
                 type="button"
                 onClick={handleNextImage}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 z-30 p-1.5 rounded-full bg-brand-espresso/70 text-brand-cream border border-brand-cream/10 shadow-md hover:bg-brand-gold hover:text-brand-espresso opacity-80 hover:opacity-100 transition-all duration-300 pointer-events-auto"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 z-30 p-1.5 rounded-full bg-brand-espresso/70 text-brand-cream border border-brand-cream/10 shadow-md hover:bg-brand-gold hover:text-brand-espresso opacity-100 transition-all duration-300 pointer-events-auto [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100"
                 aria-label="Next image"
               >
                 <ChevronRight className="h-4 w-4" />
