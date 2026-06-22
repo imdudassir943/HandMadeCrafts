@@ -7,7 +7,7 @@ class SiteSettings(models.Model):
     site_title = models.CharField(max_length=255, default="Aura Crafts - Premium Handmade Home Décor")
     site_title_ur = models.CharField(max_length=255, default="اورا کرافٹس - پریمیم ہینڈ میڈ ہوم ڈیکور")
     
-    logo = models.ImageField(upload_to='site/', blank=True, null=True)
+    logo = models.ImageField(upload_to='site/', blank=True, null=True, max_length=255)
     
     hero_title = models.CharField(max_length=255, default="Handcrafted Treasures for Your Sanctuary")
     hero_title_ur = models.CharField(max_length=255, default="ہاتھ سے بنے شاہکار آپ کے خوبصورت گھر کے لیے")
