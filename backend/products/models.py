@@ -100,11 +100,11 @@ class Product(models.Model):
 
     def save(self, *args, **kwargs):
         # Compress product main image if newly uploaded
-        if self.image and hasattr(self.image, 'file') and isinstance(self.image.file, UploadedFile):
+        if self.image and not self.image._committed:
             self.image = compress_image(self.image)
             
         # Compress artisan image if newly uploaded
-        if self.artisan_image and hasattr(self.artisan_image, 'file') and isinstance(self.artisan_image.file, UploadedFile):
+        if self.artisan_image and not self.artisan_image._committed:
             self.artisan_image = compress_image(self.artisan_image)
             
         super().save(*args, **kwargs)
@@ -118,6 +118,6 @@ class ProductImage(models.Model):
 
     def save(self, *args, **kwargs):
         # Compress additional gallery image if newly uploaded
-        if self.image and hasattr(self.image, 'file') and isinstance(self.image.file, UploadedFile):
+        if self.image and not self.image._committed:
             self.image = compress_image(self.image)
         super().save(*args, **kwargs)
